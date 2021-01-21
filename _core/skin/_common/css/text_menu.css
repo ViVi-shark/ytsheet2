@@ -1,0 +1,83 @@
+.text-arrangement-menu{
+    position: absolute;
+    z-index: 100;
+    display: block;
+    width: auto;
+    height: auto;
+    background-color: rgb(214, 203, 203);
+    box-sizing: border-box;
+    padding: 0.5em;
+    font-size: 50%;
+    opacity: 0.9;
+}
+.text-arrangement-menu.hidden{
+    display: none;
+}
+
+.text-arrangement-menu > [data-command-name]{
+    display: flex;
+    float: left;
+    width: 2.5em;
+    height: 3em;
+    background-color: rgb(215, 223, 240);
+    margin-left: 0.5em;
+    box-sizing: border-box;
+    padding: 0.4em;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4em;
+    cursor: pointer;
+
+    font-family: "Varela Round","Raleway",var(--base-font-family-jp);
+    --font-proportional: "Varela Round","Raleway",var(--base-font-family-pr);
+}
+.text-arrangement-menu > [data-command-name]:hover{
+    background-color: rgb(178, 190, 218);
+}
+.text-arrangement-menu > [data-command-name]:first-child{
+    margin-left: 0;
+}
+.text-arrangement-menu > [data-command-name="大見出し"], .text-arrangement-menu > [data-command-name="横罫線（直線）"]{
+    clear: left;
+    margin-left: 0;
+}
+.text-arrangement-menu > [data-command-name]:nth-child(n+10){
+    margin-top: 1em;
+    width: 16em;
+    height: 5em;
+    font-size: 70%;
+}
+
+.text-arrangement-menu > [data-command-name="太"]{
+    font-weight: bolder;
+}
+.text-arrangement-menu > [data-command-name="斜"]{
+    font-style: italic;
+}
+.text-arrangement-menu > [data-command-name="消"]{
+    text-decoration: line-through;
+}
+.text-arrangement-menu > [data-command-name="下"]{
+    text-decoration: underline;
+}
+.text-arrangement-menu > [data-command-name="透"]{
+    color: white;
+    text-shadow    : 
+       2px  2px 1px #56626e77,
+      -2px  2px 1px #56626e77,
+       2px -2px 1px #56626e77,
+      -2px -2px 1px #56626e77,
+       2px  0px 1px #56626e77,
+       0px  2px 1px #56626e77,
+      -2px  0px 1px #56626e77,
+       0px -2px 1px #56626e77;
+}
+.text-arrangement-menu > [data-command-name="ル"]:before{
+    content: "rb";
+    display: block;
+}
+.text-arrangement-menu > [data-command-name="傍"]{
+    -webkit-text-emphasis-style: dot;
+    text-emphasis-style: dot;
+}
