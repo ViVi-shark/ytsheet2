@@ -149,6 +149,7 @@ Content-type: text/html\n
   <link rel="stylesheet" media="all" href="${main::core_dir}/skin/dx3/css/chara.css?${main::ver}">
   <link rel="stylesheet" media="all" href="${main::core_dir}/skin/_common/css/edit.css?${main::ver}">
   <link rel="stylesheet" media="all" href="${main::core_dir}/skin/dx3/css/edit.css?${main::ver}">
+  <link rel="stylesheet" media="all" href="${main::core_dir}/skin/_common/css/text_menu.css?${main::ver}">
   <script src="${main::core_dir}/skin/_common/js/lib/Sortable.min.js"></script>
   <script src="${main::core_dir}/skin/_common/js/lib/compressor.min.js"></script>
   <script src="${main::core_dir}/lib/edit.js?${main::ver}" defer></script>
@@ -1430,6 +1431,7 @@ print "};\n";
 print <<"HTML";
 @{[ &commonJSVariable ]}
   </script>
+  <script src="${main::core_dir}/skin/_common/js/text_menu.js"></script>
 </body>
 
 </html>
