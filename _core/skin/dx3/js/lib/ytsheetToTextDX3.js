@@ -181,13 +181,14 @@ io.github.shunshun94.trpg.ytsheet._getDoubleCrossItems = (json) => {
 	return data;
 };
 
-io.github.shunshun94.trpg.ytsheet.generateCharacterTextFromYtSheet2DoubleCrossPc = (json) => {
+io.github.shunshun94.trpg.ytsheet.generateCharacterTextFromYtSheet2DoubleCross3PC = (json) => {
 	const result = [];
 
 	result.push(`タイトル：${json.characterName}`);
 	result.push('');
 
-	result.push(`キャラクター名：${json.characterName}${json.aka || ''}
+	result.push(`キャラクター名：${json.characterName}
+コードネーム：${json.aka || ''}
 年齢：${json.age || ''}
 性別：${json.gender || ''}
 身長：${json.height || ''}

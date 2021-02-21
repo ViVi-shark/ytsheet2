@@ -29,7 +29,7 @@ $INDEX->param(OAUTH_LOGIN_URL => $set::oauth_login_url);
 $INDEX->param(mode => $mode);
 
 my $index_mode;
-if(!($mode eq 'mylist' || param('tag') || param('group') || param('name') || param('player') || param('exp-min') || param('exp-max') || param('syndrome') || param('works') || param('faith') || param('image'))){
+if(!($mode eq 'mylist' || param('tag') || param('group') || param('name') || param('player') || param('exp-min') || param('exp-max') || param('syndrome') || param('works') || param('dlois') || param('image'))){
   $index_mode = 1;
   $INDEX->param(modeIndex => 1);
   $INDEX->param(simpleMode => 1) if $set::simplelist;
@@ -39,11 +39,11 @@ foreach(
   'tag',
   #'group',
   'name',
-  'race',
   'exp-min',
   'exp-max',
-  'class',
-  'faith',
+  'syndrome',
+  'works',
+  'dlois',
   'image',
   'fellow',
   ){
@@ -172,7 +172,7 @@ foreach (@list) {
   $count{'PL'}{$group}++ if !$pl_flag{$group}{$player};
   $pl_flag{$group}{$player} = 1;
   #最大表示制限
-  next if ($index_mode && $count{'PC'}{$group} >= $set::list_maxline && $set::list_maxline);
+  next if ($index_mode && $count{'PC'}{$group} > $set::list_maxline && $set::list_maxline);
   
   #性別
   my $m_flag; my $f_flag;

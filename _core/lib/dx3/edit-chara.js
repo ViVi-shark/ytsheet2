@@ -191,12 +191,20 @@ function calcMemory() {
 
 // 経験点
 function calcExp(){
-  let total = 0;
-  for (let num = 0; num <= Number(form.historyNum.value); num++){
-    let exp = Number(safeEval(form['history'+num+'Exp'].value));
-    if(isNaN(exp)){ exp = 0; }
-    total += exp;
-    form['history'+num+'Exp'].style.textDecoration = !exp ? 'underline red' : 'none';
+  let total = Number(form['history0Exp'].value);
+  for (let num = 1; num <= Number(form.historyNum.value); num++){
+    const obj = form['history'+num+'Exp'];
+    if(form['history'+num+'ExpApply'].checked){
+      let exp = safeEval(obj.value);
+      if(isNaN(exp)){
+        obj.classList.add('error');
+      }
+      else {
+        total += exp;
+        obj.classList.remove('error');
+      }
+    }
+    else { obj.classList.remove('error'); }
   }
   let rest = total;
   for (let key in exps){
@@ -447,13 +455,7 @@ function comboSkillSet(num){
   while (0 < select.childNodes.length) {
     select.removeChild(select.childNodes[0]);
   }
-  if(1){
-    let op = document.createElement("option");
-    op.value = '';
-    op.text = '－';
-    select.appendChild(op);
-  }
-  for(let i of ['白兵','射撃','RC','交渉','回避','知覚','意志','調達']){
+  for(let i of ['','―','白兵','射撃','RC','交渉','回避','知覚','意志','調達']){
     let op = document.createElement("option");
     op.text = i;
     select.appendChild(op);
@@ -468,6 +470,10 @@ function comboSkillSet(num){
       }
     }
   }
+  let op = document.createElement("option");
+  op.text = '解説参照';
+  select.appendChild(op);
+  
   select.value = nowSelect;
 }
 // 計算
@@ -505,8 +511,6 @@ function calcCombo(num){
     document.getElementById(`combo${num}Stt${i}`).innerHTML = stt;
     document.getElementById(`combo${num}SkillLv${i}`).innerHTML = lv;
   }
-}
-function comboSkillData(name){
 }
 // 追加
 function addCombo(){
@@ -909,6 +913,7 @@ function addHistory(){
     <td rowspan="2"><input name="history${num}Date"   type="text"></td>
     <td rowspan="2"><input name="history${num}Title"  type="text"></td>
     <td><input name="history${num}Exp"    type="text" oninput="calcExp()"></td>
+    <td><label><input name="history${num}ExpApply" type="checkbox" oninput="calcExp()"><b>適用</b></label></td>
     <td><input name="history${num}Gm"     type="text"></td>
     <td><input name="history${num}Member" type="text"></td>
   </tr>

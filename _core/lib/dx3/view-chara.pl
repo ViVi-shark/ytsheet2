@@ -11,6 +11,8 @@ require $set::data_syndrome;
 ### テンプレート読み込み #############################################################################
 my $SHEET;
 $SHEET = HTML::Template->new( filename => $set::skin_sheet, utf8 => 1,
+  path => ['./', $::core_dir."/skin/dx3", $::core_dir."/skin/_common", $::core_dir],
+  search_path_on_include => 1,
   loop_context_vars => 1,
   die_on_bad_params => 0, die_on_missing_include => 0, case_sensitive => 1, global_vars => 1);
 
@@ -167,19 +169,20 @@ elsif($pc{'forbidden'}){
   $pc{'forbiddenMode'} = 1;
 }
 
-### 置換前出力 #######################################################################################
-if($pc{'imageCopyrightURL'}){
-  $pc{'imageCopyright'} = $pc{'imageCopyright'} ? "\[\[$pc{'imageCopyright'}&gt;$pc{'imageCopyrightURL'}\]\]" : $pc{'imageCopyrightURL'};
-}
-
 ### 置換 #############################################################################################
-foreach (keys %pc) {
-  if($_ =~ /^(?:freeNote|freeHistory)$/){
-    $pc{$_} = tag_unescape_lines($pc{$_});
+if($pc{'ver'}){
+  foreach (keys %pc) {
+    next if($_ =~ /^(?:imageURL|imageCopyrightURL)$/);
+    if($_ =~ /^(?:freeNote|freeHistory)$/){
+      $pc{$_} = tag_unescape_lines($pc{$_});
+    }
+    $pc{$_} = tag_unescape($pc{$_});
+
+    $pc{$_} = noiseTextTag $pc{$_} if $pc{'forbiddenMode'};
   }
-  $pc{$_} = tag_unescape($pc{$_});
-  
-  $pc{$_} = noiseTextTag $pc{$_} if $pc{'forbiddenMode'};
+}
+else {
+  $pc{'freeNote'} = $pc{'freeNoteView'} if $pc{'freeNoteView'};
 }
 
 ### アップデート --------------------------------------------------
@@ -562,6 +565,9 @@ foreach (0 .. $pc{'historyNum'}){
   foreach my $mem (split(/　/,$pc{'history'.$_.'Member'})){
     $members .= '<span>'.$mem.'</span>';
   }
+  if($_ && !$pc{'history'.$_.'ExpApply'}) {
+    $pc{'history'.$_.'Exp'} = '<s>'.$pc{'history'.$_.'Exp'}.'</s>';
+  }
   push(@history, {
     "NUM"    => ($pc{'history'.$_.'Gm'} ? $h_num : ''),
     "DATE"   => $pc{'history'.$_.'Date'},
@@ -624,18 +630,24 @@ if($pc{'convertSource'} eq 'キャラクターシート倉庫'){
   $SHEET->param("image" => $code);
 }
 elsif($pc{'convertSource'} eq '別のゆとシートⅡ') {
-  $imgsrc = tag_delete $pc{'imageURL'};
+  $imgsrc = $pc{'imageURL'}."?$pc{'imageUpdate'}";
 }
 else {
   $imgsrc = "${set::char_dir}${main::file}/image.$pc{'image'}?$pc{'imageUpdate'}";
 }
 $SHEET->param("imageSrc" => $imgsrc);
 
-if($pc{'imageFit'} =~ /^(percent|percentX)$/){
+if($pc{'imageFit'} eq 'percentY'){
+  $SHEET->param("imageFit" => 'auto '.$pc{'imagePercent'}.'%');
+}
+elsif($pc{'imageFit'} =~ /^percentX?$/){
   $SHEET->param("imageFit" => $pc{'imagePercent'}.'%');
 }
-elsif($pc{'imageFit'} eq 'percentY'){
-  $SHEET->param("imageFit" => 'auto '.$pc{'imagePercent'}.'%');
+
+## 権利表記
+if($pc{'imageCopyrightURL'}){
+  $pc{'imageCopyright'} = $pc{'imageCopyrightURL'} if !$pc{'imageCopyright'};
+  $SHEET->param(imageCopyright => "<a href=\"$pc{'imageCopyrightURL'}\" target=\"_blank\">$pc{'imageCopyright'}</a>");
 }
 
 ### OGP --------------------------------------------------

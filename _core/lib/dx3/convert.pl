@@ -268,6 +268,7 @@ sub convertHokanjoToYtsheet {
   my $i = 0;
   foreach my $exp (@{$in{'get_exp_his'}}){
     $pc{'history'.($i+1).'Exp'}   = $exp;
+    $pc{'history'.($i+1).'ExpApply'} = 1 if $exp;
     $pc{'history'.($i+1).'Note'}  = $in{'seicho_memo_his'}[$i];
     $i++;
   }
@@ -280,7 +281,9 @@ sub convertHokanjoToYtsheet {
   $profile .= ": 瞳 |$in{'color_eye'}&lt;br&gt;";
   $profile .= ": 肌 |$in{'color_skin'}&lt;br&gt;";
   
-  $pc{'freeNote'} = $profile.$in{'pc_making_memo'},
+  $pc{'freeNote'} = $profile.$in{'pc_making_memo'};
+  $pc{'freeNoteView'} = (tag_unescape tag_unescape_lines $profile).$in{'pc_making_memo'};
+  $pc{'freeNoteView'} =~ s/\r\n?|\n/<br>/g;
   
   ## 〆
   $pc{'ver'} = 0;
@@ -375,7 +378,7 @@ sub convertSoukoToYtsheet {
     'skillAddWill'      => $in{'skills'}{'isi'}{'D'}{'dlv'} ne '' ? $in{'skills'}{'isi'}{'D'}{'dlv'} - $in{'skills'}{'isi'}{'A'}{'lv'} : '',
     'skillAddNegotiate' => $in{'skills'}{'kou'}{'D'}{'dlv'} ne '' ? $in{'skills'}{'kou'}{'D'}{'dlv'} - $in{'skills'}{'kou'}{'A'}{'lv'} : '',
     'skillAddProcure'   => $in{'skills'}{'tyo'}{'D'}{'dlv'} ne '' ? $in{'skills'}{'tyo'}{'D'}{'dlv'} - $in{'skills'}{'tyo'}{'A'}{'lv'} : '',
-    'freeNote' => ' '.$in{'base'}{'memo'},
+    'freeNote' => $in{'base'}{'memo'},
   );
   ## シンドローム
   foreach my $i (1 .. 3){
