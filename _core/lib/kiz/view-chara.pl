@@ -444,6 +444,8 @@ $SHEET->param(Menu => sheetMenuCreate @menu);
 $SHEET->param(error => $main::login_error);
 
 ### 出力 #############################################################################################
+print "Access-Control-Allow-Origin: *\n";
+print "Access-Control-Allow-Methods: GET\n";
 print "Content-Type: text/html\n\n";
 if($pc{modeDownload}){
   if($pc{forbidden} && $pc{yourAuthor}){ $SHEET->param(forbidden => ''); }
