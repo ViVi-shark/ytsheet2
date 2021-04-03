@@ -794,7 +794,7 @@ function addVehicle(){
     <td><input name="vehicle${num}Name"  type="text"><span class="handle"></span></td>
     <td><input name="vehicle${num}Stock" type="number" oninput="calcItem()"></td>
     <td><input name="vehicle${num}Exp"   type="number" oninput="calcItem()"></td>
-    <td><input name="vehicle${num}Type"  type="text" value="ヴィークル"></td>
+    <td><input name="vehicle${num}Type"  type="text" list="list-vehicle-type" value="ヴィークル"></td>
     <td><input name="vehicle${num}Skill" type="text" list="list-vehicle-skill"></td>
     <td><input name="vehicle${num}Initiative" type="text"></td>
     <td><input name="vehicle${num}Atk"        type="text"></td>
