@@ -1339,15 +1339,18 @@ print <<"HTML";
     <option value="白兵／射撃">
     <option value="エンブレム／白兵">
     <option value="エンブレム／射撃">
+    <option value="カスタマイズ（武器）">
   </datalist>
   <datalist id="list-armor-type">
     <option value="防具">
     <option value="防具※">
     <option value="エンブレム／防具">
+    <option value="カスタマイズ（防具）">
   </datalist>
     <datalist id="list-vehicle-type">
     <option value="ヴィークル">
     <option value="エンブレム／ヴィークル">
+    <option value="カスタマイズ（ヴィークル）">
   </datalist>
   <datalist id="list-item-type">
     <option value="コネ">
@@ -1356,6 +1359,8 @@ print <<"HTML";
     <option value="エンブレム／その他">
     <option value="エンブレム／コネ">
     <option value="エンブレム／使い捨て">
+    <option value="カスタマイズ（一般）">
+    <option value="カスタマイズ（コネ）">
   </datalist>
   <datalist id="list-dfclty">
     <option value="―">
