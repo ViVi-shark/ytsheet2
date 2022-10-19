@@ -1182,10 +1182,10 @@ function addVehicle(){
 function delVehicle(){
   let num = Number(form.vehicleNum.value);
   if(num > 0){
-    if(form[`vehicle${num}Name`].value || form[`vehicle${num}Stock`].value || form[`vehicle${num}Exp`].value || form[`vehicle${num}Skill`].value || form[`vehicle${num}Initiative`].value || form[`vehicle${num}Atk`].value || form[`vehicle${num}Armor`].value || form[`vehicle${num}Dash`].value || form[`vehicle${num}Note`].value){
+    if(form[`vehicle${num}Name`].value || form[`vehicle${num}Stock`].value || form[`vehicle${num}Exp`].value || form[`vehicle${num}Skill`].value || form[`vehicle${num}Initiative`].value || form[`vehicle${num}Atk`].value || form[`vehicle${num}Armor`].value || form[`vehicle${num}Dash`].value || form[`vehicle${num}Note`].value || form[`vehicle${num}SourceName`].value || form[`vehicle${num}SourcePage`].value){
       if (!confirm(delConfirmText)) return false;
     }
-    const target = document.querySelector("#vehicle-table tbody tr:last-of-type");
+    const target = document.querySelector("#vehicle-table tbody:last-of-type");
     target.parentNode.removeChild(target);
     num--;
     form.vehicleNum.value = num;
