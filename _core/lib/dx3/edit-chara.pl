@@ -1246,14 +1246,14 @@ print <<"HTML";
     <option value="情報:ビジネス">
   </datalist>
   <datalist id="list-lois-color">
-    <option value="BK">ブラック
-    <option value="BL">ブルー
-    <option value="GR">グリーン
-    <option value="OR">オレンジ
-    <option value="PU">パープル
-    <option value="RE">レッド
-    <option value="WH">ホワイト
-    <option value="YE">イエロー
+    <option value="BK">ブラック ― 支配欲，願望。達成値を減少させる。
+    <option value="BL">ブルー ― 闘志，反抗心。ガード値と装甲値を無視する。
+    <option value="GR">グリーン ― 信用，連帯感。達成値を増加する。
+    <option value="OR">オレンジ ― 憎悪，敵愾心。ダメージを増加する。
+    <option value="PU">パープル ― リスペクト，感謝，恩義。ＨＰを全回復する。
+    <option value="RE">レッド ― 恋慕，傾倒。与えるダメージを増加し、受けるダメージを減少させる。
+    <option value="WH">ホワイト ― 義務感，保護欲。ＨＰダメージを打ち消す。
+    <option value="YE">イエロー ― 興味，警戒。自身に対するリアクションを妨害する。
   </datalist>
   <datalist id="list-timing">
     <option value="オート">
