@@ -406,10 +406,10 @@ sub pcEscape {
 }
 sub pcTagsEscape {
   my $text = shift;
-  $text =~ s/\s/ /g; #空白統一
-  $text =~ tr/ / /s; #空白詰める
-  $text =~ tr/０-９Ａ-Ｚａ-ｚ/0-9A-Za-z/;
-  $text =~ tr/＋－＊／．，＿/\+\-\*\/\.,_/;
+#  $text =~ s/\s/ /g; #空白統一
+#  $text =~ tr/ / /s; #空白詰める
+#  $text =~ tr/０-９Ａ-Ｚａ-ｚ/0-9A-Za-z/;
+#  $text =~ tr/＋－＊／．，＿/\+\-\*\/\.,_/;
   return $text;
 }
 sub thanSignEscape {
