@@ -409,6 +409,14 @@ function encroachBonusType(){
   edbs  = OR && EA ? {200:0,150:0,100:0,80:0,0:0} : OR ? {150:0,100:0,80:0,0:0} : EA ? {300:7 ,260:6 ,220:5 ,190:5 ,160:4 ,130:4 ,100:3 ,80:2 ,60:1 ,0:0} : {300:8 ,240:7 ,200:6 ,160:5 ,130:4 ,100:3 ,80:2 ,60:1 ,0:0};
   lvbs  = OR && EA ? {200:4,150:3,100:2,80:1,0:0} : OR ? {150:3,100:2,80:1,0:0} : EA ? {300:3 ,260:3 ,220:3 ,190:2 ,160:2 ,130:1 ,100:1 ,80:0 ,60:0 ,0:0} : {300:2 ,240:2 ,200:2 ,160:2 ,130:1 ,100:1 ,80:0 ,60:0 ,0:0};
 
+  let lvOffset = form.encroachEffectLevelOffset.value;
+  lvOffset = lvOffset == null || lvOffset === '' ? 0 : parseInt(lvOffset);
+  if (lvOffset !== 0) {
+    for (const key of array) {
+      lvbs[key] = Math.max(lvbs[key] + lvOffset, 0);
+    }
+  }
+
   document.querySelectorAll('#enc-table colgroup, #enc-table tr').forEach((obj) => { obj.innerHTML = '' })
   
   for(let i = 0; i < array.length; i++){

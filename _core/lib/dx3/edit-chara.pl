@@ -548,6 +548,10 @@ print <<"HTML";
           <p>
             <!-- 現在侵蝕率:@{[ input 'currentEncroach','number','encroachBonusSet(this.value)','style="width: 4em;"' ]} -->
             @{[ checkbox 'encroachEaOn','エフェクトアーカイブ適用','encroachBonusType' ]}
+            <label class="encroach-effect-level-offset">
+              エフェクトレベルの増加量の補正
+              @{[ input 'encroachEffectLevelOffset','number', 'encroachBonusType()' ]}
+            </label>
           </p>
           <table class="data-table" id="enc-table">
             <colgroup></colgroup>

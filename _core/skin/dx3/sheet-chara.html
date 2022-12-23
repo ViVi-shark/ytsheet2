@@ -652,6 +652,7 @@
           <summary>侵蝕率効果表</summary>
           <p>
             <span class="encroach-prefix">現在</span>侵蝕率:<TMPL_IF encroachFixed><span class="encroach-fixed-value"><TMPL_VAR encroachFixedValue></span><TMPL_ELSE><input type="number" id="current-encroach" value="<TMPL_VAR currentEncroach>" oninput="encroachBonusSet(this.value);"></TMPL_IF>
+            <TMPL_IF encroachEffectLevelOffset><span class="encroach-effect-level-offset" style="padding-right: 0.25em;">エフェクトレベルの増加量の補正: <span class="value"><TMPL_VAR encroachEffectLevelOffset></span></span></TMPL_IF>
             <input type="checkbox" id="encroach-ea-on" oninput="encroachBonusType();" <TMPL_IF encroachEaOn>checked</TMPL_IF>><label for="encroach-ea-on">エフェクトアーカイブ</label>
             <input type="checkbox" id="encroach-or-on" oninput="encroachBonusType();" <TMPL_IF encroachOrOn>checked</TMPL_IF>><label for="encroach-or-on">起源種</label>
           </p>
@@ -677,6 +678,15 @@
         array = OR && EA ? [200  ,150  ,100  ,80  ,0  ] : OR ? [150  ,100  ,80  ,0  ] : EA ? [300   ,260   ,220   ,190   ,160   ,130   ,100   ,80   ,60   ,0  ] : [300   ,240   ,200   ,160   ,130   ,100   ,80   ,60   ,0  ];
         edbs  = OR && EA ? {200:0,150:0,100:0,80:0,0:0} : OR ? {150:0,100:0,80:0,0:0} : EA ? {300:7 ,260:6 ,220:5 ,190:5 ,160:4 ,130:4 ,100:3 ,80:2 ,60:1 ,0:0} : {300:8 ,240:7 ,200:6 ,160:5 ,130:4 ,100:3 ,80:2 ,60:1 ,0:0};
         lvbs  = OR && EA ? {200:4,150:3,100:2,80:1,0:0} : OR ? {150:3,100:2,80:1,0:0} : EA ? {300:3 ,260:3 ,220:3 ,190:2 ,160:2 ,130:1 ,100:1 ,80:0 ,60:0 ,0:0} : {300:2 ,240:2 ,200:2 ,160:2 ,130:1 ,100:1 ,80:0 ,60:0 ,0:0};
+
+        const lvOffsetNode = document.querySelector('#enc-bonus .encroach-effect-level-offset .value');
+        let lvOffset = lvOffsetNode != null ? lvOffsetNode.textContent : null;
+        lvOffset = lvOffset == null || lvOffset === '' ? 0 : parseInt(lvOffset);
+        if (lvOffset !== 0) {
+          for (const key of array) {
+            lvbs[key] = Math.max(lvbs[key] + lvOffset, 0);
+          }
+        }
 
         document.querySelectorAll('#enc-table colgroup, #enc-table tr').forEach((obj) => { obj.innerHTML = '' })
         
