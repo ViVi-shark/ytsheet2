@@ -319,6 +319,10 @@ body:not(.mode-crc) .crc-only {
   }
 }
 
+#enc-bonus .encroach-effect-level-offset input {
+  width: 3em;
+}
+
 #lois table {
   > colgroup {
     .relation{ width: 6.2em; } /* 関係 */
