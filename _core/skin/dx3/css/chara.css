@@ -1270,6 +1270,11 @@ table.data-table tbody span.source .source-page::before {
     line-height: 1;
   }
 }
+#enc-bonus .encroach-effect-level-offset {
+  display: inline-block;
+  float: right;
+  font-size: 80%;
+}
 
 @media screen and (max-width:735px){
   #enc-bonus p {

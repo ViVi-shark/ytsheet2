@@ -313,6 +313,10 @@ body:not(.mode-crc) .crc-only {
   }
 }
 
+#enc-bonus .encroach-effect-level-offset input {
+  width: 3em;
+}
+
 #lois table {
   > thead {
     .icon.info {
