@@ -97,7 +97,7 @@
         <h1 id="character-name"><TMPL_IF aka><span id="aka">“<TMPL_VAR aka>”</span></TMPL_IF><TMPL_VAR characterName></h1>
         <div>
         <p id="update-time"><time><TMPL_VAR updateTime></time></p>
-        <p id="player-name">プレイヤー：<TMPL_VAR playerName></p>
+        <p id="player-name"><TMPL_IF playerName>プレイヤー：<TMPL_VAR playerName></TMPL_IF></p>
         </div>
       </div>
       
