@@ -711,6 +711,7 @@ foreach (0 .. $pc{historyNum}){
   } );
 }
 $SHEET->param(History => \@history);
+$SHEET->param(HistoryRowCount => $#history);
 
 ### バックアップ --------------------------------------------------
 if($::in{id}){

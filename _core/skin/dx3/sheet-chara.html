@@ -751,6 +751,7 @@
         <p><TMPL_VAR freeHistory></p>
       </section>
       </TMPL_IF>
+      <TMPL_IF HistoryRowCount>
       <section class="box" id="history">
         <h2>セッション履歴</h2>
         <table class="data-table line-tbody">
@@ -775,6 +776,7 @@
           </TMPL_LOOP>
         </table>
       </section>
+      </TMPL_IF>
       <section class="box chat-palette float-box">
         <h2>チャットパレット</h2>
         <div class="chat-palette-menu">
