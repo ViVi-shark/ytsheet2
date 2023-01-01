@@ -350,6 +350,12 @@ foreach (1 .. 7){
     $hasLoisStateColumn = 1;
   }
 
+  if($pc{'lois'.$_.'Name'} =~ /起源種|オリジナルレネゲイド/){ $SHEET->param(encroachOrOn => 'checked'); }
+
+  if ($isEmptyRow) {
+    next;
+  }
+
   push(@loises, {
     "RELATION" => $pc{'lois'.$_.'Relation'},
     "NAME"     => $pc{'lois'.$_.'Name'},
@@ -367,7 +373,6 @@ foreach (1 .. 7){
     "HAS-STATE" => $hasState,
     "D"        => $pc{'lois'.$_.'Relation'} =~ /[DＤEＥ]ロイス|^[DＤEＥ]$/ ? 1 : 0
   });
-  if($pc{'lois'.$_.'Name'} =~ /起源種|オリジナルレネゲイド/){ $SHEET->param(encroachOrOn => 'checked'); }
 }
 $SHEET->param(Loises => \@loises);
 $SHEET->param(HasColoredLois => $coloredLoisCount ? 1 : 0);
