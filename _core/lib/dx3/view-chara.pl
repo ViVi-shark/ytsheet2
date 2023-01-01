@@ -375,6 +375,7 @@ foreach (1 .. 7){
   });
 }
 $SHEET->param(Loises => \@loises);
+$SHEET->param(LoisCount => $#loises + 1);
 $SHEET->param(HasColoredLois => $coloredLoisCount ? 1 : 0);
 $SHEET->param(HasLoisStateColumn => $hasLoisStateColumn);
 

@@ -298,6 +298,7 @@
       }
       </script>
       
+      <TMPL_IF LoisCount>
       <section class="box" id="lois">
         <h2>ロイス</h2>
         <table class="data-table <TMPL_UNLESS HasColoredLois>no-color</TMPL_UNLESS>">
@@ -330,6 +331,7 @@
           </tbody>
         </table>
       </section>
+      </TMPL_IF>
       
       <TMPL_IF Memories><section class="box" id="memory">
         <h2>メモリー</h2>
