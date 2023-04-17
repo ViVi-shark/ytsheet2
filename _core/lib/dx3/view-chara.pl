@@ -519,6 +519,9 @@ foreach (1 .. $pc{comboNum}){
   if(!$pc{'combo'.$_.'Condition3'}){ $blankrow++; }
   if(!$pc{'combo'.$_.'Condition4'}){ $blankrow++; }
   if(!$pc{'combo'.$_.'Condition5'}){ $blankrow++; }
+  if($blankrow == 4 && $pc{'combo'.$_.'Condition1'} eq '') {
+    $pc{'combo'.$_.'Condition1'} = '―';
+  }
   my $excludeDiceRoll = $pc{'combo'.$_.'Skill'} eq '' || $pc{'combo'.$_.'Skill'} =~ /^<span.+?>―<\/span>$/i || $pc{'combo'.$_.'Dfclty'} eq "自動成功";
   my $excludeAttack = (
       (!defined($pc{'combo'.$_.'Atk1'}) || $pc{'combo'.$_.'Atk1'} eq '') &&
