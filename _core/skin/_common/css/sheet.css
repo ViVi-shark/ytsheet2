@@ -43,7 +43,12 @@ article, .color-set {
     var(--box-head-bg-color-h, 0),
     calc( var(--box-head-bg-color-s,   0%) * 0.4 ), 50%, 0.5
   );
-  --box-even-rows-bg-color: rgba(127,127,127,0.15);
+  --box-even-rows-bg-color: hsla(
+    var(--box-head-bg-color-h, 225),
+    calc((var(--box-head-bg-color-s, 9%) * 2) / 3),
+    calc(var(--box-head-bg-color-l, 65%) * (50 / 65)),
+    0.1
+  );
   --box-input-border-color: hsl(
     var(--box-base-bg-color-h, 0),
     calc( var(--box-base-bg-color-s,   0%) * 0.3 ), 75%
