@@ -536,6 +536,7 @@ foreach (1 .. $pc{comboNum}){
   );
   my $excludeRange = !defined($pc{'combo'.$_.'Range'}) || $pc{'combo'.$_.'Range'} eq '';
   my $excludeTarget = $excludeRange && (!defined($pc{'combo'.$_.'Target'}) || $pc{'combo'.$_.'Target'} eq '');
+  my $excludeEncroach = $pc{'combo'.$_.'Timing'} eq '常時' && (!defined($pc{'combo'.$_.'Encroach'}) || $pc{'combo'.$_.'Encroach'} eq '');
   my $excludeDiceRoll = $skillIsEmpty || $pc{'combo'.$_.'Dfclty'} eq "自動成功";
   my $excludeAttack = (
       (!defined($pc{'combo'.$_.'Atk1'}) || $pc{'combo'.$_.'Atk1'} eq '') &&
@@ -584,6 +585,7 @@ foreach (1 .. $pc{comboNum}){
     "EXCLUDE_DIFFICULTY" => $excludeSkillAndDifficulty ? 'yes' : 'no',
     "EXCLUDE_TARGET" => $excludeTarget ? 'yes' : 'no',
     "EXCLUDE_RANGE" => $excludeRange ? 'yes' : 'no',
+    "EXCLUDE_ENCROACH" => $excludeEncroach ? 'yes' : 'no',
     "EXCLUDE_DICE_ROLL" => $excludeDiceRoll ? 'yes' : 'no',
     "EXCLUDE_ATK" => $excludeAttack ? 'yes' : 'no',
   });
