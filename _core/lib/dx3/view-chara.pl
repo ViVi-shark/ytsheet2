@@ -520,6 +520,13 @@ foreach (1 .. $pc{comboNum}){
   if(!$pc{'combo'.$_.'Condition4'}){ $blankrow++; }
   if(!$pc{'combo'.$_.'Condition5'}){ $blankrow++; }
   my $excludeDiceRoll = $pc{'combo'.$_.'Skill'} eq '' || $pc{'combo'.$_.'Skill'} =~ /^<span.+?>―<\/span>$/i || $pc{'combo'.$_.'Dfclty'} eq "自動成功";
+  my $excludeAttack = (
+      (!defined($pc{'combo'.$_.'Atk1'}) || $pc{'combo'.$_.'Atk1'} eq '') &&
+      (!defined($pc{'combo'.$_.'Atk2'}) || $pc{'combo'.$_.'Atk2'} eq '') &&
+      (!defined($pc{'combo'.$_.'Atk3'}) || $pc{'combo'.$_.'Atk3'} eq '') &&
+      (!defined($pc{'combo'.$_.'Atk4'}) || $pc{'combo'.$_.'Atk4'} eq '') &&
+      (!defined($pc{'combo'.$_.'Atk5'}) || $pc{'combo'.$_.'Atk5'} eq '')
+  );
   push(@combos, {
     NAME     => textShrink(15,17,19,23,$pc{'combo'.$_.'Name'}),
     COMBO    => textCombo($pc{'combo'.$_.'Combo'}),
@@ -557,6 +564,7 @@ foreach (1 .. $pc{comboNum}){
     FIXED5     => $pc{'combo'.$_.'Fixed5'},
     BLANKROW   => $blankrow,
     "EXCLUDE_DICE_ROLL" => $excludeDiceRoll ? 'yes' : 'no',
+    "EXCLUDE_ATK" => $excludeAttack ? 'yes' : 'no',
   });
 }
 $SHEET->param(Combos => \@combos);
