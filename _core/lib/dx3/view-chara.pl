@@ -635,6 +635,7 @@ foreach (1 .. $pc{comboNum}){
   });
 }
 $SHEET->param(Combos => \@combos);
+$SHEET->param(ComboNum => @combos ? $#combos : 0);
 sub textCombo {
   my $text = shift;
   if($text =~ /《.*?》/){
