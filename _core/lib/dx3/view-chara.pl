@@ -259,6 +259,9 @@ $SHEET->param(wordsY => ($pc{wordsY} eq '下' ? 'bottom:0;' : 'top:0;'));
 ### ステージ --------------------------------------------------
 if($pc{stage} =~ /クロウリングケイオス/){ $SHEET->param(ccOn => 1); }
 
+### 非オーヴァード --------------------------------------------------
+$SHEET->param(nonOvered => $pc{'syndrome1'} || $pc{'syndrome2'} || $pc{'syndrome3'} ? 0 : 1);
+
 ### ブリード --------------------------------------------------
 my $breedPrefix = ($pc{breed} ? $pc{breed} : $pc{syndrome3} ? 'トライ' : $pc{syndrome2} ? 'クロス' : $pc{syndrome1} ? 'ピュア' : '');
 $SHEET->param(breed => $breedPrefix ? "$breedPrefix<span>ブリード</span>" : '');
