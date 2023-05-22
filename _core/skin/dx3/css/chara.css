@@ -700,6 +700,9 @@ table.data-table tbody span.source .source-page::before {
 #effect {
   position: relative;
 }
+#effect[data-effect-num="0"] {
+  display: none;
+}
 #effect table thead th {
   vertical-align: bottom;
 }
