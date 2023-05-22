@@ -465,6 +465,7 @@ foreach (1 .. $pc{effectNum}){
   });
 }
 $SHEET->param(Effects => \@effects);
+$SHEET->param(EffectNum => @effects ? $#effects : 0);
 sub textTiming {
   my $text = shift;
   $text =~ s#([^<])[／\/]#$1<hr class="dotted">#g;
