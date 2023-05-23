@@ -458,7 +458,7 @@ sub tagUnescape {
   $text =~ s/\[(.+?)#([a-zA-Z0-9\-]+?)\]/<a href="?id=$2">$1<\/a>/gi; # シート内リンク
   $text =~ s/(?<!href=")(https?:\/\/[^\s\<]+)/<a href="$1" target="_blank">$1<\/a>/gi; # 自動リンク
   
-  $text =~ s/\n/<br>/gi;
+  $text =~ s/\n/<br><span class="head-of-line"><\/span>/gi;
 
   if($set::game eq 'sw2'){
     if($::SW2_0){

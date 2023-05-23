@@ -1288,6 +1288,9 @@ table.data-table tbody span.source .source-page::before {
 #enc-bonus p {
   margin: -1.4em 0 0 9em;
 }
+#enc-bonus p::before {
+  content: none;
+}
 #enc-bonus p input#current-encroach {
   width: 4em;
   padding: .1em;

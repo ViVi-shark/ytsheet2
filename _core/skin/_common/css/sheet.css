@@ -226,6 +226,14 @@ details:not([open]).box > summary:hover {
 .box p:empty {
   display: none;
 }
+.box p::before {
+  content: "";
+}
+.box p::before, .box p > .head-of-line {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
 .box > h2 + p:empty + * {
   margin-top: .3rem;
 }
