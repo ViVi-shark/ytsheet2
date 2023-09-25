@@ -377,6 +377,7 @@ foreach (1 .. $pc{effectNum}){
     TYPE     => $pc{'effect'.$_.'Type'},
     NAME     => textShrink(13,15,17,21,$pc{'effect'.$_.'Name'}),
     LV       => $pc{'effect'.$_.'Lv'},
+    LEVEL_UP => levelUpByEncroach($pc{'effect'.$_.'Timing'}, $pc{'effect'.$_.'Target'}, $pc{'effect'.$_.'Note'}),
     TIMING   => textTiming($pc{'effect'.$_.'Timing'}),
     SKILL    => textSkill($pc{'effect'.$_.'Skill'}),
     DFCLTY   => textShrink(3,4,4,4,$pc{'effect'.$_.'Dfclty'}),
@@ -429,6 +430,22 @@ sub textShrink {
     return '<span class="thin">'.$text.'</span>';
   }
   return $text;
+}
+sub levelUpByEncroach {
+  my $timing = shift;
+  my $target = shift;
+  my $note = shift;
+
+  my $referLevel = (
+      $target =~ /レベル|[LＬｌ][VＶｖ]/i ||
+          ($note eq '' || $note =~ /レベル|[LＬｌ][VＶｖ]/im)
+  ) ? 1 : 0;
+
+  return (
+      $referLevel == 0 ||
+          $timing =~ /常時/ ||
+          $note =~ /[侵浸][蝕食][率値](で|によって)(レベル|[LＬｌ][VＶｖ])(アップ|[UＵｕ][PＰｐ])(しない|せず)/im
+  ) ? 0 : 1;
 }
 
 ### 術式 --------------------------------------------------

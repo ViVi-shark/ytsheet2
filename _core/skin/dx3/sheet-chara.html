@@ -364,7 +364,7 @@
                <tr>
                 <td rowspan="2"><TMPL_IF TYPE><i class="ef-<TMPL_VAR TYPE>"></i></TMPL_IF>
                 <td class="name"><TMPL_VAR NAME>
-                <td><TMPL_VAR LV>
+                <td data-lvb="0" <TMPL_UNLESS LEVEL_UP>class="dont-level-up"</TMPL_UNLESS>><TMPL_VAR LV>
                 <td><TMPL_VAR TIMING>
                 <td><TMPL_VAR SKILL>
                 <td><TMPL_VAR DFCLTY>
@@ -372,6 +372,7 @@
                 <td><TMPL_VAR RANGE>
                 <td><TMPL_VAR ENCROACH>
                 <td><TMPL_VAR RESTRICT>
+              </tr>
               <tr><td class="left" colspan="9">
                 <TMPL_IF HAS_SOURCE>
                   <span class="source">
@@ -707,6 +708,9 @@
             document.getElementById('enc-col'+v).classList.add('current');
             document.querySelectorAll("[data-edb]").forEach(function(obj) {
               obj.dataset.edb = edbs[v];
+            });
+            document.querySelectorAll("[data-lvb]").forEach(function(obj) {
+              obj.dataset.lvb = lvbs[v];
             });
             break;
           }
