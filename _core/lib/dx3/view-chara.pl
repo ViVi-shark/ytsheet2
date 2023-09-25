@@ -266,6 +266,9 @@ $SHEET->param(nonOvered => $pc{'syndrome1'} || $pc{'syndrome2'} || $pc{'syndrome
 my $breedPrefix = ($pc{breed} ? $pc{breed} : $pc{syndrome3} ? 'トライ' : $pc{syndrome2} ? 'クロス' : $pc{syndrome1} ? 'ピュア' : '');
 $SHEET->param(breed => $breedPrefix ? "$breedPrefix<span>ブリード</span>" : '');
 
+### 侵蝕率基本値 --------------------------------------------------
+$SHEET->param(hasEncroachOffset => $pc{'lifepathOtherEncroach'} || $pc{'lifepathOtherNote'} ? 1 : 0);
+
 ### 能力値 --------------------------------------------------
 $SHEET->param('sttWorks'.ucfirst($pc{sttWorks}) => 1);
 
