@@ -356,6 +356,8 @@ foreach (1 .. 7){
     next;
   }
 
+  my @note = $isDLois || $isELois ? parseLoisNote($pc{'lois'.$_.'Note'}) : ($pc{'lois'.$_.'Note'});
+
   push(@loises, {
     "RELATION" => $pc{'lois'.$_.'Relation'},
     "NAME"     => $pc{'lois'.$_.'Name'},
@@ -367,12 +369,53 @@ foreach (1 .. 7){
     "COLOR"    => $pc{'lois'.$_.'Color'},
     "COLOR-BG" => $color,
     "COLOR-DESCRIPTION" => $colorDescription,
-    "NOTE"     => $pc{'lois'.$_.'Note'},
+    "NOTE"     => @note[0],
     "S"        => $pc{'lois'.$_.'S'},
     "STATE"    => $pc{'lois'.$_.'State'},
     "HAS-STATE" => $hasState,
-    "D"        => $pc{'lois'.$_.'Relation'} =~ /[DＤEＥ]ロイス|^[DＤEＥ]$/ ? 1 : 0
+    "D"        => $pc{'lois'.$_.'Relation'} =~ /[DＤEＥ]ロイス|^[DＤEＥ]$/ ? 1 : 0,
+    "HAS_SOURCE" => @note[1] || @note[2],
+    "SOURCE_NAME" => @note[1],
+    "SOURCE_PAGE" => @note[2],
   });
+}
+sub parseLoisNote {
+  my $note = shift;
+
+  if ($note =~ s/『(.+?)』[pＰ](\d+)。?//i) {
+    my $sourceName = $1;
+    my $sourcePage = $2;
+    return ($note, resolveSourceName($sourceName), $sourcePage);
+  }
+
+  return ($note);
+}
+sub resolveSourceName {
+  my $name = shift;
+
+  if ($name =~ /(ルール(ブック)?|基本)[1１]/) {
+    return 'ルールブック１';
+  } elsif ($name =~ /(ルール(ブック)?|基本)[2２]/) {
+    return 'ルールブック２';
+  } elsif ($name =~ /上級/) {
+    return '上級ルールブック';
+  } elsif ($name =~ /[PＰ][EＥ]/) {
+    return 'パブリックエネミー';
+  } elsif ($name =~ /[IＩ][CＣ]/) {
+    return 'インフィニティコード';
+  } elsif ($name =~ /[RＵ][UＵ]/) {
+    return 'レネゲイズアージ';
+  } elsif ($name =~ /[LＬ][MＭ]/) {
+    return 'リンケージマインド';
+  } elsif ($name =~ /[HＨ][RＲ]/) {
+    return 'ヒューマンリレーション';
+  } elsif ($name =~ /[RＲ][WＷ]/) {
+    return 'レネゲイドウォー';
+  } elsif ($name =~ /[BＢ][CＣ]/) {
+    return 'バッドシティ';
+  } else {
+    return $name;
+  }
 }
 $SHEET->param(Loises => \@loises);
 $SHEET->param(LoisCount => $#loises + 1);

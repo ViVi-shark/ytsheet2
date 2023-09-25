@@ -323,7 +323,21 @@
               <TMPL_IF HasColoredLois>
               <td class="color" style="<TMPL_VAR COLOR-BG>"><TMPL_VAR COLOR><TMPL_IF COLOR-DESCRIPTION><span class="color-description"><TMPL_VAR COLOR-DESCRIPTION></span></TMPL_IF></td>
               </TMPL_IF>
-              <td class="left" <TMPL_UNLESS HAS-STATE>colspan="2"</TMPL_UNLESS>><TMPL_VAR NOTE>
+              <td class="left" <TMPL_UNLESS HAS-STATE>colspan="2"</TMPL_UNLESS>>
+                <TMPL_IF HAS_SOURCE>
+                  <span class="source">
+                    <TMPL_IF SOURCE_NAME>
+                      <TMPL_UNLESS SOURCE_PAGE>
+                        <span class="source-name"><TMPL_VAR SOURCE_NAME></span>
+                      <TMPL_ELSE>
+                        <span class="source-name with-page"><TMPL_VAR SOURCE_NAME></span>
+                      </TMPL_UNLESS>
+                    </TMPL_IF>
+                    <TMPL_IF SOURCE_PAGE><span class="source-page"><TMPL_VAR SOURCE_PAGE></span></TMPL_IF>
+                  </span>
+                  <TMPL_IF NOTE><br /></TMPL_IF>
+                </TMPL_IF>
+                <TMPL_VAR NOTE>
               <TMPL_IF HAS-STATE>
               <td class="right state"><span data-state="<TMPL_VAR STATE>"></span>
               </TMPL_IF>
