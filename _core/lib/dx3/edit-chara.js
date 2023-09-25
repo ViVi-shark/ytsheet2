@@ -439,6 +439,28 @@ function encroachBonusSet(enc){
   }
 }
 
+function encroachModeChanged() {
+  const checkbox = document.querySelector('input[name="encroachFixed"]');
+  const fixed = checkbox != null && checkbox.checked;
+
+  const lifePathNode = document.getElementById('lifepath');
+  lifePathNode.classList.toggle('encroach-fixed', fixed);
+
+  const awakenNote = lifePathNode.querySelector('tbody.awaken tr > td:last-child');
+  const impulseNote = lifePathNode.querySelector('tbody.impulse tr:first-child > td:last-child');
+
+  if (fixed) {
+    awakenNote.setAttribute('colspan', '3');
+    impulseNote.setAttribute('colspan', '3');
+  } else {
+    awakenNote.removeAttribute('colspan');
+    impulseNote.removeAttribute('colspan');
+  }
+
+  calcEncroach();
+}
+encroachModeChanged();
+
 // ロイス ----------------------------------------
 function emoP(num){ form["lois"+num+"EmoNegaCheck"].checked = false; }
 function emoN(num){ form["lois"+num+"EmoPosiCheck"].checked = false; }

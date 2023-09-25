@@ -149,6 +149,37 @@ body:not(.mode-crc) .crc-only {
   transform: scale(1.4) translateY(.1em);
   margin-right: .2em;
 }
+#lifepath table th.small {
+  border-bottom-style: solid;
+}
+#lifepath.encroach-fixed table tbody.awaken .encroach, #lifepath.encroach-fixed table tbody.impulse .encroach {
+  display: none;
+}
+#lifepath.encroach-fixed table tbody.encroach-offset {
+  display: none;
+}
+#lifepath.encroach-fixed table tbody.neutral-encroach {
+  background-color: var(--box-even-rows-bg-color);
+}
+#lifepath.encroach-fixed table tbody.neutral-encroach th .suffix {
+  display: none;
+}
+#lifepath table tbody.neutral-encroach td input[name="encroachFixedValue"] {
+  display: none;
+}
+#lifepath.encroach-fixed table tbody.neutral-encroach td .calculated-value {
+  display: none;
+}
+#lifepath.encroach-fixed table tbody.neutral-encroach td input[name="encroachFixedValue"] {
+  display: initial;
+}
+#lifepath table tbody.neutral-encroach td:last-child {
+  text-align: left;
+}
+#lifepath table tbody.neutral-encroach td .check-button span {
+  border: none;
+  font-size: 80%;
+}
 @media screen and (max-width:735px){
   #lifepath table,
   #lifepath tbody,
@@ -193,6 +224,13 @@ body:not(.mode-crc) .crc-only {
   }
   #lifepath tbody:nth-child(5) tr:nth-child(2) th:nth-child(2) {
     display: none;
+  }
+  #lifepath tbody.neutral-encroach:nth-child(n+7) tr {
+    grid-template-columns: 6em 1fr auto;
+  }
+  #lifepath tbody.neutral-encroach:nth-child(n+7) tr td:last-child {
+    font-size: 80%;
+    vertical-align: middle;
   }
 }
 
