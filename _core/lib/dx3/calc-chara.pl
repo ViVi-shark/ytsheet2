@@ -72,7 +72,7 @@ sub data_calc {
     foreach my $num (1 .. $pc{'skill'.$name.'Num'}){
       my $lv = $pc{'skill'.$name.$num};
       for(my $i = 0; $i < $lv; $i++){ $pc{expUsedSkill} += ($i > 20) ? 10 : ($i > 10) ? 5 : ($i > 5) ? 3 : 1; }
-      if($pc{'skill'.$name.$num} || $pc{'skillAdd'.$name.$num}){ $pc{'skillTotal'.$name.$num} = $pc{'skill'.$name.$num} + $pc{'skillAdd'.$name.$num}; }
+      if((defined($pc{'skill'.$name.$num}) && $pc{'skill'.$name.$num} ne '') || $pc{'skillAdd'.$name.$num}){ $pc{'skillTotal'.$name.$num} = $pc{'skill'.$name.$num} + $pc{'skillAdd'.$name.$num}; }
       $skill_name_to_id{$pc{'skill'.$name.$num.'Name'}} = $name.$num if $pc{'skill'.$name.$num.'Name'};
     }
   }
@@ -217,14 +217,14 @@ sub data_calc {
     'skillAddMelee','skillAddRanged','skillAddRC','skillAddNegotiate',
     'skillAddDodge','skillAddPercept','skillAddWill','skillAddProcure',
   ){
-    delete $pc{$_} if !$pc{$_};
+    delete $pc{$_} if defined($pc{$_}) && $pc{$_} eq '';
   }
   foreach (
     'Ride','Art','Know','Info',
   ){
     foreach my $num (1..$pc{'skill'.$_.'Num'}){
-      delete $pc{'skill'.$_.$num} if !$pc{'skill'.$_.$num};
-      delete $pc{'skillAdd'.$_.$num} if !$pc{'skillAdd'.$_.$num};
+      delete $pc{'skill'.$_.$num} if defined($pc{'skill'.$_.$num}) && $pc{'skill'.$_.$num} eq '';
+      delete $pc{'skillAdd'.$_.$num} if defined($pc{'skillAdd'.$_.$num}) && $pc{'skillAdd'.$_.$num} eq '';
     }
   }
 
