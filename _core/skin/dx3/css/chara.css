@@ -181,6 +181,28 @@ table.data-table tbody tr td:nth-child(9) span.thinest.small {
   transform: scaleY(calc(1/0.8)) translateY(-.1rem);
   font-size: 70%;
 }
+table.data-table tbody span.source {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--text-color);
+  font-size: 90%;
+  border-radius: 0.5em;
+  padding: 0 0.35em;
+  line-height: 100%;
+  min-height: 1.75em;
+  max-height: 100%;
+  opacity: 0.75;
+}
+table.data-table tbody span.source .source-name.with-page::before {
+  content: "『";
+}
+table.data-table tbody span.source .source-name.with-page::after {
+  content: "』";
+}
+table.data-table tbody span.source .source-page::before {
+  content: "P";
+}
 
 /* // Area-Status
 ---------------------------------------------------------------------------------------------------- */
@@ -1167,19 +1189,19 @@ table.data-table tbody tr td:nth-child(9) span.thinest.small {
   height: 2em;
   vertical-align: bottom;
 }
-#items table thead th:nth-child(n+2) {
+#items table.data-table thead th:nth-child(n+2) {
   font-size: 90%;
 }
-#items table thead th:nth-child(1) { width:  12em; } /* 名称 */
-#items table thead th:nth-child(2) { width: 3.4em; } /* 常備化 */
-#items table thead th:nth-child(3) { width: 3.4em; } /* 経験点 */
-#items table thead th:nth-child(4) { width: 5.5em; } /* 種別 */
-#items table thead th:nth-child(5) { width: 5.9em; } /* 技能 */
-#items table thead th:nth-child(6) { width: 3.4em; } /* 命中  ／ドッジ */
-#items table thead th:nth-child(7) { width: 3.9em; } /* 攻撃力／行動 */
-#items table thead th:nth-child(8) { width: 3.4em; } /* ガード／装甲値 */
-#items table thead th:nth-child(9) { width: 3.4em; } /* 射程 */
-#items table thead th:last-child   { width: auto; text-align: left; padding-left: 1em; } /* 解説 */
+#items table.data-table thead th:nth-child(1) { width:  12em; } /* 名称 */
+#items table.data-table thead th:nth-child(2) { width: 3.4em; } /* 常備化 */
+#items table.data-table thead th:nth-child(3) { width: 3.4em; } /* 経験点 */
+#items table.data-table thead th:nth-child(4) { width: 5.5em; } /* 種別 */
+#items table.data-table thead th:nth-child(5) { width: 5.9em; } /* 技能 */
+#items table.data-table thead th:nth-child(6) { width: 3.4em; } /* 命中  ／ドッジ */
+#items table.data-table thead th:nth-child(7) { width: 3.9em; } /* 攻撃力／行動 */
+#items table.data-table thead th:nth-child(8) { width: 3.4em; } /* ガード／装甲値 */
+#items table.data-table thead th:nth-child(9) { width: 3.4em; } /* 射程 */
+#items table.data-table thead th:last-child   { width: auto; text-align: left; padding-left: 1em; } /* 解説 */
 
 #items table tbody td {
   font-family: var(--font-proportional);

@@ -299,6 +299,15 @@ table.edit-table:not(.side-margin):not(.line-tbody) tbody tr:nth-of-type(even),
 .edit-tables:not(.side-margin) table:not(.line-tbody) tbody tr:nth-of-type(even) {
   background-color: var(--box-even-rows-bg-color);
 }
+table.game-data-list tr.source td {
+  text-align: right;
+}
+table.edit-table.game-data-list tr.source input[name$="SourceName"] {
+  width: 14em;
+}
+table.edit-table.game-data-list tr.source input[name$="SourcePage"] {
+  width: 5em;
+}
 
 ul.edit-table > li,  .edit-tables ul  > li,
 dl.edit-table > *,   .edit-tables dl  > *  {

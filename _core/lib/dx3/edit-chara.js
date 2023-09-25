@@ -660,6 +660,8 @@ function effectSortAfter(){
       document.querySelector(`#${id} [name$="Restrict"]`).setAttribute('name',`effect${num}Restrict`);
       document.querySelector(`#${id} [name$="Note"]`    ).setAttribute('name',`effect${num}Note`);
       document.querySelector(`#${id} [name$="Exp"]`     ).setAttribute('name',`effect${num}Exp`);
+      document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`effect${num}SourceName`);
+      document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`effect${num}SourcePage`);
       num++;
     }
   }
@@ -681,6 +683,8 @@ function effectSortAfter(){
       document.querySelector(`#${id} [name$="Restrict"]`).setAttribute('name',`effectD${del}Restrict`);
       document.querySelector(`#${id} [name$="Note"]`    ).setAttribute('name',`effectD${del}Note`);
       document.querySelector(`#${id} [name$="Exp"]`     ).setAttribute('name',`effectD${del}Exp`);
+      document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`effectD${del}SourceName`);
+      document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`effectD${del}SourcePage`);
     }
   }
   effectTrashNum = del;
@@ -1243,7 +1247,7 @@ function delItem(){
   }
 }
 // ソート
-let itemSortable = Sortable.create(document.querySelector('#item-table tbody'), {
+let itemSortable = Sortable.create(document.querySelector('#item-table'), {
   group: "item",
   dataIdAttr: 'id',
   animation: 100,
@@ -1261,6 +1265,8 @@ let itemSortable = Sortable.create(document.querySelector('#item-table tbody'), 
         document.querySelector(`#${id} [name$="Type"]`      ).setAttribute('name',`item${num}Type`);
         document.querySelector(`#${id} [name$="Skill"]`     ).setAttribute('name',`item${num}Skill`);
         document.querySelector(`#${id} [name$="Note"]`      ).setAttribute('name',`item${num}Note`);
+        document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`item${num}SourceName`);
+        document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`item${num}SourcePage`);
         num++;
       }
     }

@@ -369,8 +369,22 @@
                 <td><TMPL_VAR RANGE>
                 <td><TMPL_VAR ENCROACH>
                 <td><TMPL_VAR RESTRICT>
-              <tr>
-                <td class="left" colspan="9"><TMPL_VAR NOTE><TMPL_IF EXP><span class="right">［<b>経験点修正</b>:<TMPL_VAR EXP>点］</span></TMPL_IF></td>
+              <tr><td class="left" colspan="9">
+                <TMPL_IF HAS_SOURCE>
+                  <span class="source">
+                    <TMPL_IF SOURCE_NAME>
+                      <TMPL_UNLESS SOURCE_PAGE>
+                        <span class="source-name"><TMPL_VAR SOURCE_NAME></span>
+                      <TMPL_ELSE>
+                        <span class="source-name with-page"><TMPL_VAR SOURCE_NAME></span>
+                      </TMPL_UNLESS>
+                    </TMPL_IF>
+                    <TMPL_IF SOURCE_PAGE><span class="source-page"><TMPL_VAR SOURCE_PAGE></span></TMPL_IF>
+                  </span>
+                </TMPL_IF>
+                <TMPL_VAR NOTE>
+                  <TMPL_IF EXP><span class="right">［<b>経験点修正</b>:<TMPL_VAR EXP>点］</span></TMPL_IF>
+              </td></tr>
             </TMPL_LOOP>
           </table>
         </section>
@@ -516,7 +530,21 @@
                   <td><TMPL_VAR EXP>
                   <td><TMPL_VAR TYPE>
                   <td><TMPL_VAR SKILL>
-                  <td class="left"><TMPL_VAR NOTE>
+                  <td class="left">
+                    <TMPL_IF HAS_SOURCE>
+                      <span class="source">
+                        <TMPL_IF SOURCE_NAME>
+                          <TMPL_UNLESS SOURCE_PAGE>
+                            <span class="source-name"><TMPL_VAR SOURCE_NAME></span>
+                          <TMPL_ELSE>
+                            <span class="source-name with-page"><TMPL_VAR SOURCE_NAME></span>
+                          </TMPL_UNLESS>
+                        </TMPL_IF>
+                        <TMPL_IF SOURCE_PAGE><span class="source-page"><TMPL_VAR SOURCE_PAGE></span></TMPL_IF>
+                      </span>
+                    </TMPL_IF>
+                    <TMPL_VAR NOTE>
+                  </td>
                 </TMPL_LOOP>
               </tbody>
             </table>
