@@ -528,9 +528,15 @@ foreach (1 .. $pc{comboNum}){
   if($blankrow == 4 && $pc{'combo'.$_.'Condition1'} eq '') {
     $pc{'combo'.$_.'Condition1'} = '―';
   }
+  my $skillIsEmpty = $pc{'combo'.$_.'Skill'} eq '' || $pc{'combo'.$_.'Skill'} =~ /^<span.+?>―<\/span>$/i;
+  my $excludeSkillAndDifficulty = (
+      $pc{'combo'.$_.'Timing'} !~ /(メジャー|リア)/ &&
+      $skillIsEmpty &&
+      $pc{'combo'.$_.'Dfclty'} eq ''
+  );
   my $excludeRange = !defined($pc{'combo'.$_.'Range'}) || $pc{'combo'.$_.'Range'} eq '';
   my $excludeTarget = $excludeRange && (!defined($pc{'combo'.$_.'Target'}) || $pc{'combo'.$_.'Target'} eq '');
-  my $excludeDiceRoll = $pc{'combo'.$_.'Skill'} eq '' || $pc{'combo'.$_.'Skill'} =~ /^<span.+?>―<\/span>$/i || $pc{'combo'.$_.'Dfclty'} eq "自動成功";
+  my $excludeDiceRoll = $skillIsEmpty || $pc{'combo'.$_.'Dfclty'} eq "自動成功";
   my $excludeAttack = (
       (!defined($pc{'combo'.$_.'Atk1'}) || $pc{'combo'.$_.'Atk1'} eq '') &&
       (!defined($pc{'combo'.$_.'Atk2'}) || $pc{'combo'.$_.'Atk2'} eq '') &&
@@ -574,6 +580,8 @@ foreach (1 .. $pc{comboNum}){
     ATK5       => $pc{'combo'.$_.'Atk5'},
     FIXED5     => $pc{'combo'.$_.'Fixed5'},
     BLANKROW   => $blankrow,
+    "EXCLUDE_SKILL" => $excludeSkillAndDifficulty ? 'yes' : 'no',
+    "EXCLUDE_DIFFICULTY" => $excludeSkillAndDifficulty ? 'yes' : 'no',
     "EXCLUDE_TARGET" => $excludeTarget ? 'yes' : 'no',
     "EXCLUDE_RANGE" => $excludeRange ? 'yes' : 'no',
     "EXCLUDE_DICE_ROLL" => $excludeDiceRoll ? 'yes' : 'no',
