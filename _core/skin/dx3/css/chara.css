@@ -1366,6 +1366,28 @@ table.data-table tbody span.source .source-page::before {
   color: #b00;
 }
 
+[data-lvb] {
+  position: relative;
+}
+[data-lvb]:not(:empty):not([data-lvb="0"]):not([data-lvb=""]) {
+  padding-right: .5em !important;
+}
+[data-lvb]:not(:empty):not([data-lvb="0"]):not([data-lvb=""])::after {
+  content: '+'attr(data-lvb);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 75%;
+  line-height: 0.8;
+  color: #b00;
+}
+.dont-level-up[data-lvb]:not(:empty):not([data-lvb="0"]):not([data-lvb=""]) {
+  padding-right: 0 !important;
+}
+.dont-level-up[data-lvb]:not(:empty):not([data-lvb="0"]):not([data-lvb=""])::after {
+  content: none;
+}
+
 /* // Free-Memo
 ---------------------------------------------------------------------------------------------------- */
 #free-note,
