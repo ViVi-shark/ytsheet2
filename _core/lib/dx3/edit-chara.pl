@@ -856,10 +856,10 @@ print <<"HTML";
       </div>
       <div class="box">
         @{[input 'vehicleNum','hidden']}
-        <table class="edit-table no-border-cells" id="vehicle-table">
+        <table class="edit-table no-border-cells game-data-list" id="vehicle-table">
           <thead>
-            <tr><th>ヴィークル<th>常備化<th>経験点<th>種別<th>技能<th>行動<th>攻撃力<th>装甲値<th><span class="small">全力移動</span><th>解説
-          <tbody>
+            <tr><th></th><th>ヴィークル</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>行動</th><th>攻撃力</th><th>装甲値</th><th><span class="small">全力移動</span></th><th>解説</th></tr>
+          </thead>
 HTML
 foreach my $num ('TMPL',1 .. $pc{vehicleNum}) {
   if($num eq 'TMPL'){ print '<template id="vehicle-template">' }
@@ -875,6 +875,13 @@ print <<"HTML";
               <td>@{[input "vehicle${num}Armor"]}
               <td>@{[input "vehicle${num}Dash"]}
               <td><textarea name="vehicle${num}Note" rows="2">$pc{"vehicle${num}Note"}</textarea>
+            <tr class="source">
+              <td colspan="10">
+                @{[input "vehicle${num}SourceName",'','','placeholder="出典" list="source-names"']}
+                @{[input "vehicle${num}SourcePage",'number','','placeholder="ページ"']}
+              </td>
+            </tr>
+          </tbody>
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }

@@ -1193,7 +1193,7 @@ function delVehicle(){
   }
 }
 // ソート
-let vehicleSortable = Sortable.create(document.querySelector('#vehicle-table tbody'), {
+let vehicleSortable = Sortable.create(document.querySelector('#vehicle-table'), {
   group: "vehicle",
   dataIdAttr: 'id',
   animation: 100,
@@ -1215,6 +1215,8 @@ let vehicleSortable = Sortable.create(document.querySelector('#vehicle-table tbo
         document.querySelector(`#${id} [name$="Armor"]`     ).setAttribute('name',`vehicle${num}Armor`);
         document.querySelector(`#${id} [name$="Dash"]`      ).setAttribute('name',`vehicle${num}Dash`);
         document.querySelector(`#${id} [name$="Note"]`      ).setAttribute('name',`vehicle${num}Note`);
+        document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`vehicle${num}SourceName`);
+        document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`vehicle${num}SourcePage`);
         num++;
       }
     }

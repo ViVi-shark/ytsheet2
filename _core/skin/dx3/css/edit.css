@@ -809,6 +809,20 @@ body:not(.mode-crc) .crc-only {
   vertical-align: middle;
   width: 1.5em;
 }
+#vehicle-table tbody:first-child {
+  border-top-width: 1px;
+}
+#vehicle-table tbody tr:last-child {
+  border-bottom-width: 1px;
+}
+#vehicle-table tbody tr {
+  border-width: 0;
+}
+#vehicle-table tbody tr.source td {
+  padding-top: 0;
+}
+#vehicle-table tbody:nth-child(odd) { background-color: var(--box-even-rows-bg-color); }
+#vehicle-table tbody tr { background-color: transparent; }
 #item-table tbody:first-child {
   border-top-width: 1px;
 }
