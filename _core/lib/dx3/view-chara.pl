@@ -334,6 +334,7 @@ foreach (1 .. 7){
     "NEGA"     => $pc{'lois'.$_.'EmoNega'},
     "P-CHECK"  => $pc{'lois'.$_.'EmoPosiCheck'},
     "N-CHECK"  => $pc{'lois'.$_.'EmoNegaCheck'},
+    "HAS-EMOTION" => !($isDLois || $isELois) || ($pc{'lois'.$_.'EmoPosi'} || $pc{'lois'.$_.'EmoNega'} || $pc{'lois'.$_.'EmoPosiCheck'} || $pc{'lois'.$_.'EmoNegaCheck'}) ? 1 : 0,
     "COLOR"    => $pc{'lois'.$_.'Color'},
     "COLOR-BG" => $color,
     "COLOR-DESCRIPTION" => $colorDescription,

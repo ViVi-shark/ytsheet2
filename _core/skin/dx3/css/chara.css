@@ -670,6 +670,9 @@ table.data-table tbody span.source .source-page::before {
 #lois table tbody td.emo.checked::before {
   color: inherit;
 }
+#lois table tbody td.emo.none::before {
+  content: none;
+}
 #lois table tbody td:nth-child(4) {
   border-style: solid hidden;
 }
