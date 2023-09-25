@@ -323,6 +323,10 @@ foreach (1 .. 7){
     $colorDescription = "自身の判定の直後。その判定に対するリアクションの達成値は０となる。また、このロイスの対象のキャラクターは、リアクションをおこなえない。";
   }
   $color = $color ? "background-color:${color};" : '';
+
+  my $isDLois = $pc{'lois'.$_.'Relation'} =~ /^[DＤ](ロイス)?/;
+  my $isELois = $pc{'lois'.$_.'Relation'} =~ /^[EＥ](ロイス)?/;
+
   push(@loises, {
     "RELATION" => $pc{'lois'.$_.'Relation'},
     "NAME"     => $pc{'lois'.$_.'Name'},
@@ -336,6 +340,7 @@ foreach (1 .. 7){
     "NOTE"     => $pc{'lois'.$_.'Note'},
     "S"        => $pc{'lois'.$_.'S'},
     "STATE"    => $pc{'lois'.$_.'State'},
+    "HAS-STATE" => !($isDLois || $isELois) || !($pc{'lois'.$_.'State'} eq 'ロイス') ? 1 : 0,
     "D"        => $pc{'lois'.$_.'Relation'} =~ /[DＤEＥ]ロイス|^[DＤEＥ]$/ ? 1 : 0
   });
   if($pc{'lois'.$_.'Name'} =~ /起源種|オリジナルレネゲイド/){ $SHEET->param(encroachOrOn => 'checked'); }
