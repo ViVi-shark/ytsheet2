@@ -630,7 +630,7 @@ table.data-table tbody span.source .source-page::before {
 #lois table tbody td:nth-child(3) { width: 4.8em; } /* 感情 */
 #lois table tbody td:nth-child(4) { width: 1.2em; }
 #lois table tbody td:nth-child(5) { width: 4.8em; }
-#lois table tbody td:nth-child(6) { width: 2.6em; } /* 属性 */
+#lois table:not(.no-color) tbody td:nth-child(6) { width: 2.6em; } /* 属性 */
 #lois table tbody td:nth-child(7) { width:  auto; } /* 備考 */
 #lois table tbody td:nth-child(8) { width: 1.5em; } /* S */
 #lois table tbody td:last-child { width: 3em; } /* 状態 */
@@ -641,7 +641,7 @@ table.data-table tbody span.source .source-page::before {
   #lois table tbody td:nth-child(3) { width: 4.8em; }
   #lois table tbody td:nth-child(4) { width: 1.2em; }
   #lois table tbody td:nth-child(5) { width: 4.8em; }
-  #lois table tbody td:nth-child(6) { width: 2.6em; }
+  #lois table:not(.no-color) tbody td:nth-child(6) { width: 2.6em; }
 }
 @media screen and (min-width:1400px) and (max-width:1680px) {
   #lois table tbody td:nth-child(2) { width: 12em; }

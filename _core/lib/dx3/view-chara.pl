@@ -287,6 +287,7 @@ $SHEET->param(Skills => \@skills);
 
 ### ロイス --------------------------------------------------
 my @loises;
+my $coloredLoisCount = 0;
 foreach (1 .. 7){
   my $color;
   my $colorDescription;
@@ -327,6 +328,10 @@ foreach (1 .. 7){
   my $isDLois = $pc{'lois'.$_.'Relation'} =~ /^[DＤ](ロイス)?/;
   my $isELois = $pc{'lois'.$_.'Relation'} =~ /^[EＥ](ロイス)?/;
 
+  if ($pc{'lois'.$_.'Color'}) {
+    $coloredLoisCount++;
+  }
+
   push(@loises, {
     "RELATION" => $pc{'lois'.$_.'Relation'},
     "NAME"     => $pc{'lois'.$_.'Name'},
@@ -347,6 +352,7 @@ foreach (1 .. 7){
   if($pc{'lois'.$_.'Name'} =~ /起源種|オリジナルレネゲイド/){ $SHEET->param(encroachOrOn => 'checked'); }
 }
 $SHEET->param(Loises => \@loises);
+$SHEET->param(HasColoredLois => $coloredLoisCount ? 1 : 0);
 
 ### メモリー --------------------------------------------------
 my @memories;
