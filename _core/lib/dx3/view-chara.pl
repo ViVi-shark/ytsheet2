@@ -288,6 +288,7 @@ $SHEET->param(Skills => \@skills);
 ### ロイス --------------------------------------------------
 my @loises;
 my $coloredLoisCount = 0;
+my $hasLoisStateColumn = 0;
 foreach (1 .. 7){
   my $color;
   my $colorDescription;
@@ -332,6 +333,23 @@ foreach (1 .. 7){
     $coloredLoisCount++;
   }
 
+  my $isEmptyRow = !(
+      $pc{'lois' . $_ . 'Relation'} ||
+          $pc{'lois' . $_ . 'Name'} ||
+          $pc{'lois' . $_ . 'EmoPosi'} ||
+          $pc{'lois' . $_ . 'EmoNega'} ||
+          $pc{'lois' . $_ . 'EmoPosiCheck'} ||
+          $pc{'lois' . $_ . 'EmoNegaCheck'} ||
+          $pc{'lois' . $_ . 'Color'} ||
+          $pc{'lois' . $_ . 'Note'} ||
+          !($pc{'lois' . $_ . 'State'} eq 'ロイス')
+  );
+
+  my $hasState = !$isEmptyRow && (!($isDLois || $isELois) || !($pc{'lois'.$_.'State'} eq 'ロイス')) ? 1 : 0;
+  if ($hasState != 0) {
+    $hasLoisStateColumn = 1;
+  }
+
   push(@loises, {
     "RELATION" => $pc{'lois'.$_.'Relation'},
     "NAME"     => $pc{'lois'.$_.'Name'},
@@ -346,13 +364,14 @@ foreach (1 .. 7){
     "NOTE"     => $pc{'lois'.$_.'Note'},
     "S"        => $pc{'lois'.$_.'S'},
     "STATE"    => $pc{'lois'.$_.'State'},
-    "HAS-STATE" => !($isDLois || $isELois) || !($pc{'lois'.$_.'State'} eq 'ロイス') ? 1 : 0,
+    "HAS-STATE" => $hasState,
     "D"        => $pc{'lois'.$_.'Relation'} =~ /[DＤEＥ]ロイス|^[DＤEＥ]$/ ? 1 : 0
   });
   if($pc{'lois'.$_.'Name'} =~ /起源種|オリジナルレネゲイド/){ $SHEET->param(encroachOrOn => 'checked'); }
 }
 $SHEET->param(Loises => \@loises);
 $SHEET->param(HasColoredLois => $coloredLoisCount ? 1 : 0);
+$SHEET->param(HasLoisStateColumn => $hasLoisStateColumn);
 
 ### メモリー --------------------------------------------------
 my @memories;
