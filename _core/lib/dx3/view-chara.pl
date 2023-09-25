@@ -531,6 +531,9 @@ foreach (1 .. $pc{armorNum}){
     DODGE      => $pc{'armor'.$_.'Dodge'},
     ARMOR      => $pc{'armor'.$_.'Armor'},
     NOTE       => $pc{'armor'.$_.'Note'},
+    "HAS_SOURCE" => $pc{'armor' . $_ . 'SourceName'} || $pc{'armor' . $_ . 'SourcePage'},
+    "SOURCE_NAME" => $pc{'armor' . $_ . 'SourceName'},
+    "SOURCE_PAGE" => $pc{'armor' . $_ . 'SourcePage'},
   });
 }
 $SHEET->param(Armors => \@armors);

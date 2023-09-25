@@ -1130,10 +1130,10 @@ function addArmor(){
 function delArmor(){
   let num = Number(form.armorNum.value);
   if(num > 1){
-    if(form[`armor${num}Name`].value || form[`armor${num}Stock`].value || form[`armor${num}Exp`].value || form[`armor${num}Initiative`].value || form[`armor${num}Dodge`].value || form[`armor${num}Armor`].value || form[`armor${num}Note`].value){
+    if(form[`armor${num}Name`].value || form[`armor${num}Stock`].value || form[`armor${num}Exp`].value || form[`armor${num}Initiative`].value || form[`armor${num}Dodge`].value || form[`armor${num}Armor`].value || form[`armor${num}Note`].value || form[`armor${num}SourceName`].value || form[`armor${num}SourcePage`].value){
       if (!confirm(delConfirmText)) return false;
     }
-    const target = document.querySelector("#armor-table tbody tr:last-of-type");
+    const target = document.querySelector("#armor-table tbody:last-of-type");
     target.parentNode.removeChild(target);
     num--;
     form.armorNum.value = num;
@@ -1141,7 +1141,7 @@ function delArmor(){
   }
 }
 // ソート
-let armorSortable = Sortable.create(document.querySelector('#armor-table tbody'), {
+let armorSortable = Sortable.create(document.querySelector('#armor-table'), {
   group: "armor",
   dataIdAttr: 'id',
   animation: 100,
@@ -1161,6 +1161,8 @@ let armorSortable = Sortable.create(document.querySelector('#armor-table tbody')
         document.querySelector(`#${id} [name$="Dodge"]`     ).setAttribute('name',`armor${num}Dodge`);
         document.querySelector(`#${id} [name$="Armor"]`     ).setAttribute('name',`armor${num}Armor`);
         document.querySelector(`#${id} [name$="Note"]`      ).setAttribute('name',`armor${num}Note`);
+        document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`armor${num}SourceName`);
+        document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`armor${num}SourcePage`);
         num++;
       }
     }

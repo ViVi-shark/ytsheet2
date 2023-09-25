@@ -809,6 +809,20 @@ body:not(.mode-crc) .crc-only {
   vertical-align: middle;
   width: 1.5em;
 }
+#armor-table tbody:first-child {
+  border-top-width: 1px;
+}
+#armor-table tbody tr:last-child {
+  border-bottom-width: 1px;
+}
+#armor-table tbody tr {
+  border-width: 0;
+}
+#armor-table tbody tr.source td {
+  padding-top: 0;
+}
+#armor-table tbody:nth-child(odd) { background-color: var(--box-even-rows-bg-color); }
+#armor-table tbody tr { background-color: transparent; }
 #vehicle-table tbody:first-child {
   border-top-width: 1px;
 }
@@ -840,15 +854,15 @@ body:not(.mode-crc) .crc-only {
 @media screen and (max-width:735px){
   #items .box { overflow-x: auto; }
   #items table  { table-layout: fixed; }
-  #items table thead th:nth-child(1) { width:  11em !important; } /* 名称 */
-  #items table thead th:nth-child(2) { width:   4em !important; } /* 常備化 */
-  #items table thead th:nth-child(3) { width:   4em !important; } /* 経験点 */
-  #items table thead th:nth-child(4) { width:   8em !important; } /* 種別 */
-  #items table thead th:nth-child(5) { width:   8em !important; } /* 技能 */
-  #items table thead th:nth-child(6) { width: 4.5em !important; } /* 命中  ／ドッジ */
-  #items table thead th:nth-child(7) { width:   6em !important; } /* 攻撃力／行動 */
-  #items table thead th:nth-child(8) { width: 4.5em !important; } /* ガード／装甲値 */
-  #items table thead th:nth-child(9) { width: 4.5em !important; } /* 射程 */
+  #items table thead th:nth-child(2) { width:  11em !important; } /* 名称 */
+  #items table thead th:nth-child(3) { width:   4em !important; } /* 常備化 */
+  #items table thead th:nth-child(4) { width:   4em !important; } /* 経験点 */
+  #items table thead th:nth-child(5) { width:   8em !important; } /* 種別 */
+  #items table thead th:nth-child(6) { width:   8em !important; } /* 技能 */
+  #items table thead th:nth-child(7) { width: 4.5em !important; } /* 命中  ／ドッジ */
+  #items table thead th:nth-child(8) { width:   6em !important; } /* 攻撃力／行動 */
+  #items table thead th:nth-child(9) { width: 4.5em !important; } /* ガード／装甲値 */
+  #items table thead th:nth-child(10) { width: 4.5em !important; } /* 射程 */
   #items table thead th:last-child   { width:  16em !important; } /* 解説 */
   #items table tbody td { width: auto !important; }
 }
