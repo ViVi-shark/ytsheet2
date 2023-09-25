@@ -667,6 +667,28 @@ table.data-table tbody span.source .source-page::before {
 #lois table tbody td:nth-child(4) {
   border-style: solid hidden;
 }
+#lois table tbody td.color {
+  position: relative;
+}
+#lois table tbody td.color .color-description {
+  display: none;
+}
+#lois table tbody td.color:hover .color-description {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  left: 1em;
+  top: 1em;
+  width: min(30em, 30vw);
+  height: auto;
+  border: 1px solid gray;
+  background-color: var(--bg-color);
+  text-align: left;
+  font-size: smaller;
+  padding: 0.5em;
+  border-radius: 0.6em;
+  opacity: 0.9;
+}
 #lois table tbody td.left {
   padding-left: .5em;
 }
