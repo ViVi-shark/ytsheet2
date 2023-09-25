@@ -529,6 +529,7 @@ foreach (1 .. $pc{comboNum}){
     $pc{'combo'.$_.'Condition1'} = '―';
   }
   my $excludeRange = !defined($pc{'combo'.$_.'Range'}) || $pc{'combo'.$_.'Range'} eq '';
+  my $excludeTarget = $excludeRange && (!defined($pc{'combo'.$_.'Target'}) || $pc{'combo'.$_.'Target'} eq '');
   my $excludeDiceRoll = $pc{'combo'.$_.'Skill'} eq '' || $pc{'combo'.$_.'Skill'} =~ /^<span.+?>―<\/span>$/i || $pc{'combo'.$_.'Dfclty'} eq "自動成功";
   my $excludeAttack = (
       (!defined($pc{'combo'.$_.'Atk1'}) || $pc{'combo'.$_.'Atk1'} eq '') &&
@@ -573,6 +574,7 @@ foreach (1 .. $pc{comboNum}){
     ATK5       => $pc{'combo'.$_.'Atk5'},
     FIXED5     => $pc{'combo'.$_.'Fixed5'},
     BLANKROW   => $blankrow,
+    "EXCLUDE_TARGET" => $excludeTarget ? 'yes' : 'no',
     "EXCLUDE_RANGE" => $excludeRange ? 'yes' : 'no',
     "EXCLUDE_DICE_ROLL" => $excludeDiceRoll ? 'yes' : 'no',
     "EXCLUDE_ATK" => $excludeAttack ? 'yes' : 'no',
