@@ -437,7 +437,7 @@
         <section class="box" id="combo">
           <h2>コンボ</h2>
           <button class="open-button" onclick="swapComboDisplayMode();" data-open="true" data-text-open="詳細表示にする" data-text-close="簡易表示にする"></button>
-          <TMPL_LOOP Combos><div class="combo-table" data-exclude-dice-roll="<TMPL_VAR EXCLUDE_DICE_ROLL>" data-exclude-atk="<TMPL_VAR EXCLUDE_ATK>">
+          <TMPL_LOOP Combos><div class="combo-table" data-exclude-range="<TMPL_VAR EXCLUDE_RANGE>" data-exclude-dice-roll="<TMPL_VAR EXCLUDE_DICE_ROLL>" data-exclude-atk="<TMPL_VAR EXCLUDE_ATK>">
             <h3><span><TMPL_VAR NAME></span></h3>
             <dl class="combo-combo"><dt>組み合わせ<dd><span><TMPL_VAR COMBO></span></dl>
             <div class="combo-in">

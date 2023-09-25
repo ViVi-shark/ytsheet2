@@ -1113,6 +1113,9 @@ table.data-table tbody span.source .source-page::before {
   }
 }
 
+#combo .combo-table[data-exclude-range="yes"] .combo-in > dl:nth-child(5) {
+  display: none;
+}
 #combo .combo-table[data-exclude-dice-roll="yes"] .combo-cond {
   grid-column: 1 / span 4;
 }
