@@ -188,7 +188,7 @@ table.data-table tbody span.source {
   border: 1px solid var(--text-color);
   font-size: 90%;
   border-radius: 0.5em;
-  padding: 0 0.35em;
+  padding: 0.35em;
   line-height: 100%;
   min-height: 1.75em;
   max-height: 100%;
@@ -199,6 +199,9 @@ table.data-table tbody span.source .source-name.with-page::before {
 }
 table.data-table tbody span.source .source-name.with-page::after {
   content: "』";
+}
+table.data-table tbody span.source .source-page {
+  word-break: keep-all;
 }
 table.data-table tbody span.source .source-page::before {
   content: "P";

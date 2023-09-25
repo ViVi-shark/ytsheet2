@@ -1079,7 +1079,7 @@ function delWeapon(){
     if(form[`weapon${num}Name`].value || form[`weapon${num}Stock`].value || form[`weapon${num}Exp`].value || form[`weapon${num}Type`].value || form[`weapon${num}Skill`].value || form[`weapon${num}Acc`].value || form[`weapon${num}Atk`].value || form[`weapon${num}Guard`].value || form[`weapon${num}Range`].value || form[`weapon${num}Note`].value){
       if (!confirm(delConfirmText)) return false;
     }
-    const target = document.querySelector("#weapon-table tbody tr:last-of-type");
+    const target = document.querySelector("#weapon-table tbody:last-of-type");
     target.parentNode.removeChild(target);
     num--;
     form.weaponNum.value = num;
@@ -1087,7 +1087,7 @@ function delWeapon(){
   }
 }
 // ソート
-let weaponSortable = Sortable.create(document.querySelector('#weapon-table tbody'), {
+let weaponSortable = Sortable.create(document.querySelector('#weapon-table'), {
   group: "weapon",
   dataIdAttr: 'id',
   animation: 100,
@@ -1109,6 +1109,8 @@ let weaponSortable = Sortable.create(document.querySelector('#weapon-table tbody
         document.querySelector(`#${id} [name$="Guard"]`).setAttribute('name',`weapon${num}Guard`);
         document.querySelector(`#${id} [name$="Range"]`).setAttribute('name',`weapon${num}Range`);
         document.querySelector(`#${id} [name$="Note"]` ).setAttribute('name',`weapon${num}Note`);
+        document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`weapon${num}SourceName`);
+        document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`weapon${num}SourcePage`);
         num++;
       }
     }
