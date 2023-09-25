@@ -710,7 +710,7 @@ print <<"HTML";
         <i class="material-symbols-outlined close-button" onclick="document.getElementById('magic-trash').style.display = 'none';">close</i>
       </div>
       
-      <details class="box" id="combo" $open{combo} style="position:relative">
+      <details class="box" id="combo" $open{combo} style="position:relative" open>
         <summary>コンボ</summary>
         @{[input 'comboNum','hidden']}
         <div id="combo-list">
