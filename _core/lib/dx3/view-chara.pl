@@ -554,6 +554,9 @@ foreach (1 .. $pc{vehicleNum}){
     ARMOR      => $pc{'vehicle'.$_.'Armor'},
     DASH       => $pc{'vehicle'.$_.'Dash'},
     NOTE       => $pc{'vehicle'.$_.'Note'},
+    "HAS_SOURCE" => $pc{'vehicle' . $_ . 'SourceName'} || $pc{'vehicle' . $_ . 'SourcePage'},
+    "SOURCE_NAME" => $pc{'vehicle' . $_ . 'SourceName'},
+    "SOURCE_PAGE" => $pc{'vehicle' . $_ . 'SourcePage'},
   });
 }
 $SHEET->param(Vehicles => \@vehicles);
