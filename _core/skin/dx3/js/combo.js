@@ -65,6 +65,119 @@
         return `侵蝕値：${sourceText}`;
     }
 
+    function searchDataByName(dataName) {
+        for (const node of document.querySelectorAll('#effect table tbody')) {
+            const effectName = node.querySelector('tr:first-child td.name').textContent.trim();
+
+            if (effectName !== dataName) {
+                continue;
+            }
+
+            const タイミング = node.querySelector('tr:first-child td:nth-child(4)').textContent.trim();
+            const 技能 = node.querySelector('tr:first-child td:nth-child(5)').textContent.trim();
+            const 難易度 = node.querySelector('tr:first-child td:nth-child(6)').textContent.trim();
+            const 対象 = node.querySelector('tr:first-child td:nth-child(7)').textContent.trim();
+            const 射程 = node.querySelector('tr:first-child td:nth-child(8)').textContent.trim();
+            const 制限 = node.querySelector('tr:first-child td:nth-child(10)').textContent.trim();
+
+            const 効果Node = node.querySelector('tr:nth-child(2) td:first-child').cloneNode(true);
+            const sourceName = 効果Node.querySelector('.source .source-name')?.textContent.trim();
+            const sourcePage = 効果Node.querySelector('.source .source-page')?.textContent.trim();
+            効果Node.querySelector('.source')?.remove();
+            効果Node.querySelector('.right')?.remove();
+            const 効果 = 効果Node.textContent.trim();
+
+            const properties = [];
+
+            for (const [label, value] of [
+                ["タイミング", タイミング],
+                ["技能", 技能.replace(':', '：').replace('RC', 'ＲＣ')],
+                ["難易度", 難易度],
+                ["射程", 射程],
+                ["対象", 対象],
+                ["制限", 制限],
+            ]) {
+                if (value === '' || value === '－' || value === '―') {
+                    continue;
+                }
+
+                properties.push(`${label}：${value}`);
+            }
+
+            return [
+                properties.length > 0 ? properties.join('、') + '。' : null,
+                sourceName != null && sourcePage != null
+                    ? `『${sourceName}』P${sourcePage}。`
+                    : null,
+                効果 !== '' ? 効果 : null,
+            ].filter(x => x != null).join('<br>');
+        }
+
+        for (const node of document.querySelectorAll('#lois table tbody tr')) {
+            const loisKind = node.querySelector('td:nth-child(1)').textContent.trim();
+            const loisName = node.querySelector('td:nth-child(2)').textContent.trim();
+
+            if (loisName !== dataName || !/^[DＤEＥ](ロイス)?$/.test(loisKind)) {
+                continue;
+            }
+
+            const 効果Node = node.querySelector('td:last-child').cloneNode(true);
+            const sourceName = 効果Node.querySelector('.source .source-name')?.textContent.trim();
+            const sourcePage = 効果Node.querySelector('.source .source-page')?.textContent.trim();
+            効果Node.querySelector('.source')?.remove();
+            const 効果 = 効果Node.textContent.trim();
+
+            if (効果 === '') {
+                continue;
+            }
+
+            return [
+                sourceName != null && sourcePage != null
+                    ? `『${sourceName}』P${sourcePage}。`
+                    : null,
+                効果 !== '' ? 効果 : null,
+            ].filter(x => x != null).join('<br>');
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {string} sourceText
+     */
+    function makeTooltip(sourceText) {
+        const matches = sourceText.matchAll(/(《(.+?)》|[EＥ]ロイス「(.+?)」)/g);
+
+        if (matches == null) {
+            return sourceText;
+        }
+
+        const parts = [];
+        let lastIndex = 0;
+
+        for (const match of matches) {
+            const previous = sourceText.substring(lastIndex, match.index);
+            parts.push(previous);
+
+            const dataName = match[2] || match[3];
+            const data = searchDataByName(dataName);
+
+            if (data == null) {
+                parts.push(match[0]);
+            } else {
+                parts.push(`<tip>${match[0]}=>${data}</tip>`);
+            }
+
+            lastIndex = match.index + match[0].length;
+        }
+
+        if (lastIndex < sourceText.length) {
+            parts.push(sourceText.substring(lastIndex));
+        }
+
+        return parts.join('');
+    }
+
     function makePatternsText(難易度, patternsNode) {
         /**
          * @param {string} sourceCommand
@@ -154,7 +267,7 @@
 
                 patternsNode.querySelectorAll(`dd.${className}`).forEach(
                     (node, index) => {
-                        const value = node.textContent;
+                        const value = node.textContent.trim();
                         if (/^\s*[\-―－]?\s*$/.test(value)) {
                             return;
                         }
@@ -206,22 +319,26 @@
                 line => /^([~～]?\d+[%％]|\d+[~～](\d+)?[%％])/.test(line) ? '・' + wrapByTag(line, 'small') : line
             ).join('\n');
 
-            const 構成 = 組み合わせ != null ? 組み合わせ : '構成：－';
+            const 構成 = 組み合わせ != null && 組み合わせ !== '－' && 組み合わせ !== '―' ? makeTooltip(組み合わせ) : '構成：－';
 
             const パターン = makePatternsText(難易度, comboNode.querySelector('.combo-out'));
 
             const 対象_composed = [`「射程：${射程}」`, `「対象：${対象}」`].filter(x => !(/：」$/).test(x)).join('');
             const 効果_resolved =
                 (
-                    /^\s*[\-―－]?\s*$/.test(タイミング) || ['メジャー', 'メジャーアクション', 'オート', 'オートアクション'].includes(タイミング)
+                    /^\s*[\-―－]?\s*$/.test(タイミング) ||
+                    /^（.+）$/.test(タイミング) ||
+                    ['メジャー', 'メジャーアクション', 'オート', 'オートアクション'].includes(タイミング)
                         ? ''
                         : `${タイミング}。`
-                ) + 効果.replace('対象', 対象_composed);
+                ) + makeTooltip(効果.replace('対象', 対象_composed));
 
             const 全文 = [
                 [
-                    名称 != null && 名称 !== '' ? `〚${名称}〛` : null,
-                    `${構成}${侵蝕値 != null ? wrapByTag(`（${侵蝕値}）`, 'small') : ''}`
+                    名称 != null && 名称 !== '' && 名称 !== '－' && 名称 !== '―' ? `〚${名称}〛` : null,
+                    (名称 == null || 名称 === '' || 名称 === '－' || 名称 === '―') && 構成 === '構成：－'
+                        ? null
+                        : `${構成}${侵蝕値 != null ? wrapByTag(`（${侵蝕値}）`, 'small') : ''}`
                 ]
                     .filter(x => x != null && x !== '')
                     .join('――'),
