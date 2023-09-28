@@ -206,7 +206,7 @@
                 <td colspan="2"><TMPL_VAR lifepathEncounter></td>
             <tbody class="awaken">
               <tr>
-                <th class="left">覚醒
+                <th class="left" colspan="2">覚醒
                 <th class="small encroach">侵蝕値
                 <td rowspan="2" class="left"><TMPL_VAR lifepathAwakenNote>
               <tr>
@@ -214,7 +214,7 @@
                 <td class="center encroach"><TMPL_VAR lifepathAwakenEncroach>
             <tbody class="impulse">
               <tr>
-                <th class="left">衝動
+                <th class="left" colspan="2">衝動
                 <th class="small encroach">侵蝕値
                 <td rowspan="2" class="left"><TMPL_VAR lifepathImpulseNote>
               <tr>
@@ -230,6 +230,7 @@
             <tbody class="neutral-encroach">
               <tr><th class="right">侵蝕率<span class="suffix">基本値</span>
                 <td class="center bold"><TMPL_IF encroachFixed><TMPL_VAR encroachFixedValue><TMPL_ELSE><TMPL_VAR baseEncroach></TMPL_IF>
+                <td>
               </tr>
             </tbody>
           </table>
