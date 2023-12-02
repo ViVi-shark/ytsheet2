@@ -1421,6 +1421,7 @@ print <<"HTML";
   <datalist id="list-armor-type">
     <option value="防具">
     <option value="防具※">
+    <option value="防具（補助）">
     <option value="エンブレム／防具">
     <option value="リレーション／防具">
     <option value="カスタマイズ（防具）">
