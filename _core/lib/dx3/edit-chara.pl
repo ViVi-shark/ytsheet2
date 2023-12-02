@@ -1433,6 +1433,7 @@ print <<"HTML";
   </datalist>
   <datalist id="list-item-type">
     <option value="コネ">
+    <option value="一般">
     <option value="その他">
     <option value="使い捨て">
     <option value="エンブレム／その他">
