@@ -1174,7 +1174,7 @@ function addVehicle(){
   let row = document.querySelector('#vehicle-template').content.firstElementChild.cloneNode(true);
   row.id = idNumSet('vehicle');
   row.innerHTML = row.innerHTML.replaceAll('TMPL', num);
-  document.querySelector("#vehicle-table tbody").append(row);
+  document.querySelector("#vehicle-table").append(row);
   
   form.vehicleNum.value = num;
 }
