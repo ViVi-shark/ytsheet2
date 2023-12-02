@@ -801,7 +801,7 @@ print <<"HTML";
         @{[input 'weaponNum','hidden']}
         <table class="edit-table no-border-cells game-data-list" id="weapon-table">
           <thead>
-            <tr><th></th><th>武器</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>命中</th><th>攻撃力</th><th><span class="small">ガード値</span></th><th>射程</th><th>解説</th></tr>
+            <tr><th>武器</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>命中</th><th>攻撃力</th><th><span class="small">ガード値</span></th><th>射程</th><th>解説</th></tr>
           </thead>
           <tbody>
 HTML
@@ -836,7 +836,7 @@ print <<"HTML";
         @{[input 'armorNum','hidden']}
         <table class="edit-table no-border-cells game-data-list" id="armor-table">
           <thead>
-            <tr><th></th><th>防具</th><th>常備化</th><th>経験点</th><th>種別</th><th></th><th>行動</th><th>ドッジ</th><th>装甲値</th><th>解説</th></tr>
+            <tr><th>防具</th><th>常備化</th><th>経験点</th><th>種別</th><th></th><th>行動</th><th>ドッジ</th><th>装甲値</th><th>解説</th></tr>
           </thead>
           <tbody>
 HTML
@@ -871,12 +871,13 @@ print <<"HTML";
         @{[input 'vehicleNum','hidden']}
         <table class="edit-table no-border-cells game-data-list" id="vehicle-table">
           <thead>
-            <tr><th></th><th>ヴィークル</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>行動</th><th>攻撃力</th><th>装甲値</th><th><span class="small">全力移動</span></th><th>解説</th></tr>
+            <tr><th>ヴィークル</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>行動</th><th>攻撃力</th><th>装甲値</th><th><span class="small">全力移動</span></th><th>解説</th></tr>
           </thead>
 HTML
 foreach my $num ('TMPL',1 .. $pc{vehicleNum}) {
   if($num eq 'TMPL'){ print '<template id="vehicle-template">' }
 print <<"HTML";
+          <tbody>
             <tr id="vehicle${num}">
               <td>@{[input "vehicle${num}Name"]}<span class="handle"></span>
               <td>@{[input "vehicle${num}Stock",'number','calcItem']}
@@ -906,12 +907,13 @@ print <<"HTML";
         @{[input 'itemNum','hidden']}
         <table class="edit-table no-border-cells game-data-list" id="item-table">
           <thead>
-            <tr><th></th><th>一般アイテム</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>解説</th></tr>
+            <tr><th>一般アイテム</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>解説</th></tr>
           </thead>
 HTML
 foreach my $num ('TMPL',1 .. $pc{itemNum}) {
   if($num eq 'TMPL'){ print '<template id="item-template">' }
 print <<"HTML";
+          <tbody>
             <tr id="item${num}">
               <td>@{[input "item${num}Name"]}<span class="handle"></span>
               <td>@{[input "item${num}Stock",'number','calcItem']}
