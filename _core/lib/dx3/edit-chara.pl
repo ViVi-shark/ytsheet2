@@ -1179,7 +1179,7 @@ print <<"HTML";
     <option value="レネゲイドウォー">
     <option value="カッティングエッジ">
     <option value="バッドシティ">
-    <option value="アンチャートシンドローム：プレサージ">
+    <option value="アンチャートシンドローム">
   </datalist>
   <datalist id="list-gender">
     <option value="男">
