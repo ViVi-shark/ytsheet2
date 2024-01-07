@@ -271,6 +271,9 @@ $SHEET->param(hasEncroachOffset => $pc{'lifepathOtherEncroach'} || $pc{'lifepath
 
 ### 能力値 --------------------------------------------------
 $SHEET->param('sttWorks'.ucfirst($pc{sttWorks}) => 1);
+foreach my $name ('Body','Sense','Mind','Social') {
+  $SHEET->param('sttBaseBreakdown'.$name => defined($pc{'sttSyn2'.$name}) ? "$pc{'sttSyn1'.$name}＋$pc{'sttSyn2'.$name}" : "$pc{'sttSyn1'.$name}×2");
+}
 
 ### 技能 --------------------------------------------------
 foreach my $name ('Melee','Ranged','RC','Negotiate','Dodge','Percept','Will','Procure'){
