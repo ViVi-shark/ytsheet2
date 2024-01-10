@@ -542,6 +542,7 @@ $SHEET->param(Magics => \@magics);
 
 ### コンボ --------------------------------------------------
 my @combos;
+my $comboNum = 0;
 sub optimizeOperand {
   my $expression = shift;
   while (1) {
@@ -633,9 +634,10 @@ foreach (1 .. $pc{comboNum}){
     "EXCLUDE_DICE_ROLL" => $excludeDiceRoll ? 'yes' : 'no',
     "EXCLUDE_ATK" => $excludeAttack ? 'yes' : 'no',
   });
+  $comboNum++;
 }
 $SHEET->param(Combos => \@combos);
-$SHEET->param(ComboNum => @combos ? $#combos : 0);
+$SHEET->param(ComboNum => $comboNum);
 sub textCombo {
   my $text = shift;
   if($text =~ /《.*?》/){
