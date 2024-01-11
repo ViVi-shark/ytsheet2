@@ -438,6 +438,7 @@ $SHEET->param(Memories => \@memories);
 
 ### エフェクト --------------------------------------------------
 my @effects;
+my $effectNum = 0;
 foreach (1 .. $pc{effectNum}){
   next if(
     !$pc{'effect'.$_.'Name'}  && !$pc{'effect'.$_.'Lv'}       && !$pc{'effect'.$_.'Timing'} &&
@@ -463,9 +464,10 @@ foreach (1 .. $pc{effectNum}){
     "SOURCE_NAME" => $pc{'effect' . $_ . 'SourceName'},
     "SOURCE_PAGE" => $pc{'effect' . $_ . 'SourcePage'},
   });
+  $effectNum++;
 }
 $SHEET->param(Effects => \@effects);
-$SHEET->param(EffectNum => @effects ? $#effects : 0);
+$SHEET->param(EffectNum => $effectNum);
 sub textTiming {
   my $text = shift;
   $text =~ s#([^<])[／\/]#$1<hr class="dotted">#g;
