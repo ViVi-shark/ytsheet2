@@ -66,8 +66,37 @@
     }
 
     function searchDataByName(dataName) {
+        /**
+         * @param {HTMLElement} nameNode
+         */
+        function extractSimpleNameByNode(nameNode) {
+            const cloned = nameNode.cloneNode(true);
+            cloned.querySelectorAll('ruby rp').forEach(x => x.remove());
+            cloned.querySelectorAll('ruby rt').forEach(x => x.remove());
+            return cloned.textContent.trim();
+        }
+
+        /**
+         * @param {HTMLElement} node
+         * @return {{効果: string, source: {name: string, page: string}|null}}
+         */
+        function parseDetailsNode(node) {
+            const clonedNode = node.cloneNode(true);
+            const sourceName = clonedNode.querySelector('.source .source-name')?.textContent.trim();
+            const sourcePage = clonedNode.querySelector('.source .source-page')?.textContent.trim();
+            clonedNode.querySelector('.source')?.remove();
+            clonedNode.querySelector('.right')?.remove();
+            const 効果 = clonedNode.textContent.trim();
+
+            const source = sourceName == null || sourcePage == null
+                ? null
+                : {name: sourceName, page: sourcePage};
+
+            return {効果, source};
+        }
+
         for (const node of document.querySelectorAll('#effect table tbody')) {
-            const effectName = node.querySelector('tr:first-child td.name').textContent.trim();
+            const effectName = extractSimpleNameByNode(node.querySelector('tr:first-child td.name'));
 
             if (effectName !== dataName) {
                 continue;
@@ -80,12 +109,7 @@
             const 射程 = node.querySelector('tr:first-child td:nth-child(8)').textContent.trim();
             const 制限 = node.querySelector('tr:first-child td:nth-child(10)').textContent.trim();
 
-            const 効果Node = node.querySelector('tr:nth-child(2) td:first-child').cloneNode(true);
-            const sourceName = 効果Node.querySelector('.source .source-name')?.textContent.trim();
-            const sourcePage = 効果Node.querySelector('.source .source-page')?.textContent.trim();
-            効果Node.querySelector('.source')?.remove();
-            効果Node.querySelector('.right')?.remove();
-            const 効果 = 効果Node.textContent.trim();
+            const details = parseDetailsNode(node.querySelector('tr:nth-child(2) td:first-child'));
 
             const properties = [];
 
@@ -106,36 +130,68 @@
 
             return [
                 properties.length > 0 ? properties.join('、') + '。' : null,
-                sourceName != null && sourcePage != null
-                    ? `『${sourceName}』P${sourcePage}。`
+                details.source != null
+                    ? `『${details.source.name}』P${details.source.page}。`
                     : null,
-                効果 !== '' ? 効果 : null,
+                details.効果 !== '' ? details.効果 : null,
             ].filter(x => x != null).join('<br>');
         }
 
         for (const node of document.querySelectorAll('#lois table tbody tr')) {
             const loisKind = node.querySelector('td:nth-child(1)').textContent.trim();
-            const loisName = node.querySelector('td:nth-child(2)').textContent.trim();
+            const loisName = extractSimpleNameByNode(node.querySelector('td:nth-child(2)'));
 
             if (loisName !== dataName || !/^[DＤEＥ](ロイス)?$/.test(loisKind)) {
                 continue;
             }
 
-            const 効果Node = node.querySelector('td:last-child').cloneNode(true);
-            const sourceName = 効果Node.querySelector('.source .source-name')?.textContent.trim();
-            const sourcePage = 効果Node.querySelector('.source .source-page')?.textContent.trim();
-            効果Node.querySelector('.source')?.remove();
-            const 効果 = 効果Node.textContent.trim();
+            const details = parseDetailsNode(node.querySelector('td:last-child'));
 
-            if (効果 === '') {
+            if (details.効果 === '') {
                 continue;
             }
 
             return [
-                sourceName != null && sourcePage != null
-                    ? `『${sourceName}』P${sourcePage}。`
+                details.source != null
+                    ? `『${details.source.name}』P${details.source.page}。`
                     : null,
-                効果 !== '' ? 効果 : null,
+                details.効果 !== '' ? details.効果 : null,
+            ].filter(x => x != null).join('<br>');
+        }
+
+        for (const node of document.querySelectorAll('#items .data-table tbody tr')) {
+            const itemName = extractSimpleNameByNode(node.querySelector('td:nth-child(1)'));
+
+            if (itemName !== dataName) {
+                continue;
+            }
+
+            const 種別 = node.querySelector('tr:first-child td:nth-child(4)').textContent.trim();
+
+            const details = parseDetailsNode(node.querySelector('td:last-child'));
+
+            if (details.効果 === '') {
+                continue;
+            }
+
+            const properties = [];
+
+            for (const [label, value] of [
+                ["種別", 種別],
+            ]) {
+                if (value === '' || value === '－' || value === '―') {
+                    continue;
+                }
+
+                properties.push(`${label}：${value}`);
+            }
+
+            return [
+                properties.length > 0 ? properties.join('、') + '。' : null,
+                details.source != null
+                    ? `『${details.source.name}』P${details.source.page}。`
+                    : null,
+                details.効果 !== '' ? details.効果 : null,
             ].filter(x => x != null).join('<br>');
         }
 
@@ -146,7 +202,7 @@
      * @param {string} sourceText
      */
     function makeTooltip(sourceText) {
-        const matches = sourceText.matchAll(/(《(.+?)》|[EＥ]ロイス「(.+?)」)/g);
+        const matches = sourceText.matchAll(/(《(.+?)》|[DＤEＥ]ロイス「(.+?)」|(?:アイテム|[🗡️🧥🚗🧰])「(.+?)」)/g);
 
         if (matches == null) {
             return sourceText;
@@ -159,7 +215,7 @@
             const previous = sourceText.substring(lastIndex, match.index);
             parts.push(previous);
 
-            const dataName = match[2] || match[3];
+            const dataName = match[2] || match[3] || match[4];
             const data = searchDataByName(dataName);
 
             if (data == null) {
@@ -224,8 +280,8 @@
 
             if (条件 == null) {
                 return [
-                    command != null ? `判定： ${command}` : null,
-                    攻撃力 != null ? `攻撃力：${['+', '-'].includes(攻撃力.substring(0, 1)) ? '' : '+'}${攻撃力}` : null,
+                    command != null ? `判定： <snippet>${command}</snippet>` : null,
+                    攻撃力 != null ? `攻撃力： <snippet>${['+', '-'].includes(攻撃力.substring(0, 1)) ? '' : '+'}${攻撃力}</snippet>` : null,
                 ]
                     .filter(x => x != null)
                     .join(' ，');
@@ -233,8 +289,8 @@
 
             return '| ' + [
                 条件,
-                command,
-                攻撃力 != null ? `${['+', '-'].includes(攻撃力.substring(0, 1)) ? '' : '+'}${攻撃力}` : null,
+                `<snippet>${command}</snippet>`,
+                攻撃力 != null ? `<snippet>${['+', '-'].includes(攻撃力.substring(0, 1)) ? '' : '+'}${攻撃力}</snippet>` : null,
             ]
                 .map(x => x != null ? wrapByTag(x, 'small') : '')
                 .join(' | ') + ' |';
