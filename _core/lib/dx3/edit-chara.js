@@ -1235,7 +1235,7 @@ function addItem(){
   let row = document.querySelector('#item-template').content.firstElementChild.cloneNode(true);
   row.id = idNumSet('item');
   row.innerHTML = row.innerHTML.replaceAll('TMPL', num);
-  document.querySelector("#item-table tbody").append(row);
+  document.querySelector("#item-table").append(row);
   
   form.itemNum.value = num;
 }
