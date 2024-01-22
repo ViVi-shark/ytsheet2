@@ -14,6 +14,8 @@
                     return text => text;
                 } else {
                     switch (node.classList[0]) {
+                        case 'underline':
+                            return text => `<u>${text}</u>`;
                         case 'oblique':
                             return text => `<i>${text}</i>`;
                         case 'head-of-line':
@@ -102,7 +104,7 @@
                 continue;
             }
 
-            const タイミング = node.querySelector('tr:first-child td:nth-child(4)').textContent.trim();
+            const タイミング = new Array(...node.querySelectorAll('tr:first-child td:nth-child(4) span:not(.shorten)')).map(x => x.textContent.trim()).join('／');
             const 技能 = node.querySelector('tr:first-child td:nth-child(5)').textContent.trim();
             const 難易度 = node.querySelector('tr:first-child td:nth-child(6)').textContent.trim();
             const 対象 = node.querySelector('tr:first-child td:nth-child(7)').textContent.trim();
@@ -121,7 +123,17 @@
                 ["対象", 対象],
                 ["制限", 制限],
             ]) {
-                if (value === '' || value === '－' || value === '―') {
+                if (
+                    (value === '' || value === '－' || value === '―') &&
+                    !(
+                        label === '制限' &&
+                        value !== '' &&
+                        (
+                            タイミング === 'オートアクション' ||
+                            (難易度 === '自動成功' || 難易度 === '' || 難易度 === '－' && 難易度 === '―')
+                        )
+                    )
+                ) {
                     continue;
                 }
 
@@ -166,7 +178,7 @@
                 continue;
             }
 
-            const 種別 = node.querySelector('tr:first-child td:nth-child(4)').textContent.trim();
+            const 種別 = node.querySelector('td:nth-child(4)').textContent.trim();
 
             const details = parseDetailsNode(node.querySelector('td:last-child'));
 
@@ -361,6 +373,22 @@
         ) + (has攻撃力 ? patternsText : patternsText.replaceAll(/\|\s+\|$/mg, '|'));
     }
 
+    function makeSnippets(text) {
+        return text
+            .replaceAll(
+                /(\s)(@\S+?[+\-=:/]\d+(?:\/\d+)?)(\s)/g,
+                '$1<snippet>$2</snippet>$3'
+            )
+            .replaceAll(
+                /(\s)(\d+[Dd](?:10)?(?:[+\-\d]+)*)(\s)/g,
+                '$1<snippet>$2</snippet>$3'
+            )
+            .replace(
+                /(\s)(@(?:un)?check)(\s)/,
+                '$1<snippet>$2</snippet>$3'
+            );
+    }
+
     document.querySelectorAll('#combo .combo-table').forEach(
         comboNode => {
 
@@ -377,7 +405,9 @@
 
             const 構成 = 組み合わせ != null && 組み合わせ !== '－' && 組み合わせ !== '―' ? makeTooltip(組み合わせ) : '構成：－';
 
-            const パターン = makePatternsText(難易度, comboNode.querySelector('.combo-out'));
+            const パターン = 構成.includes("《イベイジョン》")
+                ? ''
+                : makePatternsText(難易度, comboNode.querySelector('.combo-out'));
 
             const 対象_composed = [`「射程：${射程}」`, `「対象：${対象}」`].filter(x => !(/：」$/).test(x)).join('');
             const 効果_resolved =
@@ -386,8 +416,12 @@
                     /^（.+）$/.test(タイミング) ||
                     ['メジャー', 'メジャーアクション', 'オート', 'オートアクション'].includes(タイミング)
                         ? ''
-                        : `${タイミング}。`
-                ) + makeTooltip(効果.replace('対象', 対象_composed));
+                        : `${タイミング}。` + (効果.startsWith('・') ? '\n' : '')
+                ) + (
+                    効果.includes("[対象]") || 対象 === '自身' || 対象_composed === ''
+                        ? ''
+                        : `${対象_composed}\n`
+                ) + makeTooltip(makeSnippets(効果).replace("[対象]", 対象_composed));
 
             const 全文 = [
                 [
