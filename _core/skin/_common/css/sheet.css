@@ -340,6 +340,9 @@ details:not([open]).box > summary:hover {
   margin-top: 0em;
   padding-top: 0;
 }
+.box p.before-margin {
+  margin-top: 1em;
+}
 
 .box a[target="_blank"]::after,
 .image a[target="_blank"]::after {

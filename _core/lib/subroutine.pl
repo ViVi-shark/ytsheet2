@@ -628,6 +628,17 @@ sub nameToPlain {
   return $name;
 }
 
+sub splitParagraph {
+  my $text = shift;
+
+  $text =~ s#<br>#</p><p>#gi;
+  $text =~ s#(?:<p></p>)+<p>#<p class="before-margin">#gi;
+  $text =~ s#<p></p><(h[1-6])>#<$1>#gi;
+  $text =~ s#(^</p><p>|</p><p>$)##gi;
+
+  return $text;
+}
+
 ### RGB>HSL --------------------------------------------------
 sub rgb_to_hsl {
   my $re = shift || 0;

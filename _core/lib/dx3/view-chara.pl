@@ -179,6 +179,7 @@ if($pc{ver}){
       $pc{$_} = tagUnescapeLines($pc{$_});
     }
     $pc{$_} = tagUnescape($pc{$_});
+    $pc{$_} = splitParagraph($pc{$_}) if $_ =~ /^(?:freeNote|freeHistory|combo\d+Note)$/;
 
     $pc{$_} = noiseTextTag $pc{$_} if $pc{forbiddenMode};
   }
