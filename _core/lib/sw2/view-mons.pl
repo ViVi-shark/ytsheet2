@@ -113,6 +113,8 @@ $pc{skills} =~ s#(</p>|</details>)\n#$1#gi;
 $pc{skills} =~ s/<p><\/p>//gi;
 $pc{skills} =~ s/\n/<br>/gi;
 $pc{skills} = splitParagraph($pc{skills});
+while ($pc{skills} =~ s#(?<!<section class="level5">)<h5>(.+?)</h5>(.*?)(<(?:h[3-5]|section)(?:\s+.+?)?>|$)#<section class="level5"><h5>$1</h5>$2</section>$3#g) {};
+while ($pc{skills} =~ s#(?<!<section class="level3">)<h3>(.+?)</h3>(.*?)(<(?:h3|section class="level3")>|$)#<section class="level3"><h3>$1</h3>$2</section>$3#g) {};
 $pc{description} = splitParagraph($pc{description});
 
 ### カラー設定 --------------------------------------------------
