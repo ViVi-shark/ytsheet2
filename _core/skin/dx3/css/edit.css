@@ -9,6 +9,14 @@ body:not([data-create-type="F"]) .fullscratch-only {
   display: none;
 }
 
+#edit-protect-view::before {
+  content: none;
+}
+
+#regulation {
+  margin: 10px 0;
+  overflow-y: auto;
+}
 #regulation dl {
   grid-template-columns: max-content 1fr;
 }
