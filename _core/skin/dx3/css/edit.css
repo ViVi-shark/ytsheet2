@@ -47,6 +47,21 @@ body:not([data-create-type="F"]) .fullscratch-only {
 #regulation dl dd input[name=stage] {
   width: 16em;
 }
+#regulation dl dd.exp-value input[disabled] {
+  color: #808080;
+  background-color: var(--box-input-border-color);
+}
+#regulation dl dd.exp-mode {
+  text-align: left;
+  padding: 2px;
+}
+#regulation dl dd.exp-mode label {
+  height: 100%;
+  border: none;
+  display: inline-flex;
+  justify-content: left;
+  align-items: center;
+}
 
 #area-status {
   min-height: 0%;
@@ -1045,4 +1060,19 @@ body:not(.mode-crc) .crc-only {
 #exp-footer input:first-child,
 #exp-footer input:last-child {
   font-size: 120%;
+}
+#exp-footer .used-total {
+  display: none;
+}
+#exp-footer.unlimited .capacity {
+  display: none;
+}
+#exp-footer.unlimited .parenthesis {
+  display: none;
+}
+#exp-footer.unlimited .rest {
+  display: none;
+}
+#exp-footer.unlimited .used-total {
+  display: initial;
 }

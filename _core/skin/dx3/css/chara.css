@@ -230,6 +230,12 @@ table.data-table tbody span.source .source-page::before {
 #renegade   { grid-area: REN; }
 #exp        { grid-area: EXP; }
 #lifepath   { grid-area: LFP; }
+#area-status.exp-unlimited #sub-status {
+  grid-column-start: 1;
+}
+#area-status.exp-unlimited #exp {
+  display: none;
+}
 
 @media screen and (max-width:767px){
   #area-status {

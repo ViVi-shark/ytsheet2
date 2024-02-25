@@ -299,7 +299,8 @@ print <<"HTML";
           <dt>作成方法
           <dd>@{[ radios 'createType', 'changeCreateType', 'C=>コンストラクション','F=>フルスクラッチ' ]}
           <dt>消費経験点
-          <dd>@{[input("history0Exp",'number','changeRegu',($set::make_fix?' readonly':''))]} <span class="fullscratch-only">※フルスクラッチ作成時の130点は含みません。</span>
+          <dd class="exp-value">@{[input("history0Exp",'number','changeRegu',($set::make_fix?' readonly':''))]} <span class="fullscratch-only">※フルスクラッチ作成時の130点は含みません。</span>
+          <dd class="exp-mode">@{[ checkbox 'expUnlimited', '経験点を制限しない', 'changeRegu' ]}
           <dt>ステージ
           <dd>@{[input("stage",'','checkStage','list="list-stage"')]}<br>
             ※ステージの入力値に「クロウリングケイオス」が“含まれる”場合、専用項目が表示されます。
@@ -1081,14 +1082,14 @@ print <<"HTML";
           ／ エフェクトLvフリーポイント[<b id="freepoint-effectlv"></b>/2]
         </p>
         <p>
-        経験点[<b id="exp-total"></b>] - 
-        ( 能力値[<b id="exp-used-status"></b>]
+        <span class="capacity">経験点[<b id="exp-total"></b>] - </span>
+        <span class="parenthesis">(</span> 能力値[<b id="exp-used-status"></b>]
         + 技能[<b id="exp-used-skill"></b>]
         + エフェクト[<b id="exp-used-effect"></b>]
         <span class="crc-only">+ 術式[<b id="exp-used-magic"></b>]</span>
         + アイテム[<b id="exp-used-item"></b>]
         + メモリー[<b id="exp-used-memory"></b>]
-        ) = 残り[<b id="exp-rest"></b>]点
+        <span class="parenthesis">)</span> = <span class="rest">残り[<b id="exp-rest"></b>]点</span><span class="used-total">計[<b id="exp-used-total"></b>]</span>
         </p>
       </div>
       </section>
