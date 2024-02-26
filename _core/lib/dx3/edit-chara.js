@@ -673,6 +673,7 @@ function effectSortAfter(){
       document.querySelector(`#${id} [name$="Type"]`    ).setAttribute('name',`effect${num}Type`);
       document.querySelector(`#${id} [name$="Name"]`    ).setAttribute('name',`effect${num}Name`);
       document.querySelector(`#${id} [name$="Lv"]`      ).setAttribute('name',`effect${num}Lv`);
+      document.querySelector(`#${id} [name$="LvMode"]`  ).setAttribute('name',`effect${num}LvMode`);
       document.querySelector(`#${id} [name$="Timing"]`  ).setAttribute('name',`effect${num}Timing`);
       document.querySelector(`#${id} [name$="Skill"]`   ).setAttribute('name',`effect${num}Skill`);
       document.querySelector(`#${id} [name$="Dfclty"]`  ).setAttribute('name',`effect${num}Dfclty`);
@@ -696,6 +697,7 @@ function effectSortAfter(){
       document.querySelector(`#${id} [name$="Type"]`    ).setAttribute('name',`effectD${del}Type`);
       document.querySelector(`#${id} [name$="Name"]`    ).setAttribute('name',`effectD${del}Name`);
       document.querySelector(`#${id} [name$="Lv"]`      ).setAttribute('name',`effectD${del}Lv`);
+      document.querySelector(`#${id} [name$="LvMode"]`  ).setAttribute('name',`effectD${del}LvMode`);
       document.querySelector(`#${id} [name$="Timing"]`  ).setAttribute('name',`effectD${del}Timing`);
       document.querySelector(`#${id} [name$="Skill"]`   ).setAttribute('name',`effectD${del}Skill`);
       document.querySelector(`#${id} [name$="Dfclty"]`  ).setAttribute('name',`effectD${del}Dfclty`);
