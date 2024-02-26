@@ -655,11 +655,10 @@ print <<"HTML";
                 <b>効果</b>@{[input "effect${num}Note"]}
               </div>
             <tr class="source">
-              <td colspan="9">
+              <td colspan="10">
                 @{[input "effect${num}SourceName",'','','placeholder="出典" list="source-names"']}
                 @{[input "effect${num}SourcePage",'number','','placeholder="ページ"']}
-              </td>
-            </tr>HTML
+HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
 print <<"HTML";
