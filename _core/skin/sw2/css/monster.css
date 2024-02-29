@@ -230,6 +230,10 @@ table.status tbody:nth-of-type(even) tr td.lv {
   display: flex;
   margin-right: 1.5em;
 }
+.parts dl dt {
+  display: flex;
+  align-items: center;
+}
 .parts dl dt::after {
   content: ':';
   display: inline-block;
