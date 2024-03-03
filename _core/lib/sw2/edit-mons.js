@@ -299,7 +299,7 @@ function updatePartsAutomatically() {
   partsNumInput.dispatchEvent(new Event('input'));
 
   partsNamesInput.setAttribute('readonly', '');
-  partsNamesInput.value = partNames.reduce(
+  partsNamesInput.value = partNames.length === 0 ? '' : partNames.reduce(
       (previous, currentPartName) => {
         const previousPartTexts = previous.split('／');
         const lastPartText = previousPartTexts[previousPartTexts.length - 1];
