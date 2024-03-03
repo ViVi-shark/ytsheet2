@@ -193,7 +193,7 @@ print <<"HTML";
               <input type="text" name="taxaFree">
             </div>
           <dd>@{[ checkbox 'mount','騎獣','checkMount' ]}
-          <dt>タグ
+          <dt class="tag">タグ
           <dd>@{[ input 'tags' ]}
         </dl>
       </div>
