@@ -1260,7 +1260,11 @@ form#monster .box h2 {
   font-size: 100%;
 }
 form#monster #group dl {
-  grid-template-columns: 3em 8em 4em 3em 3fr;
+  grid-template-columns: 3em max-content max-content max-content 3fr;
+
+  & dt.tag {
+    margin-left: 1em;
+  }
 }
 form#monster #group dl .select-input {
   width: 100%;
@@ -1305,8 +1309,12 @@ form#monster div.status input {
 }
 @media screen and (max-width:735px){
   form#monster #group dl {
-    grid-template-columns: 2em 1fr 4em;
+    grid-template-columns: max-content 1fr max-content;
     grid-template-rows: auto auto;
+
+    & dt.tag {
+      margin-left: 0;
+    }
   }
   form#monster div.status input[name="language"] {
     width: 18em;
