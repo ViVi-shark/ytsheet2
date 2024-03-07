@@ -16,6 +16,11 @@ sub data_calc {
   $pc{skills}      =~ s/\r\n?|\n/<br>/g;
   $pc{description} =~ s/\r\n?|\n/<br>/g;
   $pc{chatPalette} =~ s/\r\n?|\n/<br>/g;
+  foreach (keys %pc) {
+    if ($_ =~ /^golemReinforcement_.+_details$/) {
+      $pc{$_} =~ s/\r\n?|\n/<br>/g;
+    }
+  }
   
   #### 保存処理でなければここまで --------------------------------------------------
   if(!$::mode_save){ return %pc; }
@@ -28,7 +33,7 @@ sub data_calc {
   my $name = $pc{characterName} ? $pc{characterName} : $pc{monsterName};
   $name =~ s/[|｜]([^|｜]+?)《.+?》/$1/g;
   $pc{hide} = 'IN' if(!$pc{hide} && $pc{description} =~ /#login-only/i);
-  my $taxa = ($pc{mount} ? '騎獣／':'')
+  my $taxa = ($pc{mount} ? '騎獣／' : $pc{golem} ? 'ゴーレム／' : '')
            . (($pc{taxa} && !grep { @$_[0] eq $pc{taxa} } @data::taxa) ? 'その他:' : '')
            . $pc{taxa};
   my $lv = ($pc{mount} && $pc{lv} eq '') ? "$pc{lvMin}-$pc{lvMax}" : $pc{lv};
@@ -36,10 +41,11 @@ sub data_calc {
   my $initiative  = $pc{mount} ? '' : $pc{initiative};
   my $habitat     = $pc{mount} ? '' : $pc{habitat};
   my $price       = $pc{mount} ? "$pc{price}／$pc{priceRental}" : '';
+  my $requiredConjurerLv = $pc{golem} ? $pc{requiredConjurerLv} : '';
   $::newline = "$pc{id}<>$::file<>".
                 "$pc{birthTime}<>$::now<>$name<>$pc{author}<>$taxa<>$lv<>".
                 "$pc{intellect}<>$pc{perception}<>$disposition<>$pc{sin}<>$initiative<>$pc{weakness}<>".
-                "$pc{image}<> $pc{tags} <>$pc{hide}<>$pc{partsNum}<>$habitat<>$price";
+                "$pc{image}<> $pc{tags} <>$pc{hide}<>$pc{partsNum}<>$habitat<>$price<>$requiredConjurerLv";
   
   return %pc;
 }

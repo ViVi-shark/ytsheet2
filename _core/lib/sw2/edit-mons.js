@@ -7,7 +7,9 @@ window.onload = function() {
   updatePartsAutomatically();
   updatePartList();
   selectInputCheck('taxa',form.taxa,'その他')
-  checkMount();
+  checkKind();
+  updateGolemReinforcementItemGrade(false);
+  updateGolemReinforcementItemPartRestriction();
 
   changeColor();
 }
@@ -38,8 +40,58 @@ function nameSet(){
     else { return '' }
   }
 }
-// 騎獣 ----------------------------------------
+// 魔物／騎獣／ゴーレムの区別 ----------------------------------------
 let mountFlag = 0;
+function checkKind() {
+  document.querySelectorAll('[type="radio"][name="kind"]').forEach(
+      radioButton => {
+        if (!radioButton.checked) {
+          return;
+        }
+
+        const value = radioButton.getAttribute('value');
+
+        const mount = document.querySelector('[name="mount"]');
+        const golem = document.querySelector('[name="golem"]');
+
+        mountFlag = value === 'mount';
+        const isGolem = value === 'golem';
+
+        mount.setAttribute('value', mountFlag ? '1' : '0');
+        golem.setAttribute('value', isGolem ? '1' : '0');
+
+        form.classList.toggle('mount', mountFlag);
+        form.classList.toggle('golem', isGolem);
+
+        if (isGolem) {
+          /** @var {Array<{name: string, value: string}>} */
+          const preset = [
+            {name: 'taxa', value: "魔法生物"},
+            {name: 'intellect', value: "命令を聞く"},
+            {name: 'perception', value: "魔法"},
+            {name: 'disposition', value: "命令による"},
+            {name: 'language', value: "なし"},
+            {name: 'habitat', value: "さまざま"}
+          ];
+
+          preset.forEach(
+              x => {
+                const control = document.querySelector(`[name="${x.name}"]`);
+                control.value = x.value;
+                control.dispatchEvent(new Event('input'));
+              }
+          );
+        }
+      }
+  );
+}
+document.querySelectorAll('[type="radio"][name="kind"]').forEach(
+    radioButton => radioButton.addEventListener(
+        'input',
+        () => checkKind()
+    )
+);
+// 騎獣 ----------------------------------------
 function checkMount(){
   mountFlag = form.mount.checked ? 1 : 0;
   form.classList.toggle('mount', mountFlag);
@@ -345,6 +397,91 @@ function updatePartList() {
       }
   );
 }
+
+// ゴーレム強化アイテム ----------------------------------------
+function updateGolemReinforcementItemGrade(force = true) {
+  const gradeSelector = document.querySelector('[name="reinforcementItemGrade"]');
+  const selectedGrade = gradeSelector.value;
+  const gradeIndex = ['小', '中', '大', '極大'].indexOf(selectedGrade);
+
+  if (gradeIndex < 0) {
+    return;
+  }
+
+  document.querySelectorAll('.reinforcement-items .items dd.price input').forEach(
+      input => {
+        if (input.value !== '' && !force) {
+          return;
+        }
+
+        input.value = input.dataset.prices.split('|')[gradeIndex] ?? '';
+        input.dispatchEvent(new Event('input'));
+      }
+  );
+
+  document.querySelectorAll('.reinforcement-items .items dd.ability').forEach(
+      dd => {
+        dd.dataset.suffix = dd.dataset.suffixes.split('|')[gradeIndex] ?? '';
+      }
+  );
+}
+function updateGolemReinforcementItemPartRestriction() {
+  const partNames =
+      document.querySelector('form#monster [name="parts"]').value
+          .split(/[/／]/)
+          .map(x => x.trim().replace(/×\d+$/, '').trim())
+          .filter(x => x !== '');
+
+  const datalist = document.getElementById('golem-reinforcement-item-part-restriction-list');
+  datalist.innerHTML = '';
+
+  partNames.forEach(
+      partName => {
+        const option = document.createElement('option');
+        option.textContent = `${partName}のみ`;
+        datalist.appendChild(option);
+      }
+  );
+
+  document.querySelectorAll('.reinforcement-items dd.item input').forEach(
+      x => {
+        const supported = x.closest('dd.item').classList.contains('supported');
+
+        if (x.getAttribute('name').endsWith('partRestriction')) {
+          if (supported && partNames.length > 0) {
+            x.removeAttribute('disabled');
+          } else {
+            x.setAttribute('disabled', '');
+          }
+        } else {
+          if (supported) {
+            x.removeAttribute('disabled');
+          } else {
+            x.setAttribute('disabled', '');
+          }
+        }
+      }
+  );
+
+  document.querySelector('.reinforcement-items > .items').classList.toggle('hide-part-restriction', partNames.length === 0);
+}
+document.querySelector('form#monster [name="parts"]').addEventListener(
+    'input',
+    () => updateGolemReinforcementItemPartRestriction()
+);
+document.querySelectorAll('.reinforcement-items [type="checkbox"][name$="_supported"]').forEach(
+    checkbox =>
+        checkbox.addEventListener(
+            'input',
+            () => {
+              const dt = checkbox.closest('dt.item');
+              dt.classList.toggle('supported', checkbox.checked);
+              dt.nextElementSibling?.classList.toggle('supported', checkbox.checked);
+
+              updateGolemReinforcementItemPartRestriction();
+            }
+        )
+);
 
 // 戦利品欄 ----------------------------------------
 // 追加

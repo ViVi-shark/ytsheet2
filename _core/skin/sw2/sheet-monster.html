@@ -13,7 +13,7 @@
   <script src="<TMPL_VAR coreDir>/skin/<TMPL_VAR gameDir>/js/export_skill.js?<TMPL_VAR ver>" defer></script>
   <script src="<TMPL_VAR coreDir>/skin/<TMPL_VAR gameDir>/js/export_loot.js?<TMPL_VAR ver>" defer></script>
 </head>
-<body id="monster" <TMPL_IF mount>class="mount"</TMPL_IF>>
+<body id="monster" class="<TMPL_IF mount>mount</TMPL_IF> <TMPL_IF golem>golem</TMPL_IF>">
   <header>
     <h1><a href="./?type=m"><TMPL_VAR title></a></h1>
     <nav>
@@ -97,12 +97,20 @@
     </aside></TMPL_IF>
     
     <article>
+      <div class="level-and-name">
+        <TMPL_IF golem><div class="conjurer-lv"><TMPL_VAR requiredConjurerLv></div></TMPL_IF>
       <div id="area-name" class="color-set">
         <TMPL_UNLESS mount><div class="lv"><TMPL_VAR lv></div></TMPL_UNLESS>
         <div class="name-taxa">
           <h1><TMPL_IF characterName><TMPL_VAR characterName><TMPL_IF monsterName><small>（<TMPL_VAR monsterName>）</small></TMPL_IF><TMPL_ELSE><TMPL_VAR monsterName></TMPL_IF></h1>
-          <div class="taxa">分類：<TMPL_IF mount>騎獣／</TMPL_IF><TMPL_VAR taxa></div>
+          <div class="taxa">分類：<TMPL_IF mount>騎獣／</TMPL_IF><TMPL_VAR taxa><TMPL_IF golem>（ゴーレム）</TMPL_IF></div>
         </div>
+      </div>
+        <TMPL_IF golem>
+          <div class="golem-material">
+            <TMPL_VAR materialName>（<TMPL_VAR materialPriceNormal>／<TMPL_VAR materialPriceHigher>）
+          </div>
+        </TMPL_IF>
       </div>
 
       <div id="tags">
@@ -190,6 +198,24 @@
         <h2><TMPL_IF head_skills><TMPL_VAR head_skills><TMPL_ELSE>特殊能力</TMPL_IF></h2>
         <TMPL_VAR skills>
       </section>
+      <TMPL_IF golem>
+        <section class="golem-reinforcement-items">
+          <h2>強化アイテム／最大数＝<TMPL_VAR reinforcementItemMaxCount></h2>
+          <TMPL_LOOP golemReinforcementItems>
+            <section class="part-group">
+              <h3>※<TMPL_VAR PartName></h3>
+              <TMPL_LOOP Items>
+                <section class="skill">
+                  <h4 class="<TMPL_IF hasPrerequisiteItem>has-prerequisite-item</TMPL_IF>">〈<TMPL_VAR name>(<TMPL_VAR price>)〉<TMPL_IF ability>（<TMPL_VAR ability>）</TMPL_IF></h4>
+                  <TMPL_IF abilityDetails>
+                    <TMPL_VAR abilityDetails>
+                  </TMPL_IF>
+                </section>
+              </TMPL_LOOP>
+            </section>
+          </TMPL_LOOP>
+        </section>
+      </TMPL_IF>
       <TMPL_IF Loots>
       <section class="loots">
         <h2>戦利品</h2>
