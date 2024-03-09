@@ -49,7 +49,7 @@
      */
     function sectionToText(section) {
         const lines = [
-            nodeToText(section.querySelector('h1, h2, h3, h4, h5, h6')),
+            nodeToText(section.querySelector('h5, h6')),
         ];
 
         section.querySelectorAll('p').forEach(
