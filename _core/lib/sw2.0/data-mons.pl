@@ -58,6 +58,7 @@ sub getGolemReinforcementItems {
 
     for my $h (@golemReinforcementItems) {
         my %item = %{Clone::clone($h)};
+        $item{abilityRaw} = $item{ability};
         $item{ability} = ::textToIcon($item{ability});
         push(@result, \%item);
     }

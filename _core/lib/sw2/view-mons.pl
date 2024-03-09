@@ -90,6 +90,9 @@ if($pc{forbidden} && !$pc{yourAuthor}){
   $pc{sin} += $pc{sinOffset} if $pc{sin} ne '' && $pc{sinOffset};
 }
 
+### ゴーレム強化アイテムによる特殊能力 --------------------------------------------------
+%pc = %{resolveAdditionalSkills(\%pc);};
+
 ### その他 --------------------------------------------------
 $SHEET->param(rawName => $pc{characterName}?"$pc{characterName}（$pc{monsterName}）":$pc{monsterName});
 
@@ -188,6 +191,24 @@ foreach (1 .. $pc{statusNum}){
   $pc{'status'.$_.'Defense'} += $pc{'partEquipment'.$_.'-armor-defense'} if $pc{'status'.$_.'Defense'} ne '' && $pc{'partEquipment'.$_.'-armor-defense'};
   $pc{'status'.$_.'Hp'} += $pc{'partEquipment'.$_.'-armor-hp'} if $pc{'status'.$_.'Hp'} ne '' && $pc{'partEquipment'.$_.'-armor-hp'};
   $pc{'status'.$_.'Mp'} += $pc{'partEquipment'.$_.'-armor-mp'} if $pc{'status'.$_.'Mp'} ne '' && $pc{'partEquipment'.$_.'-armor-mp'};
+
+  if ($pc{golem} && $pc{individualization}) {
+    my $offset;
+    if ($pc{reinforcementItemGrade} eq '小') {
+      $offset = 5;
+    } elsif ($pc{reinforcementItemGrade} eq '中') {
+      $offset = 10;
+    } elsif ($pc{reinforcementItemGrade} eq '大') {
+      $offset = 15;
+    } elsif ($pc{reinforcementItemGrade} eq '極大') {
+      $offset = 20;
+    } else {
+      $offset = 0;
+    }
+
+    $pc{'status'.$_.'Hp'} += $offset if $pc{"golemReinforcement_garnetEnergy_part${_}_using"};
+    $pc{'status'.$_.'Hp'} += $offset if $pc{"golemReinforcement_garnetLife_part${_}_using"};
+  }
 
   $pc{'status'.$_.'Accuracy'} = $pc{'status'.$_.'Accuracy'} eq '' ? '―' : $pc{'status'.$_.'Accuracy'}.(!$pc{statusTextInput} && !$pc{mount}?' ('.$pc{'status'.$_.'AccuracyFix'}.')':'');
   $pc{'status'.$_.'Evasion'}  = $pc{'status'.$_.'Evasion'}  eq '' ? '―' : $pc{'status'.$_.'Evasion'} .(!$pc{statusTextInput} && !$pc{mount}?' ('.$pc{'status'.$_.'EvasionFix'}.')' :'');
@@ -351,6 +372,92 @@ if ($pc{golem}) {
   }
 
   $SHEET->param(golemReinforcementItems => \@expectedItems);
+}
+if ($pc{golem} && $pc{individualization}) {
+  my @partNames = ();
+
+  if ($pc{parts} ne '') {
+    for my $partName (split(/[\/／]/, $pc{parts})) {
+      next if $partName eq '';
+      $partName =~ s/×(\d+)$//;
+      my $count = $1;
+      if ($count && $count > 1) {
+        foreach (('A' .. 'Z')[0 .. ($count - 1)]) {
+          push(@partNames, $partName . $_);
+        }
+      }
+      else {
+        push(@partNames, $partName);
+      }
+    }
+  }
+  else {
+    push(@partNames, '');
+  }
+
+  my @allItems = data::getGolemReinforcementItems($::SW2_0 ? '2.0' : '2.5');
+
+  if ($pc{reinforcementItemGrade}) {
+    foreach (0 .. $#allItems) {
+      my %item = %{$allItems[$_]};
+      $item{name} .= "($pc{reinforcementItemGrade})";
+      $allItems[$_] = \%item;
+    }
+  }
+
+  my @parts = ();
+  my $mobilityEnhancement = undef;
+
+  for my $index (1 .. ($#partNames + 1 + 1)) {
+    my @partItems = ();
+
+    for my $itemAddress (@allItems) {
+      my %item = %{$itemAddress};
+      my $partSuffix = $index <= $#partNames + 1 ? $index : 'All';
+      my $key = "golemReinforcement_$item{fieldName}_part${partSuffix}_using";
+      my $isUsing = $pc{$key} eq 'on';
+      next unless $isUsing;
+
+      if ($item{name} =~ /^月長石の安らぎ/) {
+        $item{ability} .= textToIcon('に変更、「○＊＊に弱い」除去') if $pc{skillsRaw} =~ /^[○◯〇][^\n<>&]+に弱い/;
+
+        $pc{'reputation+'} = '―';
+        $SHEET->param('reputation+' => $pc{'reputation+'});
+
+        $pc{weakness} = 'なし';
+        $SHEET->param(weakness => $pc{weakness});
+      }
+      elsif ($item{name} =~ /^異方の菫青石/) {
+        if ($pc{golemReinforcement_cordierite_landMobility}) {
+          $pc{mobility} =~ s/^\s*(?:[-‐－―ー]\s*([\/／]))?/$pc{golemReinforcement_cordierite_landMobility}$1/;
+          $SHEET->param(mobility => $pc{mobility});
+        }
+      }
+      elsif ($item{abilityRaw} eq '◯移動力強化') {
+        $mobilityEnhancement = 5;
+      }
+      elsif ($item{abilityRaw} eq '◯属性耐性') {
+        $item{ability} .= "＝" . $pc{golemReinforcement_quartzDisruption_attribute} if $pc{golemReinforcement_quartzDisruption_attribute};
+      }
+
+      push(@partItems, \%item);
+    }
+
+    # ○移動力強化
+    if (defined($mobilityEnhancement)) {
+      $pc{mobility} =~ s/(\d+)/$1 + $mobilityEnhancement/eg;
+      $SHEET->param(mobility => $pc{mobility});
+    }
+
+    my %part = (partName => $index <= $#partNames + 1 ? $partNames[$index - 1] : '全部位必須');
+    next if !@partItems && $part{partName} eq '全部位必須';
+
+    $part{items} = \@partItems;
+
+    push(@parts, \%part);
+  }
+
+  $SHEET->param(golemReinforceItemByParts => \@parts);
 }
 
 ### 騎獣用武装 --------------------------------------------------
