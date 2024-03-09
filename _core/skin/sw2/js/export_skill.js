@@ -59,7 +59,7 @@
         return lines.join('\n');
     }
 
-    document.querySelectorAll('main article .skills h5').forEach(
+    document.querySelectorAll('main article :is(.skills, .golem-reinforcement-items) h5').forEach(
         headline => {
             const text = sectionToText(headline.closest('section'));
 

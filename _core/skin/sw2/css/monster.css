@@ -374,7 +374,7 @@ table.status tbody:nth-of-type(even) tr td.lv {
 .skills section {
   position: relative;
 }
-.skills button.to-copy {
+:is(.skills, .golem-reinforcement-items) button.to-copy {
   display: none;
   position: absolute;
   top: 0;
@@ -384,13 +384,13 @@ table.status tbody:nth-of-type(even) tr td.lv {
   opacity: 0.75;
   cursor: copy;
 }
-.skills section:hover > button.to-copy {
+:is(.skills, .golem-reinforcement-items) section:hover > button.to-copy {
   display: initial;
 }
-.skills section.level5:hover {
+:is(.skills, .golem-reinforcement-items) section.level5:hover {
   background-color: rgba(85, 107, 47, 0.05);
 }
-.skills button.to-copy::before {
+:is(.skills, .golem-reinforcement-items) button.to-copy::before {
   content: "\e14d";
   font-family: "Material Symbols Outlined", sans-serif;
   font-variation-settings: 'FILL' 1;
@@ -447,6 +447,7 @@ table.status tbody:nth-of-type(even) tr td.lv {
 
   .skill {
     margin-top: 0.5em;
+    position: relative;
   }
 
   .skill:has(h4.has-prerequisite-item) {
