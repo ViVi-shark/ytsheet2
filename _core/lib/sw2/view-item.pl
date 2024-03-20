@@ -80,6 +80,8 @@ $pc{effects} =~ s#(</p>|</details>)\n#$1#gi;
 $pc{effects} =~ s/<p><\/p>//gi;
 $pc{effects} =~ s#<h2>(.+?)</h2>#</dd><dt>$1</dt><dd class="box">#gi;
 $pc{effects} =~ s/\n/<br>/gi;
+$pc{effects} = splitParagraph($pc{effects});
+$pc{description} = splitParagraph($pc{description});
 
 ### アップデート --------------------------------------------------
 if($pc{ver}){
