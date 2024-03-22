@@ -361,6 +361,54 @@
   }
 }
 
+#craft-alchemy .select-input:not(.free):not([data-color=""]) {
+  position: relative;
+
+  & select {
+    padding-left: calc(1em + 2px);
+  }
+}
+#craft-alchemy .select-input:not(.free)::before,
+#craft-alchemy .select-input:not(.free)::after {
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-variation-settings: 'FILL' 1;
+  width: 1em;
+  height: 1em;
+  position: absolute;
+  top: calc((100% - 1em) / 2);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+#craft-alchemy .select-input:not(.free)::before {
+  left: calc(2px + 1px + 2px);
+}
+#craft-alchemy .select-input:not(.free)::after {
+  left: calc(2px + 1px + 2px + 1em);
+}
+#craft-alchemy .select-input:not(.free)[data-color*="白"][data-color*="黒"],
+#craft-alchemy .select-input:not(.free)[data-color*="赤"][data-color*="緑"] {
+  & select {
+    padding-left: calc(2em + 2px);
+  }
+}
+#craft-alchemy .select-input:not(.free)[data-color*="白"][data-color*="黒"]::before {
+  content:'\e87d';
+  color: #bbb;
+}
+#craft-alchemy .select-input:not(.free)[data-color*="白"][data-color*="黒"]::after {
+  content:'\ead5';
+  color: #777;
+}
+#craft-alchemy .select-input:not(.free)[data-color*="赤"][data-color*="緑"]::before {
+  content:'\e91d';
+  color: #a00;
+}
+#craft-alchemy .select-input:not(.free)[data-color*="赤"][data-color*="緑"]::after {
+  content:'\e123';
+  color: #0c3;
+}
+
 
 #area-status + p {
   margin-top: var(--box-v-gap);

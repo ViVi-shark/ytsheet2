@@ -615,7 +615,7 @@ foreach my $class (@data::class_names){
 HTML
   my $c_max = $class =~ /バード|ウォーリーダー/ ? 20 : $class eq 'アーティザン' ? 19 : 17;
   foreach my $lv (1..$c_max){
-    print '<li id="craft-'.$name.$lv.'"><div class="select-input"><select name="craft'.$Name.$lv.'" oninput="'.($class =~ /ウォーリーダー|ライダー/ ? 'calcPackage();':'').'selectInputCheck(\'craft'.$Name.$lv.'\',this);">';
+    print '<li id="craft-'.$name.$lv.'"><div class="select-input"><select name="craft'.$Name.$lv.'" oninput="'.($class =~ /ウォーリーダー|ライダー/ ? 'calcPackage();':'').($class =~ /アルケミスト/ ? 'updateAlchemyIcon(this);' : '').'selectInputCheck(\'craft'.$Name.$lv.'\',this);">';
     print '<option></option>';
     my %only; my $hit; my $value = $pc{"craft${Name}${lv}"};
     foreach my $data (@{$data::class{$class}{craft}{data}}){
@@ -625,6 +625,7 @@ HTML
         $item .= ' selected';
         $hit = 1;
       }
+      $item .= ' data-note="'.@$data[3].'"' if @$data[3];
       $item .= ' value="'.@$data[1].'">'.@$data[1];
       
       if(@$data[2] =~ /^(.*?)専用/){ $only{@$data[2]} .= $item; }
