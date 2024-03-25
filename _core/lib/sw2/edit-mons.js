@@ -5,6 +5,7 @@ window.onload = function() {
   nameSet();
   rewriteMountLevel();
   updatePartsAutomatically();
+  updatePartList();
   selectInputCheck('taxa',form.taxa,'その他')
   checkMount();
 
@@ -312,6 +313,37 @@ function updatePartsAutomatically() {
       }
   );
   partsNamesInput.dispatchEvent(new Event('input'));
+}
+function updatePartList() {
+  const partsText = document.querySelector('input[name="parts"]').value.trim();
+
+  const items =
+      partsText
+          .split(/[/／]/)
+          .map(x => x.trim())
+          .filter(x => x !== '')
+          .map(
+              part => /[*×]\d+$/.test(part)
+                  ? `${part.replace(/[*×]\d+$/, '')}（すべて）`
+                  : part
+          );
+
+  const datalist = document.getElementById('list-of-core-part');
+  datalist.innerHTML = '';
+
+  if (items.length === 0) {
+    return;
+  }
+
+  items.unshift("なし");
+
+  items.forEach(
+      item => {
+        const option = document.createElement('option');
+        option.textContent = item;
+        datalist.appendChild(option);
+      }
+  );
 }
 
 // 戦利品欄 ----------------------------------------
