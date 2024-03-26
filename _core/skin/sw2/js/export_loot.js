@@ -1,5 +1,7 @@
 {
-    const monsterName = document.querySelector('.name-taxa h1').textContent.trim();
+    const nameNode = document.querySelector('.name-taxa h1').cloneNode(true);
+    nameNode.querySelector('small')?.remove();
+    const monsterName = nameNode.textContent.trim();
 
     const lootSection = document.querySelector('section.loots');
 
