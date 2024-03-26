@@ -322,6 +322,9 @@ table.status tbody:nth-of-type(even) tr td.lv {
 .skills h3::first-letter {
   color: var(--s-icon-color);
 }
+.skills > section.level5:first-of-type > h5:first-child {
+  margin-top: 1.0rem;
+}
 .skills .s-icon::before {
   color: var(--s-icon-color);
 }
