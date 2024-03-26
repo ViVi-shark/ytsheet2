@@ -67,7 +67,7 @@
 
         if (rows.length > 0) {
             const command =
-                `/random-table ${monsterName}戦利品\n2d6\n` +
+                `/random-table ${monsterName}戦利品\n2d6 2 12\n` +
                 rows
                     .map(x => `${x.min !== x.max ? `${x.min ?? ''}-${x.max ?? ''}` : x.min.toString()}\t${x.content}`)
                     .join('\n');
