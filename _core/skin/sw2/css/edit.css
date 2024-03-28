@@ -1061,7 +1061,38 @@ article > form > hr {
 
 /* // モンスター
 ---------------------------------------------------------------------------------------------------- */
-form#monster div.box {
+form#monster {
+  & :is(input, textarea, select):is([readonly], [disabled]),
+  & fieldset[disabled] :is(input, textarea, select) {
+    background-color: lightgray;
+    pointer-events: none;
+  }
+
+  & fieldset[disabled] :is(.add-del-button, .handle) {
+    color: lightgray;
+    pointer-events: none;
+  }
+
+  & fieldset[disabled] label,
+  & label:has(:is(input, textarea, select):is([readonly], [disabled])) {
+    pointer-events: none;
+  }
+}
+form#monster:not(.individualization) .individualization-only,
+form#monster:not(.individualization) [data-related-field] {
+  display: none;
+}
+.individualization-area {
+  display: none;
+}
+form#monster .individualization-area {
+  display: block;
+
+  & label {
+    border: none;
+  }
+}
+form#monster :is(div, fieldset).box {
   margin: var(--box-v-gap) 0;
   overflow-x: auto;
 }
@@ -1074,6 +1105,9 @@ form#monster #group dl {
   & dt.tag {
     margin-left: 1em;
   }
+}
+form#monster.individualization #group dd.kind fieldset {
+  display: none;
 }
 form#monster #group label:has([type="radio"][name="kind"]) {
   display: inline-flex;
@@ -1089,6 +1123,21 @@ form#monster #group label:has([type="radio"][name="kind"]):not(:first-of-type) {
 }
 form#monster #group dl .select-input {
   width: 100%;
+}
+form#monster.individualization #group :is([name="taxa"], [name="taxaFree"], label:has([name="mount"])) {
+  display: none;
+}
+form#monster.individualization #group .is-mount[data-is-mount="true"]::before {
+  content: "（騎獣）";
+}
+form#monster.individualization #group .is-mount:not([data-is-mount="true"]) {
+  display: none;
+}
+form#monster.individualization #group .is-golem[data-is-golem="true"]::before {
+  content: "（ゴーレム）";
+}
+form#monster.individualization #group .is-golem:not([data-is-golem="true"]) {
+  display: none;
 }
 form#monster.mount .monster-only {
   display: none;
@@ -1114,6 +1163,73 @@ form#monster #monster-name {
 form#monster #monster-name input {
   width: calc(100% - 3em);
 }
+form#monster.individualization #character-name dd {
+  text-align: left;
+}
+form#monster.individualization #character-name [name="monsterName"] {
+  display: none;
+}
+form#monster.individualization #player-name dd {
+  text-align: left;
+}
+form#monster.individualization #player-name [name="author"] {
+  display: none;
+}
+form#monster label:has(:is([name="exclusiveMount"], [name="ridingHpReinforcement"], [name="ridingHpReinforcementSuper"])) {
+  border: none;
+
+  & span {
+    opacity: 1;
+  }
+}
+form#monster.individualization #player-name {
+  grid-template-rows: repeat(4, max-content);
+  grid-template-columns: auto;
+
+  & :is(dt, dd):nth-child(1) { grid-row: 1 / 2; }
+  & :is(dt, dd):nth-child(2) { grid-row: 2 / 3; }
+  & :is(dt, dd):nth-child(3) { grid-row: 3 / 4; }
+  & :is(dt, dd):nth-child(4) { grid-row: 4 / 5; }
+}
+form#monster.individualization #player-name dt:first-child {
+  display: flex;
+}
+form#monster.individualization #player-name dt:first-child::before {
+  content: "元データ";
+}
+form#monster.individualization #section-common > .status {
+  [name="price"],
+  [name="priceRental"],
+  [name="priceRegenerate"],
+  [name="lvMin"],
+  [name="lvMax"],
+  [name="intellect"],
+  [name="perception"],
+  [name="disposition"],
+  [name="sin"],
+  [name="language"],
+  [name="habitat"],
+  [name="reputation"],
+  [name="reputation+"],
+  [name="weakness"],
+  [name="initiative"],
+  [name="mobility"],
+  [name="vitResist"],
+  [name="vitResistFix"],
+  [name="mndResist"],
+  [name="mndResistFix"] {
+    display: none;
+  }
+}
+form#monster.individualization:not(.mount) #section-common > .status [name="lv"] {
+  display: none;
+}
+form#monster.individualization.mount #section-common > .status [data-related-field="lv"] {
+  display: none;
+}
+form#monster.individualization #section-common > *:has([name="statusTextInput"]) {
+  display: none;
+}
 form#monster div.status dl {
   margin: .5rem 0;
   place-items: center start;
@@ -1126,6 +1242,7 @@ form#monster div.status dl.price dd + dd::before {
 }
 form#monster div.status input[name^="lv"],
 form#monster div.status input[name="sin"],
+form#monster div.status input[name="sinOffset"],
 form#monster div.status input[name^="reputation"],
 form#monster div.status input[name="initiative"],
 form#monster div.status input[name*="Resist"] {
@@ -1191,8 +1308,40 @@ form#monster.golem div.status dl.material {
     width: 6em;
   }
 }
+form#monster.individualization div.status .price [data-related-field]:empty::before {
+  content: "－";
+}
+form#monster.individualization div.status .sin [data-related-field="sin"]:empty::before {
+  content: "0";
+}
+form#monster.individualization div.status .level dd:last-child {
+  display: none;
+}
 form#monster div.status input[name="language"] {
   width: 25em;
+}
+form#monster div.status .language {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(2, max-content) 1fr;
+
+  .additional {
+    padding-left: 0.75em;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: max-content 1fr;
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    & input {
+      width: 100%;
+      margin: 0;
+    }
+  }
 }
 @media screen and (max-width:735px){
   form#monster #group dl {
@@ -1216,6 +1365,9 @@ form#monster div.status input[name="language"] {
 
 form#monster table.status {
   border-width: 0;
+}
+form#monster.individualization table.status {
+  display: none;
 }
 form#monster table.status thead th.lv     { width: 0em; }
 form#monster table.status thead th.handle { width: 1.4em; cursor: unset; }
@@ -1282,25 +1434,133 @@ form#monster.mount table.status .button {
   padding-top: 2px;
   padding-bottom: 2px;
 }
-form#monster div.parts input {
+form#monster.individualization table.status + .add-del-button {
+  display: none;
+}
+form#monster #source-status-table,
+form#monster #source-status-table :is(th, td) {
+  border: 1px solid var(--box-outside-border-color);
+  border-collapse: collapse;
+}
+form#monster #source-status-table {
+  width: 100%;
+  border-top-width: 0;
+}
+form#monster #source-status-table thead :is(tr, th) {
+  border: none;
+}
+form#monster #source-status-table,
+form#monster #source-status-table tr,
+form#monster #source-status-table tr > :is(th, td):first-child,
+form#monster:not(.mount) #source-status-table tr > :is(th, td):nth-child(2) {
+  border-left-width: 0;
+}
+form#monster #source-status-table,
+form#monster #source-status-table tr,
+form#monster #source-status-table tr > :is(th, td):last-child,
+form#monster:not(.mount) #source-status-table tr > :is(th, td):is(.mp) {
+  border-right-width: 0;
+}
+form#monster:not(.mount) #source-status-table,
+form#monster:not(.mount) #source-status-table tbody:last-child tr:last-child,
+form#monster:not(.mount) #source-status-table tbody:last-child tr:last-child :is(th, td) {
+  border-bottom-width: 0;
+}
+form#monster.mount {
+  & #source-status-table[data-selected-level="1"] tbody:not([data-level="1"]),
+  & #source-status-table[data-selected-level="2"] tbody:not([data-level="2"]),
+  & #source-status-table[data-selected-level="3"] tbody:not([data-level="3"]),
+  & #source-status-table[data-selected-level="4"] tbody:not([data-level="4"]),
+  & #source-status-table[data-selected-level="5"] tbody:not([data-level="5"]),
+  & #source-status-table[data-selected-level="6"] tbody:not([data-level="6"]),
+  & #source-status-table[data-selected-level="7"] tbody:not([data-level="7"]),
+  & #source-status-table[data-selected-level="8"] tbody:not([data-level="8"]),
+  & #source-status-table[data-selected-level="9"] tbody:not([data-level="9"]),
+  & #source-status-table[data-selected-level="10"] tbody:not([data-level="10"]),
+  & #source-status-table[data-selected-level="11"] tbody:not([data-level="11"]),
+  & #source-status-table[data-selected-level="12"] tbody:not([data-level="12"]),
+  & #source-status-table[data-selected-level="13"] tbody:not([data-level="13"]),
+  & #source-status-table[data-selected-level="14"] tbody:not([data-level="14"]),
+  & #source-status-table[data-selected-level="15"] tbody:not([data-level="15"]),
+  & #source-status-table[data-selected-level="16"] tbody:not([data-level="16"]),
+  & #source-status-table[data-selected-level="17"] tbody:not([data-level="17"]) {
+    display: none;
+  }
+}
+form#monster #source-status-table td :is(.base, .fixed):has(.value:empty) {
+  display: none;
+}
+form#monster #source-status-table td .offset[data-offset]:not([data-offset=""]):not([data-offset="0"]):not([data-offset^="-"])::after {
+  content: "+" attr(data-offset);
+}
+form#monster #source-status-table td .offset[data-offset^="-"]::after {
+  content: attr(data-offset);
+}
+form#monster #source-status-table td .fixed {
+  margin-left: 0.25em;
+}
+form#monster #source-status-table td .fixed::before {
+  content: "(";
+}
+form#monster #source-status-table td .fixed::after {
+  content: ")";
+}
+form#monster fieldset.parts input {
   width: auto;
 }
-form#monster div.parts input[name="partsNum"] {
+form#monster fieldset.parts input[name="partsNum"] {
   width: 5em;
+}
+form#monster.individualization fieldset.parts :is(label, input) {
+  display: none;
 }
 @media screen and (max-width:735px){
   form#monster table.status { width: 50em; }
-  form#monster div.parts dl { display: block; }
+  form#monster fieldset.parts dl { display: block; }
 }
 
+form#monster.individualization textarea[name="skills"] + .annotate {
+  display: none;
+}
 form#monster textarea[name="skills"] + .annotate code {
   font-size: 100%;
   font-family: monospace,serif;
 }
 
+form#monster #section-common > .skills {
+  position: relative;
+}
+form#monster.individualization #section-common > .skills {
+  padding-bottom: 0;
+}
+form#monster.individualization #section-common > .skills > .riding-checks {
+  position: absolute;
+  top: 0.25em;
+  right: 0.25em;
+
+  & label {
+    border: none;
+  }
+
+  & label > span {
+    opacity: 1;
+  }
+}
+form#monster.individualization:not(.mount) #section-common > .skills > .riding-checks {
+  display: none;
+}
 form#monster textarea[name="skills"] {
   height: 16em;
   padding: 2px;
+}
+form#monster.individualization textarea[name="skills"] {
+  display: none;
+}
+form#monster.individualization [data-related-field="skills"] {
+  border-color: var(--monster-head-bg-color);
+  border-style: solid;
+  border-width: 0 1px 1px 1px;
+  padding: 0.5em;
 }
 
 form#monster .reinforcement-items {
@@ -1477,9 +1737,21 @@ form#monster .reinforcement-items {
   }
 }
 
+form#monster.individualization #section-common > .description:has([data-related-field="description"]:empty) {
+  display: none;
+}
 form#monster textarea[name="description"] {
   height: 16em;
   padding: 2px;
+}
+form#monster.individualization textarea[name="description"] {
+  display: none;
+}
+form#monster.individualization #loots-list {
+  display: none;
+}
+form#monster.individualization #loots-list + .add-del-button {
+  display: none;
 }
 form#monster div#loots-list {
   display: grid;
@@ -1502,6 +1774,257 @@ form#monster div#loots-list input {
 }
 form#monster ul#loots-num {
   background-color: rgba(127,127,127,0.3);
+}
+form#monster #source-loot-table {
+  width: 100%;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  border-left-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+
+  & dt {
+    grid-column: 1 / 2;
+  }
+
+  & dd {
+    grid-column: 2 / 3;
+    text-align: left;
+  }
+}
+
+form#monster .mount-equipments {
+  width: 100%;
+
+  & .parts {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    & :is(dt, dd).part {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    & dt.part {
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--monster-head-bg-color);
+      padding: 0 1em;
+      margin-bottom: 0.35em;
+    }
+
+    & dt.part:not(:first-of-type) {
+      margin-top: 0.75em;
+    }
+  }
+
+  & .equipments {
+    width: 100%;
+    display: grid;
+    grid-template-rows: repeat(2, max-content);
+    grid-template-columns: max-content 1fr;
+    margin: 0;
+
+    & .weapon {
+      grid-row: 1 / 2;
+      padding-top: 0.125em;
+    }
+
+    & .armor {
+      grid-row: 2 / 3;
+      border-style: solid;
+      border-color: lightgray;
+      border-width: 1px 0 1px 0;
+      padding: 0.25em 0;
+      margin-top: 0.25em;
+    }
+
+    & dt:is(.weapon, .armor) {
+      grid-column: 1 / 2;
+    }
+
+    & dt:is(.weapon, .armor)::after {
+      content: "";
+      display: inline-block;
+      height: 100%;
+      width: 1px;
+      box-sizing: border-box;
+      border-right: 1px dotted lightgray;
+      margin: 0 0.5em;
+    }
+
+    & dd.weapon,
+    & dd.armor {
+      grid-column: 2 / 3;
+      width: 100%;
+    }
+
+    & input {
+      display: inline-block;
+      min-width: initial;
+    }
+
+    & input[type="number"] {
+      width: 4em;
+    }
+
+    & .weapon-settings,
+    & .armor-settings {
+      width: 100%;
+      display: grid;
+      grid-template-rows: repeat(2, max-content);
+      grid-template-columns: repeat(4, max-content max-content);
+      margin: 0;
+
+      & dt {
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-end;
+        align-items: center;
+        font-weight: normal;
+      }
+
+      & dt::after {
+        content: none;
+      }
+
+      & dd {
+        width: 100%;
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: max-content max-content;
+
+        & input {
+          grid-row: 1 / -1;
+          grid-column: 2 / 3;
+          margin: 0;
+        }
+      }
+
+      & dd::before {
+        display: inline-flex;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+
+      & dd.name::before {
+        content: ":";
+      }
+
+      & dd:not(.name)::before {
+        content: "+";
+      }
+
+      & :is(dt, dd).name {
+        grid-row: 1 / 2;
+        margin-bottom: 0.35em;
+      }
+
+      & dt.name {
+        grid-column: 1 / 2;
+      }
+
+      & dd.name {
+        grid-column: 2 / 5;
+      }
+    }
+  }
+}
+@media screen and (min-width: 736px) {
+  form#monster .mount-equipments {
+    & .weapon-settings,
+    & .armor-settings {
+      & :is(dt, dd):not(.name) {
+        grid-row: 2 / 3;
+      }
+    }
+
+    & .weapon-settings {
+      & dt:is(.damage) {
+        margin-left: 0.5em;
+      }
+
+      & dt.accuracy {
+        grid-column: 1 / 2;
+      }
+
+      & dd.accuracy {
+        grid-column: 2 / 3;
+      }
+
+      & dt.damage {
+        grid-column: 3 / 4;
+      }
+
+      & dd.damage {
+        grid-column: 4 / 5;
+      }
+    }
+
+    & .armor-settings {
+      & dt:is(.defense, .hp, .mp) {
+        margin-left: 0.5em;
+      }
+
+      & dt.evasion {
+        grid-column: 1 / 2;
+      }
+
+      & dd.evasion {
+        grid-column: 2 / 3;
+      }
+
+      & dt.defense {
+        grid-column: 3 / 4;
+      }
+
+      & dd.defense {
+        grid-column: 4 / 5;
+      }
+
+      & dt.hp {
+        grid-column: 5 / 6;
+      }
+
+      & dd.hp {
+        grid-column: 6 / 7;
+      }
+
+      & dt.mp {
+        grid-column: 7 / 8;
+      }
+
+      & dd.mp {
+        grid-column: 8 / 9;
+      }
+    }
+  }
+}
+@media screen and (max-width: 735px) {
+  form#monster .mount-equipments {
+    & .equipments {
+      & .weapon-settings,
+      & .armor-settings {
+        grid-template-columns: max-content 1fr;
+
+        & :is(dt, dd):not(:last-of-type) {
+          margin-bottom: 0.35em;
+        }
+
+        & dt {
+          grid-column: 1 / 2;
+        }
+
+        & dd {
+          grid-column: 2 / 3;
+        }
+      }
+    }
+  }
 }
 
 form#monster .color-sample .name {

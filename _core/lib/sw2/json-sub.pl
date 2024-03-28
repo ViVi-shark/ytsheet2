@@ -27,6 +27,7 @@ sub addJsonData {
       my $lastPartName;
       my $partNameContinuousCount;
       foreach my $i (1 .. $pc{statusNum}){
+        my $n = $i;
         my $partname = $pc{"part${i}"};
         if ($partname eq $lastPartName) {
           if ($partNameContinuousCount == 0) {
@@ -51,9 +52,25 @@ sub addJsonData {
           $count{ $pc{"part${i}"} }++;
           $pc{"part${i}"} .= $n2a[ $count{ $pc{"part${i}"} } ];
         }
-        push(@hp , {$partname.':HP' => $pc{"status${i}Hp"}.'/'.$pc{"status${i}Hp"}});
-        push(@mp , {$partname.':MP' => $pc{"status${i}Mp"}.'/'.$pc{"status${i}Mp"}});
-        push(@def, $partname.$pc{"status${i}Defense"});
+
+        my $partHp = $pc{"status${i}Hp"};
+        my $partMp = $pc{"status${i}Mp"};
+        my $partDef = $pc{"status${i}Defense"};
+        if ($pc{mount} && $pc{individualization}) {
+          $partHp += $pc{'partEquipment' . $n . '-armor-hp'} if $partHp ne '';
+          $partMp += $pc{'partEquipment' . $n . '-armor-mp'} if $partMp ne '';
+          $partDef += $pc{'partEquipment' . $n . '-armor-defense'} if $partDef ne '';
+
+          if ($partHp ne '') {
+            $partHp += 10 if $pc{exclusiveMount};
+            $partHp += 5 if $pc{ridingHpReinforcement};
+            $partHp += 5 if $pc{ridingHpReinforcementSuper};
+          }
+        }
+
+        push(@hp , {$partname.':HP' => $partHp.'/'.$partHp});
+        push(@mp , {$partname.':MP' => $partMp.'/'.$partMp});
+        push(@def, $partname.$partDef);
         if (!$pc{mount} || $pc{"status${i}Vit"} =~ /\d/) {
           $vitresist = $pc{mount} ? $pc{"status${i}Vit"} : $pc{vitResist} . '（' . $pc{vitResistFix} . '）';
           $mndresist = $pc{mount} ? $pc{"status${i}Mnd"} : $pc{mndResist} . '（' . $pc{mndResistFix} . '）';
@@ -70,10 +87,26 @@ sub addJsonData {
           $i .= $ii > 1 ? "-$ii" : '';
         }
       }
+
+      my $partHp = $pc{"status${i}Hp"};
+      my $partMp = $pc{"status${i}Mp"};
+      my $partDef = $pc{"status${i}Defense"};
+      if ($pc{mount} && $pc{individualization}) {
+        $partHp += $pc{'partEquipment1-armor-hp'} if $partHp ne '';
+        $partMp += $pc{'partEquipment1-armor-mp'} if $partMp ne '';
+        $partDef += $pc{'partEquipment1-armor-defense'} if $partDef ne '';
+
+        if ($partHp ne '') {
+          $partHp += 10 if $pc{exclusiveMount};
+          $partHp += 5 if $pc{ridingHpReinforcement};
+          $partHp += 5 if $pc{ridingHpReinforcementSuper};
+        }
+      }
+
       $pc{unitStatus} = [
-        { 'HP' => $pc{"status${i}Hp"}.'/'.$pc{"status${i}Hp"} },
-        { 'MP' => $pc{"status${i}Mp"}.'/'.$pc{"status${i}Mp"} },
-        { '防護' => $pc{"status${i}Defense"} },
+        { 'HP' => $partHp.'/'.$partHp },
+        { 'MP' => $partMp.'/'.$partMp },
+        { '防護' => $partDef },
       ];
       $vitresist = $pc{mount} ? $pc{"status${i}Vit"} : $pc{vitResist} . '（' . $pc{vitResistFix} . '）';
       $mndresist = $pc{mount} ? $pc{"status${i}Mnd"} : $pc{mndResist} . '（' . $pc{mndResistFix} . '）';

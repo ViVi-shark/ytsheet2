@@ -277,4 +277,21 @@ sub data_update_arts {
   return %pc;
 }
 
+sub addOffsetToDamage {
+  my $original = shift;
+  my $offset = shift;
+  return '' if $original eq '';
+  return $original if !defined($offset) || $offset eq '' || $offset == 0;
+
+  if ($original =~ /^(\d+[d]6?)[+]?(-?\d+)$/i) {
+    my $dice = $1;
+    my $fixed = $2;
+    $fixed += $offset;
+    return $dice if $fixed == 0;
+    return $dice . ($fixed > 0 ? '+' : '') . $fixed;
+  }
+
+  return $original;
+}
+
 1;
