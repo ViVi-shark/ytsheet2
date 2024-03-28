@@ -255,7 +255,10 @@ print <<"HTML";
         </dl>
         <dl class="monster-only">
           <dt>知名度／弱点値
-          <dd>@{[ input 'reputation' ]}／@{[ input 'reputation+' ]}
+          <dd>@{[ input 'reputation' ]}／@{[ input 'reputation+','','','list="list-of-reputation-plus"' ]}
+          <datalist id="list-of-reputation-plus">
+            <option>―</option>
+          </datalist>
         </dl>
         <dl>
           <dt>弱点
