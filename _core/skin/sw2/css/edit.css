@@ -1682,6 +1682,19 @@ form#monster.individualization #section-common > .status .mobility {
     }
   }
 }
+form#monster.individualization #section-common > .status dl:is(.vit-resistance, .mnd-resistance) {
+  .offset-by-sword-fragment {
+    margin-left: 0.25em;
+  }
+
+  .offset-by-sword-fragment::before {
+    content: "+";
+  }
+
+  .offset-by-sword-fragment:empty {
+    display: none;
+  }
+}
 @media screen and (max-width:735px){
   form#monster #group dl {
     grid-template-columns: max-content 1fr max-content;
@@ -1828,6 +1841,10 @@ form#monster.mount {
     display: none;
   }
 }
+form#monster #source-status-table td:has(.base .value:empty)::before,
+form#monster #source-status-table td:has(.value:empty):not(:has(.base))::before {
+  content: "―";
+}
 form#monster #source-status-table td :is(.base, .fixed):has(.value:empty) {
   display: none;
 }
@@ -1893,6 +1910,197 @@ form#monster.individualization fieldset.parts :is(label, input) {
 @media screen and (max-width:735px){
   form#monster table.status { width: 50em; }
   form#monster fieldset.parts dl { display: block; }
+}
+
+form#monster.individualization:is(.mount, .golem) .sword-fragment-box {
+  display: none;
+}
+form#monster.individualization .sword-fragment-box {
+  & label.num {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem;
+
+    & input {
+      width: 5em;
+    }
+
+    .effect-summary {
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+
+      & span:not(:first-child)::before {
+        content: "、";
+      }
+
+      & i.value {
+        font-style: normal;
+        font-weight: normal;
+      }
+
+      & i.value:not(:empty)::before {
+        content: "+";
+      }
+    }
+
+    .effect-summary::before {
+      content: "（";
+    }
+
+    .effect-summary::after {
+      content: "）";
+    }
+
+    .effect-summary:not(:has(.value:not(:empty))) {
+      display: none;
+    }
+  }
+
+  .offset-distribution,
+  .offset-distribution :is(thead, tbody, tr, th, td) {
+    border-style: solid;
+    border-color: var(--box-inside-border-color);
+    border-width: 2px;
+    border-collapse: collapse;
+  }
+
+  .offset-distribution {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+
+    & th,
+    & td {
+      vertical-align: middle;
+    }
+
+    & thead {
+      background-color: var(--monster-head-bg-color);
+
+      & tr:first-child,
+      & tr:first-child th[colspan] {
+        border-bottom-width: 1px;
+      }
+
+      & tr:last-child,
+      & tr:last-child th {
+        border-top-width: 1px;
+      }
+
+      & th {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+      }
+
+      .part-name {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+      }
+
+      .base,
+      .offset,
+      .total {
+        min-width: 6rem;
+        background-color: rgba(255, 255, 255, 50%);
+      }
+
+      .base {
+        font-size: 65%;
+      }
+
+      .offset {
+        font-size: 55%;
+      }
+    }
+
+    & tbody {
+      & tr, & td {
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+      }
+
+      .part-name {
+        min-width: 5em;
+      }
+
+      .base,
+      .offset {
+        font-weight: normal;
+        border-right-width: 0;
+      }
+
+      .offset,
+      .total {
+        border-left-width: 0;
+      }
+
+      .offset input[type="number"] {
+        width: 4em;
+      }
+    }
+
+    & tfoot {
+      background-color: var(--monster-head-bg-color);
+
+      & th:first-child {
+        padding: 0.5rem 1rem;
+      }
+
+      & td:not(:first-child) {
+        background-color: rgba(255, 255, 255, 50%);
+      }
+
+      & td.deficient {
+        background-color: rgba(255, 255, 0, 0.5);
+      }
+
+      & td.excess {
+        background-color: rgba(255, 0, 0, 0.5);
+      }
+
+      .offset[data-expected]:not([data-expected=""])::after {
+        content: "/" attr(data-expected);
+      }
+    }
+
+    .base,
+    .offset {
+      border-right-width: 1px;
+    }
+
+    .offset,
+    .total {
+      border-left-width: 1px;
+    }
+  }
+
+  .offset-distribution[data-part-count="1"] {
+    display: none;
+  }
+}
+.night form#monster.individualization .sword-fragment-box {
+  .offset-distribution {
+    & thead {
+      .base,
+      .offset,
+      .total {
+        background-color: rgba(0, 0, 0, 50%);
+      }
+    }
+
+    & tfoot {
+      & td:not(:first-child) {
+        background-color: rgba(0, 0, 0, 50%);
+      }
+    }
+  }
+}
+form#monster.individualization .sword-fragment-box[data-sword-fragment-num="0"] {
+  .offset-distribution {
+    display: none;
+  }
 }
 
 form#monster.individualization textarea[name="skills"] + .annotate {
