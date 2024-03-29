@@ -308,13 +308,13 @@ print <<"HTML";
           <dt>移動速度<dd>@{[ input 'mobility' ]}
           <dd class="individualization-only">
         </dl>
-        <dl class="monster-only">
+        <dl class="monster-only vit-resistance">
           <dt>生命抵抗力
-          <dd>@{[ input 'vitResist',($status_text_input ? 'text':'number'),'calcVit' ]}<span data-related-field="vitResist"></span> <span class=" calc-only">(@{[ input 'vitResistFix','number','calcVitF' ]}<span data-related-field="vitResistFix"></span>)</span>
+          <dd>@{[ input 'vitResist',($status_text_input ? 'text':'number'),'calcVit' ]}<span data-related-field="vitResist"></span> <span class=" calc-only">(@{[ input 'vitResistFix','number','calcVitF' ]}<span data-related-field="vitResistFix"></span>)</span><span class="offset-by-sword-fragment"></span>
         </dl>
-        <dl class="monster-only">
+        <dl class="monster-only mnd-resistance">
           <dt>精神抵抗力
-          <dd>@{[ input 'mndResist',($status_text_input ? 'text':'number'),'calcMnd' ]}<span data-related-field="mndResist"></span> <span class=" calc-only">(@{[ input 'mndResistFix','number','calcMndF' ]}<span data-related-field="mndResistFix"></span>)</span>
+          <dd>@{[ input 'mndResist',($status_text_input ? 'text':'number'),'calcMnd' ]}<span data-related-field="mndResist"></span> <span class=" calc-only">(@{[ input 'mndResistFix','number','calcMndF' ]}<span data-related-field="mndResistFix"></span>)</span><span class="offset-by-sword-fragment"></span>
         </dl>
       </div>
       <fieldset class="monster-only">@{[ input "statusTextInput",'checkbox','statusTextInputToggle']}命中・回避・抵抗に数値以外を入力</fieldset>
@@ -426,6 +426,53 @@ print <<"HTML";
         <dl><dt>部位数<dd>@{[ input 'partsNum','number','','min="1"' ]}<span data-related-field="partsNum"></span> (@{[ input 'parts' ]}<span data-related-field="parts"></span>) </dl>
         <dl><dt>コア部位<dd>@{[ input 'coreParts','','','list="list-of-core-part"' ]}<span data-related-field="coreParts"></span></dl>
         <datalist id="list-of-core-part"></datalist>
+      </fieldset>
+      <fieldset class="box monster-only individualization-only sword-fragment-box">
+        <h2>剣のかけら</h2>
+        <label class="num">
+            個数
+            @{[ input 'swordFragmentNum','number','','min="0"' ]}
+            <span class="effect-summary">
+                <span class="hp-offset">ＨＰ<i class="value"></i></span>
+                <span class="mp-offset">ＭＰ<i class="value"></i></span>
+                <span class="vit-resistance-offset">生命抵抗力<i class="value"></i></span>
+                <span class="mnd-resistance-offset">精神抵抗力<i class="value"></i></span>
+            </span>
+        </label>
+        <table class="offset-distribution">
+            <thead>
+                <tr>
+                    <th class="part-name" rowspan="2">部位
+                    <th colspan="3">ＨＰ
+                    <th colspan="3">ＭＰ
+                <tr>
+                    <th class="base">基本値
+                    <th class="offset">かけら<br />補正
+                    <th class="total">小計
+                    <th class="base">基本値
+                    <th class="offset">かけら<br />補正
+                    <th class="total">小計
+            <tbody>
+            <tfoot class="sum">
+                <tr>
+                    <th>全部位合計
+                    <td class="base">
+                    <td class="hp offset">
+                    <td class="total">
+                    <td class="base">
+                    <td class="mp offset">
+                    <td class="total">
+        </table>
+        <template id="template-of-sword-fragment-offset-distribution-row">
+            <tr>
+                <td class="part-name">
+                <td class="hp base">
+                <td class="hp offset">+<input type="number" min="0" />=
+                <td class="hp total">
+                <td class="mp base">
+                <td class="mp offset">+<input type="number" min="0" />=
+                <td class="mp total">
+        </template>
       </fieldset>
       <fieldset class="box mount-only individualization-only mount-equipments">
         <h2>騎獣用武装</h2>
@@ -648,7 +695,7 @@ print <<"HTML";
 HTML
     print "<fieldset id=\"loaded-data\" style=\"display: none;\">\n";
     for my $key (keys %pc) {
-        next if $key !~ /^partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$/;
+        next if $key !~ /^partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$|^swordFragment_[hm]pOffset_part\d+$/;
         print "<input type=\"hidden\" name=\"$key\" value=\"$pc{$key}\" />\n";
     }
     print "</fieldset>\n";

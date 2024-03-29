@@ -10,6 +10,7 @@ window.onload = function() {
   checkKind();
   updateGolemReinforcementItemGrade(false);
   updateGolemReinforcementItemPartRestriction();
+  swordFragmentNumChanged();
   individualizationModeChanged();
 
   changeColor();
@@ -589,6 +590,20 @@ function individualizationSourceUrlChanged() {
             document.querySelector('#group span.is-mount').dataset.isMount = isMount.toString();
             document.querySelector('#group span.is-golem').dataset.isGolem = isGolem.toString();
 
+            {
+              const kind = isMount ? 'mount' : isGolem ? 'golem' : 'monster';
+
+              document.querySelectorAll('#group [type="radio"][name="kind"]').forEach(x => x.checked = false);
+
+              const selectingRadio = document.querySelector(`#group [type="radio"][name="kind"][value="${kind}"]`);
+              selectingRadio.checked = true;
+              selectingRadio.dispatchEvent(new Event('input'));
+            }
+
+            if (isMount) {
+              checkLevel();
+            }
+
             Object.keys(source).forEach(
                 key => {
                   if (!/^(?:description|skills|golemReinforcement_.+_details)$/.test(key) || source[key] == null) {
@@ -706,6 +721,7 @@ function individualizationSourceUrlChanged() {
                   key === 'individualization' || // 個別化チェックそのものは無視する
                   key === 'sourceMonsterUrl' || // 個別化の元データＵＲＬも無視する
                   ['characterName', 'tags'].includes(key) || // 名前・タグは上書き可能
+                  ['mount', 'golem'].includes(key) || // 騎獣／ゴーレムの是非は解決済み
                   key === 'statusNum' || // 部位数は解決済み
                   /^status\d.*Fix$/.test(key) && isMount || // 騎獣の場合は固定達成値を無視
                   key === 'lootsNum' || // 戦利品の行数は解決済み
@@ -859,6 +875,101 @@ function individualizationSourceUrlChanged() {
 
                 tbody.querySelectorAll('tr:not(:first-child) th').forEach(x => x.remove());
               }
+            }
+
+            {
+              /** @var {Object<string, int>} */
+              const oldValues = {};
+
+              document.querySelectorAll('#loaded-data [name]').forEach(
+                  x => {
+                    const name = x.getAttribute('name');
+                    if (/^swordFragment_[hm]pOffset_part\d+$/.test(name)) {
+                      const value = x.getAttribute('value');
+                      oldValues[name] = /^\d+$/.test(value) ? parseInt(value) : null;
+                    }
+                  }
+              );
+
+              const sourceStatusTable = document.getElementById('source-status-table');
+
+              const offsetDistributionTable =
+                  document.querySelector('.sword-fragment-box .offset-distribution');
+
+              const offsetDistributionTableBody = offsetDistributionTable.querySelector('tbody');
+              const offsetDistributionTableFooter = offsetDistributionTable.querySelector('tfoot');
+
+              const rowTemplate = document.getElementById('template-of-sword-fragment-offset-distribution-row');
+
+              offsetDistributionTableBody.innerHTML = '';
+
+              /** @var {Function[]} */
+              const functionsToSetupInput = [];
+
+              let partCount = 0;
+
+              sourceStatusTable.querySelectorAll('tbody tr').forEach(
+                  sourceRow => {
+                    const partName = sourceRow.querySelector('.style').textContent.trim()
+                        .replace(/^.+[(（](.+?)[）)]$/, '$1');
+
+                    const partSerial = sourceRow.dataset.partSerial;
+
+                    const hp = parseInt(sourceRow.querySelector('.hp .value').textContent.trim());
+                    const mp = parseInt(sourceRow.querySelector('.mp .value').textContent.trim());
+
+                    const row = rowTemplate.content.firstElementChild.cloneNode(true);
+                    row.querySelector('.part-name').textContent = partName;
+                    row.querySelector('.hp.base').textContent = isNaN(hp) ? '―' : hp.toString();
+                    row.querySelector('.mp.base').textContent = isNaN(mp) ? '―' : mp.toString();
+
+                    for (const propertyName of ['hp', 'mp']) {
+                      const name = `swordFragment_${propertyName}Offset_part${partSerial}`;
+
+                      const offsetInput = row.querySelector(`.${propertyName}.offset input`);
+                      offsetInput.setAttribute('name', name);
+                      offsetInput.value = oldValues[name]?.toString() ?? '0';
+
+                      const onOffsetChanged = ((propertyName, row, offsetInput) => {
+                        return () => {
+                          const base = parseInt(row.querySelector(`.${propertyName}.base`).textContent);
+                          const offset = parseInt(offsetInput.value);
+                          const total = isNaN(base) ? NaN : isNaN(offset) ? base : base + offset;
+
+                          row.querySelector(`.${propertyName}.total`).textContent =
+                              isNaN(total) ? '―' : total.toString();
+
+                          let sum =
+                              [...offsetDistributionTableBody.querySelectorAll(`.${propertyName}.offset input`)]
+                                  .map(/** @param {HTMLInputElement} x */x => parseInt(x.value))
+                                  .filter(x => !isNaN(x))
+                                  .reduce((x, y) => x + y, 0);
+
+                          const offsetSumNode =
+                              offsetDistributionTableFooter.querySelector(`.${propertyName}.offset`);
+
+                          if (offsetSumNode.textContent !== sum.toString()) {
+                            offsetSumNode.textContent = sum.toString();
+                            swordFragmentNumChanged();
+                          }
+                        };
+                      })(propertyName, row, offsetInput);
+
+                      offsetInput.addEventListener('input', () => onOffsetChanged());
+
+                      functionsToSetupInput.push(onOffsetChanged);
+                    }
+
+                    offsetDistributionTableBody.appendChild(row);
+
+                    partCount++;
+                  }
+              );
+
+              functionsToSetupInput.forEach(f => f.call(null));
+              swordFragmentNumChanged();
+
+              offsetDistributionTable.dataset.partCount = partCount.toString();
             }
 
             mountHpOptionsUpdated();
@@ -1371,6 +1482,54 @@ document.querySelectorAll('[data-related-field]').forEach(
       );
     }
 );
+function swordFragmentNumChanged() {
+  const fragmentNumInput = document.querySelector('[name="swordFragmentNum"]');
+  const fragmentNum = fragmentNumInput.value !== '' ? parseInt(fragmentNumInput.value) : 0;
+  const resistanceOffset = Math.min(Math.ceil((fragmentNum) / 5), 4);
+
+  fragmentNumInput.closest('.box').dataset.swordFragmentNum = fragmentNum.toString();
+
+  const hpOffset = fragmentNum * 5;
+  const mpOffset = fragmentNum * 1;
+
+  const summaryNode = document.querySelector('.sword-fragment-box label.num .effect-summary');
+  summaryNode.querySelector('.hp-offset .value').textContent = hpOffset > 0 ? hpOffset.toString() : '';
+  summaryNode.querySelector('.mp-offset .value').textContent = mpOffset > 0 ? mpOffset.toString() : '';
+  summaryNode.querySelector('.vit-resistance-offset .value').textContent = resistanceOffset > 0 ? resistanceOffset.toString() : '';
+  summaryNode.querySelector('.mnd-resistance-offset .value').textContent = resistanceOffset > 0 ? resistanceOffset.toString() : '';
+
+  document.querySelectorAll('#section-common > .status dl:is(.vit-resistance, .mnd-resistance) .offset-by-sword-fragment').forEach(
+      x => x.textContent = resistanceOffset > 0 ? resistanceOffset.toString() : ''
+  );
+
+  const offsetDistribution = document.querySelector('.sword-fragment-box .offset-distribution');
+
+  const hasSinglePart = offsetDistribution.querySelectorAll('tbody tr').length === 1;
+
+  const summaryRow = offsetDistribution.querySelector('tfoot.sum tr');
+
+  for (const [className, expectedValue] of [['hp', hpOffset], ['mp', mpOffset]]) {
+    const cell = summaryRow.querySelector(`.${className}.offset`);
+
+    if (hasSinglePart) {
+      const input = offsetDistribution.querySelector(`tbody .${className} input`);
+
+      if (input.value !== expectedValue.toString()) {
+        input.value = expectedValue.toString();
+        input.dispatchEvent(new Event('input'));
+      }
+
+      cell.textContent = expectedValue.toString();
+    }
+
+    cell.dataset.expected = expectedValue.toString();
+
+    const current = parseInt(cell.textContent.trim());
+    cell.classList.toggle('deficient', !isNaN(current) && current < expectedValue);
+    cell.classList.toggle('excess', !isNaN(current) && current > expectedValue);
+  }
+}
+document.querySelector('[name="swordFragmentNum"]').addEventListener('input', () => swordFragmentNumChanged());
 // document.querySelector('.individualization-area input[name="sourceMonsterUrl"]').value = 'http://localhost/ytsheet2/sw2.5/?id=W1xihL'; // todo: for DEBUG
 // document.querySelector('.individualization-area input[name="sourceMonsterUrl"]').value = 'http://localhost/ytsheet2/sw2.5/?id=LPt9In'; // todo: for DEBUG
 // document.querySelector('.individualization-area input[type="checkbox"][name="individualization"]').checked = true; // todo: for DEBUG

@@ -139,6 +139,16 @@ if($::in{url}){
 }
 ### 個別化 --------------------------------------------------
 $SHEET->param(individualization => $pc{individualization});
+# 剣のかけらによる抵抗力へのボーナス修正
+if ($pc{individualization} && $pc{swordFragmentNum} > 0) {
+  my $resistanceOffset = min(ceil(($pc{swordFragmentNum}) / 5.0), 4);
+
+  $pc{vitResist} += $resistanceOffset;
+  $pc{vitResistFix} += $resistanceOffset;
+  $pc{mndResist} += $resistanceOffset;
+  $pc{mndResistFix} += $resistanceOffset;
+}
+
 ### タグ --------------------------------------------------
 my @tags;
 foreach(split(/ /, $pc{tags})){
@@ -191,6 +201,9 @@ foreach (1 .. $pc{statusNum}){
   $pc{'status'.$_.'Defense'} += $pc{'partEquipment'.$_.'-armor-defense'} if $pc{'status'.$_.'Defense'} ne '' && $pc{'partEquipment'.$_.'-armor-defense'};
   $pc{'status'.$_.'Hp'} += $pc{'partEquipment'.$_.'-armor-hp'} if $pc{'status'.$_.'Hp'} ne '' && $pc{'partEquipment'.$_.'-armor-hp'};
   $pc{'status'.$_.'Mp'} += $pc{'partEquipment'.$_.'-armor-mp'} if $pc{'status'.$_.'Mp'} ne '' && $pc{'partEquipment'.$_.'-armor-mp'};
+
+  $pc{'status'.$_.'Hp'} += $pc{'swordFragment_hpOffset_part' . $_} if $pc{swordFragmentNum} > 0 && $pc{'swordFragment_hpOffset_part' . $_};
+  $pc{'status'.$_.'Mp'} += $pc{'swordFragment_mpOffset_part' . $_} if $pc{swordFragmentNum} > 0 && $pc{'swordFragment_mpOffset_part' . $_};
 
   if ($pc{golem} && $pc{individualization}) {
     my $offset;
@@ -506,6 +519,9 @@ sub formatMountEquipmentOffset {
 
 ### 戦利品 --------------------------------------------------
 my @loots;
+if ($pc{individualization} && $pc{swordFragmentNum} > 0) {
+  push(@loots, {NUM => '自動／全部位合計', ITEM => "〈剣のかけら〉×$pc{swordFragmentNum}"});
+}
 foreach (1 .. $pc{lootsNum}){
   next if !$pc{'loots'.$_.'Num'} && !$pc{'loots'.$_.'Item'};
   push(@loots, {
