@@ -138,7 +138,7 @@ div.data-magic dl.duration { grid-area: DURA; }
 div.data-magic dl.resist   { grid-area: RESI; }
 div.data-magic dl.element  { grid-area: ELEM; }
 div.data-magic dl.summary  { grid-area: SMRY; }
-div.data-magic dl:not(.element)+dl.summary { grid-column: 1/5; }
+div.data-magic dl:not(.element)+dl.summary { grid-column: 1/-1; }
 div.data-magic dl.effect   { grid-area: EFCT; }
 
 div.data-magic dl.type      { grid-area: TYPE; }
