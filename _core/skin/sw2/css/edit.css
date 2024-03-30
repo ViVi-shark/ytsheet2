@@ -2316,6 +2316,20 @@ form#monster textarea[name="description"] {
 form#monster.individualization textarea[name="description"] {
   display: none;
 }
+form#monster.individualization.golem #section-common > .loots > h2 label {
+  display: inline-flex;
+  height: 100%;
+  flex-flow: row;
+  align-items: center;
+  float: right;
+  border: none;
+  padding: 0;
+  margin-top: 0.35em;
+  font-size: 90%;
+}
+form#monster:is(:not(.individualization), :not(.golem)) #section-common > .loots > h2 label {
+  display: none;
+}
 form#monster.individualization #loots-list {
   display: none;
 }
@@ -2360,6 +2374,9 @@ form#monster #source-loot-table {
     grid-column: 2 / 3;
     text-align: left;
   }
+}
+form#monster .loots-disabled #source-loot-table {
+  display: none;
 }
 
 form#monster .mount-equipments {

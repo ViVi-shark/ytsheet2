@@ -10,6 +10,7 @@ window.onload = function() {
   checkKind();
   updateGolemReinforcementItemGrade(false);
   updateGolemReinforcementItemPartRestriction();
+  switchLoots();
   swordFragmentNumChanged();
   individualizationModeChanged();
 
@@ -1482,6 +1483,10 @@ document.querySelectorAll('[data-related-field]').forEach(
       );
     }
 );
+function switchLoots() {
+  const checkbox = document.querySelector('[name="disableLoots"]');
+  checkbox.closest('.box').classList.toggle('loots-disabled', checkbox.checked);
+}
 function swordFragmentNumChanged() {
   const fragmentNumInput = document.querySelector('[name="swordFragmentNum"]');
   const fragmentNum = fragmentNumInput.value !== '' ? parseInt(fragmentNumInput.value) : 0;
