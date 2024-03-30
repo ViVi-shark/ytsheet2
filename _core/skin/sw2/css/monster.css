@@ -83,6 +83,12 @@ article {
     grid-column: 1 / -1;
     text-align: right;
     font-weight: bold;
+
+    .price {
+      .normal:not(:empty) + .higher:not(:empty)::before {
+        content: "／";
+      }
+    }
   }
 }
 .night .golem .level-and-name {
