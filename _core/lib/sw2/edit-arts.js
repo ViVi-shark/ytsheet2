@@ -294,6 +294,7 @@ function delSchoolMagic(){
         group: 'school-magic',
         dataIdAttr: 'id',
         animation: 100,
+        handle: '.handle',
         filter: 'template',
         ghostClass: 'sortable-ghost',
         onUpdate: () => {
