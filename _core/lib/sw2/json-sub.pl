@@ -67,6 +67,27 @@ sub addJsonData {
             $partHp += 5 if $pc{ridingHpReinforcementSuper};
           }
         }
+        if ($pc{golem} && $pc{individualization} && $partHp ne '') {
+          my $offset;
+          if ($pc{reinforcementItemGrade} eq '小') {
+            $offset = 5;
+          }
+          elsif ($pc{reinforcementItemGrade} eq '中') {
+            $offset = 10;
+          }
+          elsif ($pc{reinforcementItemGrade} eq '大') {
+            $offset = 15;
+          }
+          elsif ($pc{reinforcementItemGrade} eq '極大') {
+            $offset = 20;
+          }
+          else {
+            $offset = 0;
+          }
+
+          $partHp += $offset if $pc{'golemReinforcement_garnetEnergy_part' . $n . '_using'};
+          $partHp += $offset if $pc{'golemReinforcement_garnetLife_part' . $n . '_using'};
+        }
 
         push(@hp , {$partname.':HP' => $partHp.'/'.$partHp});
         push(@mp , {$partname.':MP' => $partMp.'/'.$partMp});
