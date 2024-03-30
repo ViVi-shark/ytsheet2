@@ -693,13 +693,13 @@ print <<"HTML";
       </p>
     </form>
 HTML
-    print "<fieldset id=\"loaded-data\" style=\"display: none;\">\n";
-    for my $key (keys %pc) {
-        next if $key !~ /^partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$|^swordFragment_[hm]pOffset_part\d+$/;
-        print "<input type=\"hidden\" name=\"$key\" value=\"$pc{$key}\" />\n";
-    }
-    print "</fieldset>\n";
 }
+print "<fieldset id=\"loaded-data\" style=\"display: none;\">\n";
+for my $key (keys %pc) {
+    next if $key !~ /^partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$|^swordFragment_[hm]pOffset_part\d+$/;
+    print "<input type=\"hidden\" name=\"$key\" value=\"$pc{$key}\" />\n";
+}
+print "</fieldset>\n";
 print <<"HTML";
     </article>
 HTML
