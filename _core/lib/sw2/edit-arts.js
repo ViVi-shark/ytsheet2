@@ -229,6 +229,7 @@ function delSchoolArts(){
         group: 'school-arts',
         dataIdAttr: 'id',
         animation: 100,
+        handle: '.handle',
         filter: 'template',
         ghostClass: 'sortable-ghost',
         onUpdate: () => {
