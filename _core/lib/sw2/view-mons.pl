@@ -161,8 +161,23 @@ $SHEET->param(Tags => \@tags);
 
 ### ゴーレム素材 --------------------------------------------------
 if ($pc{golem}) {
-  $SHEET->param(materialPriceNormal => commify $pc{materialPriceNormal}) if $pc{materialPriceNormal};
-  $SHEET->param(materialPriceHigher => commify $pc{materialPriceHigher}) if $pc{materialPriceHigher};
+  if ($pc{individualization}) {
+    if ($pc{golemMaterialRank} eq 'higher') {
+      $pc{materialName} = '強く' . $pc{materialName} if $pc{golemMaterialRank} eq 'higher';
+      $SHEET->param(materialName => $pc{materialName});
+
+      $pc{materialPriceNormal} = '';
+    }
+    else {
+      $pc{materialPriceHigher} = '';
+    }
+  }
+
+  $pc{materialPriceNormal} = commify $pc{materialPriceNormal} if $pc{materialPriceNormal};
+  $pc{materialPriceHigher} = commify $pc{materialPriceHigher} if $pc{materialPriceHigher};
+
+  $SHEET->param(materialPriceNormal => $pc{materialPriceNormal});
+  $SHEET->param(materialPriceHigher => $pc{materialPriceHigher});
 }
 ### 価格 --------------------------------------------------
 {
