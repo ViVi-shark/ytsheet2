@@ -211,6 +211,11 @@ if ($pc{individualization} && $pc{additionalLanguage}) {
   $pc{language} .= $pc{additionalLanguage};
   $SHEET->param(language => $pc{language});
 }
+### 生息地 --------------------------------------------------
+if ($pc{individualization} && $pc{habitatReplacementEnabled}) {
+  $pc{habitat} = $pc{habitatReplacement} || '';
+  $SHEET->param(habitat => $pc{habitat});
+}
 ### 穢れ --------------------------------------------------
 $SHEET->param(sin => $pc{sin});
 unless(
