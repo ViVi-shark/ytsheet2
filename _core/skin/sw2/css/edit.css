@@ -2316,6 +2316,9 @@ form#monster textarea[name="description"] {
 form#monster.individualization textarea[name="description"] {
   display: none;
 }
+form#monster.individualization #section-common > .loots:has(#source-loot-table:empty) {
+  display: none;
+}
 form#monster.individualization.golem #section-common > .loots > h2 label {
   display: inline-flex;
   height: 100%;
@@ -2375,6 +2378,7 @@ form#monster #source-loot-table {
     text-align: left;
   }
 }
+form#monster #source-loot-table:empty,
 form#monster .loots-disabled #source-loot-table {
   display: none;
 }

@@ -1399,12 +1399,19 @@ function individualizationSourceUrlChanged() {
               const rowTemplate = document.getElementById('template-of-source-loot-table-row');
 
               for (let i = 1; i <= lootsNum; i++) {
+                const range = source[`loots${i}Num`] ?? '';
+                const item = source[`loots${i}Item`] ?? '';
+
+                if (range === '' && item === '') {
+                  continue;
+                }
+
                 const rangeNode = rowTemplate.content.querySelector('.range').cloneNode(true);
-                rangeNode.textContent = source[`loots${i}Num`] ?? '';
+                rangeNode.textContent = range;
                 sourceLootTable.appendChild(rangeNode);
 
                 const contentNode = rowTemplate.content.querySelector('.content').cloneNode(true);
-                contentNode.textContent = source[`loots${i}Item`] ?? '';
+                contentNode.textContent = item;
                 sourceLootTable.appendChild(contentNode);
               }
             }
