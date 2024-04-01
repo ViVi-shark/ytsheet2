@@ -10,6 +10,7 @@ window.onload = function() {
   checkKind();
   updateGolemReinforcementItemGrade(false);
   updateGolemReinforcementItemPartRestriction();
+  switchHabitatReplacement();
   switchLoots();
   swordFragmentNumChanged();
   individualizationModeChanged();
@@ -1474,6 +1475,16 @@ document.querySelectorAll('[data-related-field]').forEach(
       );
     }
 );
+function switchHabitatReplacement() {
+  const checkbox = document.querySelector('[name="habitatReplacementEnabled"]');
+  const textField = document.querySelector('[name="habitatReplacement"]');
+
+  if (checkbox.checked) {
+    textField.removeAttribute('disabled');
+  } else {
+    textField.setAttribute('disabled', '');
+  }
+}
 function switchLoots() {
   const checkbox = document.querySelector('[name="disableLoots"]');
   checkbox.closest('.box').classList.toggle('loots-disabled', checkbox.checked);
