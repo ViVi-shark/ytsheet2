@@ -556,7 +556,6 @@ function individualizationSourceUrlChanged() {
       .then(
           source => {
             delete source['result'];
-            console.log(source); // todo
 
             if (now !== lastSourceTimestamp) {
               return;
@@ -1514,6 +1513,3 @@ function swordFragmentNumChanged() {
   }
 }
 document.querySelector('[name="swordFragmentNum"]').addEventListener('input', () => swordFragmentNumChanged());
-// document.querySelector('.individualization-area input[name="sourceMonsterUrl"]').value = 'http://localhost/ytsheet2/sw2.5/?id=W1xihL'; // todo: for DEBUG
-// document.querySelector('.individualization-area input[name="sourceMonsterUrl"]').value = 'http://localhost/ytsheet2/sw2.5/?id=LPt9In'; // todo: for DEBUG
-// document.querySelector('.individualization-area input[type="checkbox"][name="individualization"]').checked = true; // todo: for DEBUG
