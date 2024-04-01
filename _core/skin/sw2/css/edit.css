@@ -1653,6 +1653,42 @@ form#monster div.status .language {
 form#monster.golem div.status .language .additional {
   display: none;
 }
+form#monster.individualization div.status .habitat {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: max-content max-content 1fr;
+}
+form#monster.individualization div.status .habitat .replacement {
+  padding-left: 0.75em;
+  width: 100%;
+  display: inline-grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: max-content 1fr;
+
+  & label:has([type="checkbox"]) {
+    grid-column: 1 / 2;
+    display: flex;
+    padding: 0;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: center;
+    border: none;
+
+    & span {
+      display: inline;
+    }
+  }
+
+  & label:has([type="checkbox"])::after {
+    content: ":";
+  }
+
+  [name="habitatReplacement"] {
+    grid-column: 2 / 3;
+    margin: 0;
+    width: 100%;
+  }
+}
 form#monster.individualization.golem #section-common > .status.remove-weakness {
   .reputation [data-related-field="reputation+"],
   .weakness [data-related-field] {

@@ -287,9 +287,12 @@ print <<"HTML";
           <dd>@{[ input 'language' ]}<span data-related-field="language"></span>
           <dd class="additional individualization-only"><span class="label">追加：</span>@{[ input 'additionalLanguage' ]}
         </dl>
-        <dl class="monster-only">
+        <dl class="habitat monster-only">
           <dt>生息地
           <dd>@{[ input 'habitat' ]}<span data-related-field="habitat"></span>
+          <dd class="replacement individualization-only">
+            @{[ checkbox 'habitatReplacementEnabled','置き換え','switchHabitatReplacement' ]}
+            @{[ input 'habitatReplacement','','','disabled' ]}
         </dl>
         <dl class="monster-only reputation">
           <dt>知名度／弱点値
