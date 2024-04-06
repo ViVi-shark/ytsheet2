@@ -249,6 +249,8 @@ foreach (1 .. $pc{statusNum}){
   $pc{'status'.$_.'Hp'} += $pc{'swordFragment_hpOffset_part' . $_} if $pc{swordFragmentNum} > 0 && $pc{'swordFragment_hpOffset_part' . $_};
   $pc{'status'.$_.'Mp'} += $pc{'swordFragment_mpOffset_part' . $_} if $pc{swordFragmentNum} > 0 && $pc{'swordFragment_mpOffset_part' . $_};
 
+  $pc{'status'.$_.'Damage'} = '―' if $pc{'status'.$_.'Damage'} eq '2d+' && ($pc{'status'.$_.'Accuracy'} eq '' || $pc{'status'.$_.'Accuracy'} eq '―');
+
   if ($pc{golem} && $pc{individualization}) {
     my $offset;
     if ($pc{reinforcementItemGrade} eq '小') {
@@ -323,6 +325,8 @@ foreach my $lv (2 .. ($pc{lvMax}-$pc{lvMin}+1)){
     $pc{'status'.$num.'Defense'} += $pc{'partEquipment'.$_.'-armor-defense'} if $pc{'status'.$num.'Defense'} ne '' && $pc{'partEquipment'.$_.'-armor-defense'};
     $pc{'status'.$num.'Hp'} += $pc{'partEquipment'.$_.'-armor-hp'} if $pc{'status'.$num.'Hp'} ne '' && $pc{'partEquipment'.$_.'-armor-hp'};
     $pc{'status'.$num.'Mp'} += $pc{'partEquipment'.$_.'-armor-mp'} if $pc{'status'.$num.'Mp'} ne '' && $pc{'partEquipment'.$_.'-armor-mp'};
+
+    $pc{'status'.$num.'Damage'} = '―' if $pc{'status'.$num.'Damage'} eq '2d+' && ($pc{'status'.$num.'Accuracy'} eq '' || $pc{'status'.$num.'Accuracy'} eq '―');
 
 #   $pc{'status'.$num.'Accuracy'} = $pc{'status'.$num.'Accuracy'} eq '' ? '―' : $pc{'status'.$num.'Accuracy'};
 #   $pc{'status'.$num.'Evasion'}  = $pc{'status'.$num.'Evasion'}  eq '' ? '―' : $pc{'status'.$num.'Evasion'} ;
