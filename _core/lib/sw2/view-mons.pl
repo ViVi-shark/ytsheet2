@@ -225,6 +225,8 @@ foreach (1 .. $pc{statusNum}){
   $pc{'status'.$_.'Hp'} += $pc{'swordFragment_hpOffset_part' . $_} if $pc{swordFragmentNum} > 0 && $pc{'swordFragment_hpOffset_part' . $_};
   $pc{'status'.$_.'Mp'} += $pc{'swordFragment_mpOffset_part' . $_} if $pc{swordFragmentNum} > 0 && $pc{'swordFragment_mpOffset_part' . $_};
 
+  $pc{'status'.$_.'Damage'} = '' if $pc{'status'.$_.'Accuracy'} eq '' || $pc{'status'.$_.'Accuracy'} eq '―';
+
   if ($pc{golem} && $pc{individualization}) {
     my $offset;
     if ($pc{reinforcementItemGrade} eq '小') {
