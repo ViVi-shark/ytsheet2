@@ -332,6 +332,9 @@ table.status {
   & h3::first-letter {
     color: var(--s-icon-color);
   }
+  > section.level5:first-of-type > h5:first-child {
+    margin-top: 1.0rem;
+  }
   & .s-icon::before {
     color: var(--s-icon-color);
   }
