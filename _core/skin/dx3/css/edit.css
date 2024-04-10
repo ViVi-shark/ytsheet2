@@ -276,6 +276,22 @@ body:not(.mode-crc) .crc-only {
 }
 
 #lois table {
+  > thead {
+    .icon.info {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-style: normal;
+      font-weight: normal;
+      height: 100%;
+      opacity: 0.5;
+    }
+
+    .icon.info::before {
+      content: "\e887";
+      font-family: "Material Symbols Outlined", sans-serif;
+    }
+  }
 }
 #lois table thead th.right.small {
   padding-right: 0;

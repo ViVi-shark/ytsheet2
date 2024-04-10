@@ -560,7 +560,7 @@ print <<"HTML";
               <th>関係
               <th>名前
               <th colspan="3">感情<span class="small">(Positive／Negative)</span>
-              <th>属性
+              <th>属性<i class="icon info"></i>
               <th colspan="2" class="right small">Sロイス
               <th class="right">状態
             </tr>
