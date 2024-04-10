@@ -352,7 +352,8 @@ print <<"HTML";
       <div class="box parts in-toc" data-content-title="部位数・コア部位">
         @{[ checkbox 'partsManualInput', '部位数と内訳を手動入力する', 'updatePartsAutomatically' ]}
         <dl><dt>部位数<dd>@{[ input 'partsNum','number','','min="1"' ]} (@{[ input 'parts' ]}) </dl>
-        <dl><dt>コア部位<dd>@{[ input 'coreParts' ]}</dl>
+        <dl><dt>コア部位<dd>@{[ input 'coreParts','','','list="list-of-core-part"' ]}</dl>
+        <datalist id="list-of-core-part"></datalist>
       </div>
       <div class="box">
         <h2 class="in-toc">特殊能力</h2>
