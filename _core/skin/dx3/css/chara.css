@@ -1050,10 +1050,39 @@ table.data-table tbody span.source .source-page::before {
   border-style: solid;
   text-align: left;
   line-height: 1.4;
+  position: relative;
 
   &:empty {
     display: unset;
   }
+}
+#combo .combo-table:hover .combo-note:empty {
+  display: block;
+}
+#combo .combo-table .combo-note button.to-copy {
+  display: none;
+}
+#combo .combo-table:hover .combo-note button.to-copy {
+  display: initial;
+  position: absolute;
+  right: 0.1em;
+  bottom: 0.1em;
+  cursor: copy;
+  background: transparent;
+  border: none;
+  font-size: 150%;
+  padding: 0.05em;
+  opacity: 0.5;
+}
+#combo .combo-table:hover .combo-note button.to-copy:hover {
+  opacity: 0.75;
+}
+#combo .combo-table:hover .combo-note button.to-copy::before {
+  content: "\e14d";
+  font-family: "Material Symbols Outlined";
+  font-variation-settings: 'FILL' 1;
+  font-weight: 100;
+  color: mediumseagreen;
 }
 
 #combo .combo-table .combo-combo dd span.thin {
