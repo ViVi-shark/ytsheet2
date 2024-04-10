@@ -1113,6 +1113,13 @@ table.data-table tbody span.source .source-page::before {
   }
 }
 
+#combo .combo-table[data-exclude-dice-roll="yes"] .combo-cond {
+  grid-column: 1 / span 4;
+}
+#combo .combo-table[data-exclude-dice-roll="yes"] .combo-dice, #combo .combo-table[data-exclude-dice-roll="yes"] .combo-crit, #combo .combo-table[data-exclude-dice-roll="yes"] .combo-fixed {
+  display: none;
+}
+
 #combo[data-display-mode="simple"] .combo-table {
   & h3 {
     border-bottom: none;

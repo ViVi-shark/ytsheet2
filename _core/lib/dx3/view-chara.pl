@@ -519,6 +519,7 @@ foreach (1 .. $pc{comboNum}){
   if(!$pc{'combo'.$_.'Condition3'}){ $blankrow++; }
   if(!$pc{'combo'.$_.'Condition4'}){ $blankrow++; }
   if(!$pc{'combo'.$_.'Condition5'}){ $blankrow++; }
+  my $excludeDiceRoll = $pc{'combo'.$_.'Dfclty'} eq "自動成功";
   push(@combos, {
     NAME     => textShrink(15,17,19,23,$pc{'combo'.$_.'Name'}),
     COMBO    => textCombo($pc{'combo'.$_.'Combo'}),
@@ -555,6 +556,7 @@ foreach (1 .. $pc{comboNum}){
     ATK5       => $pc{'combo'.$_.'Atk5'},
     FIXED5     => $pc{'combo'.$_.'Fixed5'},
     BLANKROW   => $blankrow,
+    "EXCLUDE_DICE_ROLL" => $excludeDiceRoll ? 'yes' : 'no',
   });
 }
 $SHEET->param(Combos => \@combos);
