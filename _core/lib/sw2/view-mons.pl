@@ -556,6 +556,7 @@ foreach (1 .. $pc{lootsNum}){
     ITEM => $pc{'loots'.$_.'Item'},
   } );
 }
+@loots = () if $pc{individualization} && $pc{disableLoots};
 $SHEET->param(Loots => \@loots);
 
 ### バックアップ --------------------------------------------------
