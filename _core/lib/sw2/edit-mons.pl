@@ -643,7 +643,7 @@ print <<"HTML";
         </template>
       </div>
       <fieldset class="box loots monster-only">
-        <h2 class="in-toc">戦利品</h2>
+        <h2 class="in-toc" data-content-title="戦利品">戦利品@{[ checkbox 'disableLoots','戦利品をもたない','switchLoots' ]}</h2>
         <div id="loots-list">
           <ul id="loots-num">
 HTML
