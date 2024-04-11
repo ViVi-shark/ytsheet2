@@ -908,6 +908,9 @@ table.data-table tbody span.source .source-page::before {
 
 
 /* Combos */
+#combo[data-combo-num="0"] {
+  display: none;
+}
 #combo .combo-table {
   display: grid;
   grid-template-columns: 1.7fr 1.3fr 2fr;
