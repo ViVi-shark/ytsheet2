@@ -512,6 +512,7 @@ $SHEET->param(Magics => \@magics);
 
 ### コンボ --------------------------------------------------
 my @combos;
+my $comboNum = 0;
 foreach (1 .. $pc{comboNum}){
   next if !existsRow "combo$_",'Name','Combo','Timing','Skill','Dfclty','Target','Range','Encroach','Note','Dice1','Crit1','Atk1','Fixed1';
   my $blankrow = 0;
@@ -583,8 +584,10 @@ foreach (1 .. $pc{comboNum}){
     "EXCLUDE_DICE_ROLL" => $excludeDiceRoll ? 'yes' : 'no',
     "EXCLUDE_ATK" => $excludeAttack ? 'yes' : 'no',
   });
+  $comboNum++;
 }
 $SHEET->param(Combos => \@combos);
+$SHEET->param(ComboNum => $comboNum);
 sub textCombo {
   my $text = shift;
   if($text =~ /《.*?》/){
