@@ -559,6 +559,13 @@ sub palettePreset {
             .($+{base} ne '' ?"2d+{$+{name}} ".convertMark($+{mark})."$+{name}$+{other}\n":'')
             .skillNote($+{head},$+{name},$+{note})."\n";
       /megix;
+
+    if ($skills =~ /(?:^|\n)(?:(?:[☆≫»]|&gt;&gt;)△?|△)練技[^\n]*\n[\s　]*((?:【.+?】、?)+)/) { #
+      my $enhanceNames = $1;
+      while ($enhanceNames =~ s/(【.+?】)//) {
+        $text .= "\@MP-3 $1\n";
+      }
+    }
   }
   
   return $text;
