@@ -61,7 +61,9 @@
             p => lines.push(nodeToText(p))
         );
 
-        return lines.join('\n');
+        return lines.join('\n')
+            .replaceAll(/(\s+)(@[HM]P-\d+)(\s+)/g, '$1<snippet>$2</snippet>$3')
+            .replaceAll(/(\s+)(2d(?:\[>=\d+:\+\d+])?(?:[-+]\d+)*)(\s+)/g, '$1<snippet>$2</snippet>$3');
     }
 
     document.querySelectorAll('main article .skills h5').forEach(
