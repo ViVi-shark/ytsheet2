@@ -348,7 +348,9 @@ sub palettePreset {
     foreach (1 .. $::pc{statusNum}){
       my $num = $::pc{mount} && $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
       (my $part   = $::pc{'status'.$_.'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
-      $text .= "2d+{回避$_}+{回避修正} 回避／".$part."\n" if $::pc{'status'.$num.'Evasion'} ne '';
+      $part = '' if $::pc{partsNum} == 1;
+      $part = "／$part" if $part ne '';
+      $text .= "2d+{回避$_}+{回避修正} 回避".$part."\n" if $::pc{'status'.$num.'Evasion'} ne '';
     }
     $text .= "\n";
 
@@ -365,8 +367,11 @@ sub palettePreset {
               ? extractWeaponMarks($::pc{'partEquipment' . $_ . '-weapon-name'})
               : '';
 
-      $text .= "2d+{命中$_}+{命中修正} 命中力／$weapon\n" if $::pc{'status'.$num.'Accuracy'} ne '';
-      $text .= "{ダメージ$_}+{打撃修正} ダメージ／".$weapon."\n" if $::pc{'status'.$num.'Damage'} ne '';
+      $weapon = '' if $::pc{partsNum} == 1;
+      $weapon = "／$weapon" if $weapon ne '';
+
+      $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status'.$num.'Accuracy'} ne '';
+      $text .= "{ダメージ$_}+{打撃修正} ダメージ".$weapon."\n" if $::pc{'status'.$num.'Damage'} ne '';
       $text .= "\n";
     }
     my $skills = $::pc{skills};
