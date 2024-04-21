@@ -480,25 +480,31 @@ sub palettePreset {
     $text .= "//回避修正=0\n";
     $text .= "2d+{生命抵抗}+{生命抵抗修正} 生命抵抗力\n";
     $text .= "2d+{精神抵抗}+{精神抵抗修正} 精神抵抗力\n";
+    my $lastPart;
     foreach (1 .. $::pc{statusNum}){
       (my $part   = $::pc{'status'.$_.'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
       $part = '' if $::pc{partsNum} == 1;
       $part = "／$part" if $part ne '';
+      next if $part eq $lastPart && $::pc{'status'.$_.'Evasion'} == $::pc{'status'.($_ - 1).'Evasion'};
       $text .= "2d+{回避$_}+{回避修正} 回避".$part."\n" if $::pc{'status'.$_.'Evasion'} ne '';
+      $lastPart = $part;
     }
     $text .= "\n";
 
     $text .= "//命中修正=0\n";
     $text .= "//打撃修正=0\n";
+    my $lastWeapon;
     foreach (1 .. $::pc{statusNum}){
       (my $part   = $::pc{'status'.$_.'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
       (my $weapon = $::pc{'status'.$_.'Style'}) =~ s/^(.+?)[（(].+?[)）]$/$1/;
       if($part ne $weapon){ $weapon = $::pc{'status'.$_.'Style'}; }
       $weapon = '' if $::pc{partsNum} == 1;
       $weapon = "／$weapon" if $weapon ne '';
+      next if $weapon eq $lastPart && $::pc{'status'.$_.'Accuracy'} == $::pc{'status'.($_ - 1).'Accuracy'} && $::pc{'status'.$_.'Damage'} == $::pc{'status'.($_ -1).'Damage'};
       $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status'.$_.'Accuracy'} ne '';
       $text .= "{ダメージ$_}+{打撃修正} ダメージ".$weapon."\n" if $::pc{'status'.$_.'Damage'} ne '';
       $text .= "\n" if $::pc{'status'.$_.'Accuracy'} ne '' || $::pc{'status'.$_.'Damage'} ne '';
+      $lastPart = $weapon;
     }
     my $skills = $::pc{skills};
     $skills =~ tr/０-９（）/0-9\(\)/;
