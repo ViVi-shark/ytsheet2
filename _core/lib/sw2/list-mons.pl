@@ -37,7 +37,7 @@ foreach (keys %::in) {
   $::in{$_} =~ s/</&lt;/g;
   $::in{$_} =~ s/>/&gt;/g;
 }
-if(!($mode eq 'mylist' || $::in{tag} || $::in{taxa} || $::in{mount} || $::in{name} || $::in{'lv-max'} || $::in{'lv-min'} || $::in{'parts-max'} || $::in{'parts-min'} || $::in{intellect} || $::in{perception} || $::in{disposition} || $::in{habitat} || $::in{weakness})){
+if(!($mode eq 'mylist' || $::in{tag} || $::in{taxa} || $::in{mount} || $::in{golem} || $::in{name} || $::in{'lv-max'} || $::in{'lv-min'} || $::in{'parts-max'} || $::in{'parts-min'} || $::in{intellect} || $::in{perception} || $::in{disposition} || $::in{habitat} || $::in{weakness})){
   $index_mode = 1;
   $INDEX->param(modeIndex => 1);
 }
@@ -48,6 +48,7 @@ foreach(
   'tag',
   #'taxa',
   'mount',
+  'golem',
   'name',
   'lv-min',
   'lv-max',
@@ -106,8 +107,12 @@ if($::in{mount}) {
   if($taxa_query eq 'all'){ $taxa_query = '' }
   @list = grep { $_ =~ /^(?:[^<]*?<>){6}騎獣／\Q$taxa_query\E/ } @list;
 }
+elsif($::in{golem}) {
+  if($taxa_query eq 'all'){ $taxa_query = '' }
+  @list = grep { $_ =~ /^(?:[^<]*?<>){6}ゴーレム／\Q$taxa_query\E/ } @list;
+}
 elsif($taxa_query) {
-  @list = grep { $_ !~ /^(?:[^<]*?<>){6}騎獣／/ } @list;
+  @list = grep { $_ !~ /^(?:[^<]*?<>){6}(?:騎獣|ゴーレム)／/ } @list;
   if($taxa_query eq 'その他') {
     @list = grep { $_ =~ /^(?:[^<]*?<>){6}その他/ } @list;
   }
@@ -116,8 +121,10 @@ elsif($taxa_query) {
   }
 }
 if($::in{mount}){ $INDEX->param(group => '騎獣'.($taxa_query?"／$taxa_query":'')      ); }
+elsif($::in{golem}){ $INDEX->param(group => 'ゴーレム'.($taxa_query?"／$taxa_query":'')      ); }
 else            { $INDEX->param(group => $taxa_query eq 'all' ? 'すべて' : $taxa_query); }
 $INDEX->param(mount => $::in{mount} ? 'checked' : '');
+$INDEX->param(golem => $::in{golem} ? 'checked' : '');
 my @taxalist;
 foreach (sort { $a->[1] cmp $b->[1] } @data::taxa){
   push(@taxalist, {
@@ -211,13 +218,17 @@ foreach (@list) {
   my (
     $id, undef, undef, $updatetime, $name, $author, $taxa, $lv,
     $intellect, $perception, $disposition, $sin, $initiative, $weakness,
-    $image, $tags, $hide, $parts, $habitat, $price
-  ) = (split /<>/, $_)[0..19];
+    $image, $tags, $hide, $parts, $habitat, $price, $requiredConjurerLv
+  ) = (split /<>/, $_)[0..20];
   
   #グループ
   my $taxa_full = $taxa =~ s/^その他://r;
   $taxa_full = "<span class=\"small\">$taxa_full</span>" if length($taxa_full) >= 6;
   if($taxa =~ /^騎獣／/){ $taxa = '騎獣'; }
+  elsif($taxa =~ /^ゴーレム／/){
+    $taxa = 'ゴーレム';
+    $taxa_full =~ s/ゴーレム／//;
+  }
   else {
     if (!$taxa){ $taxa = '未分類' }
     elsif($taxa =~ /^その他/){ $taxa = 'その他' }
@@ -258,6 +269,7 @@ foreach (@list) {
     "NAME" => $name,
     "AUTHOR" => $author,
     "TAXA" => $taxa_full,
+    "REQUIRED_CONJURER_LEVEL" => $requiredConjurerLv,
     "LV" => $lv,
     "PARTS" => $parts,
     "DISPOSITION" => $disposition,
@@ -275,7 +287,7 @@ foreach (@list) {
 my @characterlists; 
 @data::taxa = sort{$a->[1] <=> $b->[1]} @data::taxa;
 my @taxa = $index_mode || ($taxa_query && $taxa_query ne 'all') ? @data::taxa : ['すべて','',];
-foreach (@taxa,['騎獣', 'XX' , '']){
+foreach (@taxa,['騎獣', 'XX' , ''],['ゴーレム', 'XX' , '']){
   my $name = $_->[0];
   next if !$count{$name};
 
@@ -284,6 +296,11 @@ foreach (@taxa,['騎獣', 'XX' , '']){
     if($taxa_query && $taxa_query ne 'all'){ $urltaxa = uri_escape_utf8($name); }
     else { $urltaxa = 'all'; }
     if(!$::in{mount}){ $urltaxa .= '&mount=1' }
+  }
+  elsif($name eq 'ゴーレム'){
+    if($taxa_query && $taxa_query ne 'all'){ $urltaxa = uri_escape_utf8($name); }
+    else { $urltaxa = 'all'; }
+    if(!$::in{golem}){ $urltaxa .= '&golem=1' }
   }
   elsif($name eq 'すべて'){
     $urltaxa = 'all';
@@ -316,10 +333,14 @@ foreach (@taxa,['騎獣', 'XX' , '']){
   }
 
   my $text;
-  if($name eq 'すべて'){ $text = '騎獣以外のすべての魔物' }
+  if($name eq 'すべて'){ $text = '騎獣・ゴーレム以外のすべての魔物' }
   if($name eq '騎獣'){
     if($taxa_query){ $text = "／$taxa_query" }
     else { $text = 'すべての騎獣' }
+  }
+  elsif($name eq 'ゴーレム'){
+    if($taxa_query){ $text = "／$taxa_query" }
+    else { $text = 'すべてのゴーレム' }
   }
 
   ##
@@ -328,6 +349,7 @@ foreach (@taxa,['騎獣', 'XX' , '']){
     "NAME" => "$name <small>$text</small>",
     "NUM" => $count{$name},
     "MOUNT" => ($name eq '騎獣' ? 1 : 0),
+    "GOLEM" => ($name eq 'ゴーレム' ? 1 : 0),
     "Characters" => ($grouplist{$name} ? [@{$grouplist{$name}}] : []),
     "NAV" => $navbar,
   });
