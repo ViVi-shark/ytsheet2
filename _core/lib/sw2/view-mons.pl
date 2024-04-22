@@ -108,6 +108,8 @@ $pc{skills} = "<p>$pc{skills}</p>";
 $pc{skills} =~ s#(</p>|</details>)\n#$1#gi;
 $pc{skills} =~ s/<p><\/p>//gi;
 $pc{skills} =~ s/\n/<br>/gi;
+$pc{skills} = splitParagraph($pc{skills});
+$pc{description} = splitParagraph($pc{description});
 
 ### カラー設定 --------------------------------------------------
 setColors();
