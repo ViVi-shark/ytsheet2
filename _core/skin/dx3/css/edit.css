@@ -478,6 +478,30 @@ body:not(.mode-crc) .crc-only {
   content: ":";
   font-size: 1rem;
 }
+#effect table tbody tr.third td {
+  text-align: left;
+}
+#effect table tbody tr.third label.level-mode span {
+  font-size: 70%;
+}
+#effect table tbody tr.third select[name$="LvMode"] {
+  width: 10.5em;
+}
+#effect table tbody tr.third span.source {
+  display: inline-block;
+  width: calc(14em + 5em);
+  float: right;
+}
+#effect table tbody tr.third span.source > input {
+  display: inline-block;
+  margin: 0;
+}
+#effect table tbody tr.third span.source > input[name$="SourceName"] {
+  width: 14em;
+}
+#effect table tbody tr.third span.source > input[name$="SourcePage"] {
+  width: 5em;
+}
 @media screen and (min-width:736px){
   #effect table tbody td:nth-child(n+4) input {
     font-size: 12.5px;
