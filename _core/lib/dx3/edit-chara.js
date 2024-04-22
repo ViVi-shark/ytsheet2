@@ -916,12 +916,12 @@ function addWeapon(){
 }
 // 削除
 function delWeapon(){
-  if(delRow('weaponNum', '#weapon-table tbody tr:last-of-type')){
+  if(delRow('weaponNum', '#weapon-table tbody:last-of-type')){
     calcItem();
   }
 }
 // ソート
-setSortable('weapon','#weapon-table tbody','tr');
+setSortable('weapon','#weapon-table','tbody');
 
 // 防具欄 ----------------------------------------
 // 追加

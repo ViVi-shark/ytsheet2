@@ -797,9 +797,10 @@ print <<"HTML";
       <summary class="in-toc" data-content-title="アイテム">アイテム [<span id="exp-item">0</span>]</summary>
       <div class="box">
         @{[input 'weaponNum','hidden']}
-        <table class="edit-table no-border-cells" id="weapon-table">
+        <table class="edit-table no-border-cells game-data-list" id="weapon-table">
           <thead>
-            <tr><th>武器<th>常備化<th>経験点<th>種別<th>技能<th>命中<th>攻撃力<th><span class="small">ガード値</span><th>射程<th>解説
+            <tr><th></th><th>武器</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>命中</th><th>攻撃力</th><th><span class="small">ガード値</span></th><th>射程</th><th>解説</th></tr>
+          </thead>
           <tbody>
 HTML
 foreach my $num ('TMPL',1 .. $pc{weaponNum}) {
@@ -816,6 +817,12 @@ print <<"HTML";
               <td>@{[input "weapon${num}Guard"]}
               <td>@{[input "weapon${num}Range"]}
               <td><textarea name="weapon${num}Note" rows="2">$pc{"weapon${num}Note"}</textarea>
+              <tr class="source">
+                <td colspan="10">
+                  @{[input "weapon${num}SourceName",'','','placeholder="出典" list="source-names"']}
+                  @{[input "weapon${num}SourcePage",'number','','placeholder="ページ"']}
+                </td>
+              </tr>
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
