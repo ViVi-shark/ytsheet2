@@ -754,6 +754,20 @@ body:not(.mode-crc) .crc-only {
   vertical-align: middle;
   width: 1.5em;
 }
+#weapon-table tbody:first-child {
+  border-top-width: 1px;
+}
+#weapon-table tbody tr:last-child {
+  border-bottom-width: 1px;
+}
+#weapon-table tbody tr {
+  border-width: 0;
+}
+#weapon-table tbody tr.source td {
+  padding-top: 0;
+}
+#weapon-table tbody:nth-child(odd) { background-color: var(--box-even-rows-bg-color); }
+#weapon-table tbody tr { background-color: transparent; }
 #armor-table tbody:first-child {
   border-top-width: 1px;
 }
