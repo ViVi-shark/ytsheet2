@@ -940,16 +940,16 @@ setSortable('armor','#armor-table tbody','tr');
 // ヴィークル欄 ----------------------------------------
 // 追加
 function addVehicle(){
-  document.querySelector("#vehicle-table tbody").append(createRow('vehicle','vehicleNum'));
+  document.querySelector("#vehicle-table").append(createRow('vehicle','vehicleNum'));
 }
 // 削除
 function delVehicle(){
-  if(delRow('vehicleNum', '#vehicle-table tbody tr:last-of-type')){
+  if(delRow('vehicleNum', '#vehicle-table tbody tbody:last-of-type')){
     calcItem();
   }
 }
 // ソート
-setSortable('vehicle','#vehicle-table tbody','tr');
+setSortable('vehicle','#vehicle-table','tbody');
 
 // アイテム欄 ----------------------------------------
 // 追加
