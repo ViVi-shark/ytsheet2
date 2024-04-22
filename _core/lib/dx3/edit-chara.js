@@ -930,12 +930,12 @@ function addArmor(){
 }
 // 削除
 function delArmor(){
-  if(delRow('armorNum', '#armor-table tbody tr:last-of-type')){
+  if(delRow('armorNum', '#armor-table tbody:last-of-type')){
     calcItem();
   }
 }
 // ソート
-setSortable('armor','#armor-table tbody','tr');
+setSortable('armor','#armor-table','tbody');
 
 // ヴィークル欄 ----------------------------------------
 // 追加
