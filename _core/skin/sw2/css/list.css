@@ -153,6 +153,19 @@ body {
   }
   & .price { grid-area: PRICE; }
 }
+.list.monster table.golem tr {
+  grid-template-columns: 24rem 1fr 7.2em 2fr 5.2em 3.2em 0.8fr;
+  grid-template-areas:
+    "NAME AUTHOR TAXA CONJURER_LV LV   PARTS DATE"
+    "NAME   TAGS TAGS        TAGS TAGS TAGS  DATE"
+;
+}
+.list.monster table.golem tr:has(.tags:empty) {
+  grid-template-areas:
+    "NAME AUTHOR TAXA CONJURER_LV LV   PARTS DATE"
+;
+}
+.list.monster table .required-conjurer-level { grid-area: CONJURER_LV; }
 
 /* // List-Item
 ---------------------------------------------------------------------------------------------------- */

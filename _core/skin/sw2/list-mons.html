@@ -21,7 +21,7 @@
         <p id="form-search-area" style="display:none">
           名前　：<input type="text" name="name" value="<TMPL_VAR name>"><br>
           タグ　：<input type="text" name="tag" value="<TMPL_VAR tag>"><br>
-          分類　：<select name="taxa"><option value="all">すべて<TMPL_LOOP Taxa><option <TMPL_VAR SELECTED>><TMPL_VAR NAME></TMPL_LOOP></select> <input type="checkbox" name="mount" value="1"  <TMPL_VAR mount>>騎獣<br>
+          分類　：<select name="taxa"><option value="all">すべて<TMPL_LOOP Taxa><option <TMPL_VAR SELECTED>><TMPL_VAR NAME></TMPL_LOOP></select> <input type="checkbox" name="mount" value="1"  <TMPL_VAR mount>>騎獣 <input type="checkbox" name="golem" value="1"  <TMPL_VAR golem>>ゴーレム<br>
           レベル：<input type="number" name="lv-min" value="<TMPL_VAR lvMin>" style="width:5em;"> ～ <input type="number" name="lv-max" value="<TMPL_VAR lvMax>" style="width:5em;"><br>
           部位数：<input type="number" name="parts-min" value="<TMPL_VAR partsMin>" style="width:5em;"> ～ <input type="number" name="parts-max" value="<TMPL_VAR partsMax>" style="width:5em;"><br>
           知能　：<input type="text" name="intellect" value="<TMPL_VAR intellect>"><br>
@@ -45,19 +45,24 @@
           </TMPL_LOOP>
         </ul>
         <TMPL_ELSE>
-        <table <TMPL_IF MOUNT>class="mount"</TMPL_IF>>
+        <table class="<TMPL_IF MOUNT>mount</TMPL_IF> <TMPL_IF GOLEM>golem</TMPL_IF>">
           <thead>
             <tr>
               <th class="name"><span>名称</span>
               <th class="author"><a href="./?type=m&<TMPL_VAR URL><TMPL_VAR qLinks>&sort=author">製作者</a>
               <th class="taxa"><span>分類</span>
+              <TMPL_IF GOLEM>
+                <th class="required-conjurer-level"><span>作製可能コンジャラーレベル</span>
+              </TMPL_IF>
               <th class="level"><a href="./?type=m&<TMPL_VAR URL><TMPL_VAR qLinks>&sort=lv"><span class="small">レベル</span></a>
               <th class="parts"><a href="./?type=m&<TMPL_VAR URL><TMPL_VAR qLinks>&sort=parts"><span class="small">部位数</span></a>
               <TMPL_IF MOUNT>
                 <th class="price"><span><span>価格<span class="small">(購入／レンタル)</span></span></span>
               <TMPL_ELSE>
-                <th class="disposition"><span>反応</span>
-                <th class="habitat"><span>生息地</span>
+                <TMPL_UNLESS GOLEM>
+                  <th class="disposition"><span>反応</span>
+                  <th class="habitat"><span>生息地</span>
+                </TMPL_UNLESS>
               </TMPL_IF>
               <th class="date"><a href="./?type=m&<TMPL_VAR URL><TMPL_VAR qLinks>&sort=date">更新日時</a>
           </thead>
@@ -65,13 +70,18 @@
             <td class="name"><a href="./?id=<TMPL_VAR ID>"><TMPL_VAR NAME></a>
             <td class="author"><TMPL_VAR AUTHOR>
             <td class="taxa"><TMPL_VAR TAXA>
+            <TMPL_IF GOLEM>
+              <td class="required-conjurer-level"><TMPL_VAR REQUIRED_CONJURER_LEVEL>
+            </TMPL_IF>
             <td class="level"><TMPL_VAR LV>
             <td class="parts"><TMPL_VAR PARTS>
             <TMPL_IF MOUNT>
               <td class="price"><TMPL_VAR PRICE>
             <TMPL_ELSE>
-              <td class="disposition"><TMPL_VAR DISPOSITION>
-              <td class="habitat"><TMPL_VAR HABITAT>
+              <TMPL_UNLESS GOLEM>
+                <td class="disposition"><TMPL_VAR DISPOSITION>
+                <td class="habitat"><TMPL_VAR HABITAT>
+              </TMPL_UNLESS>
             </TMPL_IF>
             <td class="tags"><TMPL_VAR TAGS></td>
             <td class="date"><div><TMPL_VAR DATE></div>
@@ -86,6 +96,7 @@
         <ul class="grouplist">
           <TMPL_LOOP Taxa><li><a href="./?type=m&taxa=<TMPL_VAR ID>"><TMPL_VAR NAME><small><TMPL_VAR TEXT></small></a></TMPL_LOOP>
           <li><a href="./?type=m&taxa=all&mount=1">騎獣</a>
+          <li><a href="./?type=m&taxa=all&golem=1">ゴーレム</a>
         </ul>
       </section></TMPL_IF>
     </article>
