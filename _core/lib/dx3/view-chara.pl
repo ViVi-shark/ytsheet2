@@ -501,6 +501,9 @@ foreach (1 .. $pc{weaponNum}){
     GUARD => $pc{'weapon'.$_.'Guard'},
     RANGE => $pc{'weapon'.$_.'Range'},
     NOTE  => $pc{'weapon'.$_.'Note'},
+    "HAS_SOURCE" => $pc{'weapon' . $_ . 'SourceName'} || $pc{'weapon' . $_ . 'SourcePage'},
+    "SOURCE_NAME" => $pc{'weapon' . $_ . 'SourceName'},
+    "SOURCE_PAGE" => $pc{'weapon' . $_ . 'SourcePage'},
   });
 }
 $SHEET->param(Weapons => \@weapons);
