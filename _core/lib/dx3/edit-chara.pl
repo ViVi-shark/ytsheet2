@@ -629,7 +629,7 @@ print <<"HTML";
       <details class="box" id="effect" $open{effect}>
         <summary class="in-toc" data-content-title="エフェクト">エフェクト [<span id="exp-effect">0</span>]</summary>
         @{[input 'effectNum','hidden']}
-        <table class="edit-table line-tbody no-border-cells" id="effect-table">
+        <table class="edit-table line-tbody no-border-cells game-data-list" id="effect-table">
           <thead id="effect-head">
             <tr><th><th>名称<th>LV<th>タイミング<th>技能<th>難易度<th>対象<th>射程<th>侵蝕値<th>制限
 HTML
@@ -654,7 +654,12 @@ print <<"HTML";
                 <b class="small">経験点修正</b>@{[input "effect${num}Exp",'number','calcEffect']}
                 <b>効果</b>@{[input "effect${num}Note"]}
               </div>
-HTML
+            <tr class="source">
+              <td colspan="9">
+                @{[input "effect${num}SourceName",'','','placeholder="出典" list="source-names"']}
+                @{[input "effect${num}SourcePage",'number','','placeholder="ページ"']}
+              </td>
+            </tr>HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
 print <<"HTML";
@@ -876,10 +881,10 @@ print <<"HTML";
       </div>
       <div class="box">
         @{[input 'itemNum','hidden']}
-        <table class="edit-table no-border-cells" id="item-table">
+        <table class="edit-table no-border-cells game-data-list" id="item-table">
           <thead>
-            <tr><th>一般アイテム<th>常備化<th>経験点<th>種別<th>技能<th>解説
-          <tbody>
+            <tr><th></th><th>一般アイテム</th><th>常備化</th><th>経験点</th><th>種別</th><th>技能</th><th>解説</th></tr>
+          </thead>
 HTML
 foreach my $num ('TMPL',1 .. $pc{itemNum}) {
   if($num eq 'TMPL'){ print '<template id="item-template">' }
@@ -891,6 +896,13 @@ print <<"HTML";
               <td>@{[input "item${num}Type",'','','list="list-item-type"']}
               <td>@{[input "item${num}Skill",'','','list="list-item-skill"']}
               <td><textarea name="item${num}Note" rows="2">$pc{"item${num}Note"}</textarea>
+            <tr class="source">
+              <td colspan="6">
+                @{[input "item${num}SourceName",'','','placeholder="出典" list="source-names"']}
+                @{[input "item${num}SourcePage",'number','','placeholder="ページ"']}
+              </td>
+            </tr>
+          </tbody>
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
@@ -1072,6 +1084,21 @@ print <<"HTML";
     <option value="ウィアードエイジ">
     <option value="カオスガーデン">
     <option value="クロウリングケイオス">
+  </datalist>
+  <datalist id="source-names">
+    <option value="ルールブック１">
+    <option value="ルールブック２">
+    <option value="上級ルールブック">
+    <option value="パブリックエネミー">
+    <option value="インフィニティコード">
+    <option value="ユニバーサルガーディアン">
+    <option value="レネゲイズアージ">
+    <option value="エフェクトアーカイブ">
+    <option value="リンケージマインド">
+    <option value="ヒューマンリレーション">
+    <option value="レネゲイドウォー">
+    <option value="カッティングエッジ">
+    <option value="バッドシティ">
   </datalist>
   <datalist id="list-gender">
     <option value="男">
