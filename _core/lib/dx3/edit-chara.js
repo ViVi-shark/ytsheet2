@@ -944,12 +944,12 @@ function addVehicle(){
 }
 // 削除
 function delVehicle(){
-  if(delRow('vehicleNum', '#vehicle-table tbody tr:last-of-type')){
+  if(delRow('vehicleNum', '#vehicle-table tbody tbody:last-of-type')){
     calcItem();
   }
 }
 // ソート
-setSortable('vehicle','#vehicle-table tbody','tr');
+setSortable('vehicle','#vehicle-table','tbody');
 
 // アイテム欄 ----------------------------------------
 // 追加
