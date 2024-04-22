@@ -52,6 +52,9 @@ my $status_text_input = $pc{statusTextInput} || $pc{mount} || 0;
 $pc{skills}      =~ s/&lt;br&gt;/\n/g;
 $pc{description} =~ s/&lt;br&gt;/\n/g;
 $pc{chatPalette} =~ s/&lt;br&gt;/\n/g;
+for my $key (keys %pc) {
+    $pc{$key} =~ s/&lt;br&gt;/\n/g if $key =~ /^golemReinforcement_[A-Za-z]+_details$/;
+}
 
 ### フォーム表示 #####################################################################################
 my $title;
@@ -188,11 +191,23 @@ foreach (@data::taxa){
 if($pc{taxa} && !grep { @$_[0] eq $pc{taxa} } @data::taxa){
   print '<option selected>'.$pc{taxa}.'</option>'."\n";
 }
+$pc{mount} = 0 if !defined($pc{mount});
+$pc{golem} = 0 if !defined($pc{golem});
+my $mountChecked = $pc{mount} ? 'checked' : '';
+my $golemChecked = $pc{golem} ? 'checked' : '';
+my $monsterChecked = !($pc{mount} || $pc{golem}) ? 'checked' : '';
 print <<"HTML";
               </select>
               <input type="text" name="taxaFree">
             </div>
-          <dd>@{[ checkbox 'mount','騎獣','checkMount' ]}
+          <dd>
+            <input type="hidden" name="mount" value="$pc{mount}" />
+            <input type="hidden" name="golem" value="$pc{golem}" />
+            <fieldset>
+                <label><input type="radio" name="kind" value="monster" $monsterChecked />魔物</label>
+                <label><input type="radio" name="kind" value="mount" $mountChecked />騎獣</label>
+                <label><input type="radio" name="kind" value="golem" $golemChecked />ゴーレム</label>
+            </fieldset>
           <dt class="tag">タグ
           <dd>@{[ input 'tags' ]}
         </dl>
@@ -226,6 +241,16 @@ print <<"HTML";
           <dt>適正レベル
           <dd>@{[ input 'lvMin','number','checkMountLevel','min="0"' ]} ～ @{[ input 'lvMax','number','checkMountLevel','min="0"' ]}
         </dl>
+        <dl class="golem-only">
+          <dt>作製可能コンジャラーレベル
+          <dd>@{[ input 'requiredConjurerLv','number','','min="0"' ]}
+        </dl>
+        <dl class="golem-only material">
+          <dt>ゴーレム作製素材
+          <dd class="material-name"><span class="label">名称</span>@{[ input 'materialName' ]}
+          <dd class="normal-price">通常素材価格@{[ input 'materialPriceNormal' ]}G
+          <dd class="higher-price">上級素材価格@{[ input 'materialPriceHigher' ]}G
+        </dl>
         <dl>
           <dt><span class="mount-only">騎獣</span>レベル
           <dd>@{[ input 'lv','number','checkLevel','min="0"' ]}
@@ -243,7 +268,7 @@ print <<"HTML";
           <dt>反応
           <dd>@{[ input 'disposition','','','list="data-disposition"' ]}
         </dl>
-        <dl>
+        <dl class="omit-if-golem">
           <dt>穢れ
           <dd>@{[ input 'sin','number','','min="0"' ]}
         </dl>
@@ -386,9 +411,75 @@ print <<"HTML";
           宣言型　　（<i class="s-icon active" ></i>）：<code>[宣]</code><code>🗨</code> <code>□</code> <code>☑</code><br>
 HTML
 }
+my $reinforcementItemGrade_S_state = $pc{reinforcementItemGrade} eq '小' ? 'selected' : '';
+my $reinforcementItemGrade_M_state = $pc{reinforcementItemGrade} eq '中' ? 'selected' : '';
+my $reinforcementItemGrade_L_state = $pc{reinforcementItemGrade} eq '大' ? 'selected' : '';
+my $reinforcementItemGrade_XL_state = $pc{reinforcementItemGrade} eq '極大' ? 'selected' : '';
 print <<"HTML";
           <code>[]</code>で漢字一文字を囲う記法は、行頭でなくても各マークに変換されます。
         </div>
+      </div>
+      <div class="box reinforcement-items golem-only">
+        <h2>ゴーレム強化アイテム</h2>
+        <label class="max-count">最大数@{[input('reinforcementItemMaxCount','number','','min="0"')]}</label>
+        <label class="grade">
+            グレード
+            <select name="reinforcementItemGrade" oninput="updateGolemReinforcementItemGrade();">
+                <option>
+                <option $reinforcementItemGrade_S_state>小
+                <option $reinforcementItemGrade_M_state>中
+                <option $reinforcementItemGrade_L_state>大
+HTML
+print "<option $reinforcementItemGrade_XL_state>極大" if $::SW2_0;
+print <<"HTML";
+            </select>
+        </label>
+        <dl class="items">
+HTML
+my @golemReinforcementItems = data::getGolemReinforcementItems($::SW2_0 ? '2.0' : '2.5');
+for my $itemAddress (@golemReinforcementItems) {
+    my %item = %{$itemAddress};
+    print "\n";
+    if ($item{prerequisiteItem}) {
+        print "<dt class=\"item\" data-prerequisite-item=\"$item{prerequisiteItem}\">";
+    } else {
+        print '<dt class="item">'
+    }
+    my $checkState = $pc{"golemReinforcement_$item{fieldName}_supported"} ? 'checked' : '';
+    print "<label><input type=\"checkbox\" name=\"golemReinforcement_$item{fieldName}_supported\" $checkState />$item{name}</label>";
+    print "\n";
+    print "<dd class=\"item @{[$checkState eq 'checked' ? 'supported' : '']}\"><dl class=\"item\">";
+    my %abilitySuffixes = $item{abilitySuffixes} ? %{$item{abilitySuffixes}} : ();
+    print "<dt class=\"ability\">能力<dd class=\"ability\" data-suffixes=\"$abilitySuffixes{'小'}|$abilitySuffixes{'中'}|$abilitySuffixes{'大'}|$abilitySuffixes{'極大'}\">$item{ability}";
+    my %prices = %{$item{prices}};
+    print "<dt class=\"price\">価格<dd class=\"price\"><input type=\"number\" name=\"golemReinforcement_$item{fieldName}_price\" data-prices=\"$prices{'小'}|$prices{'中'}|$prices{'大'}|$prices{'極大'}\" />G";
+    print "<dt class=\"part-restriction\">部位制限<dd class=\"part-restriction\">";
+    if ($item{requirementAllParts}) {
+        print '<span class="requirement-all-parts">全部位必須</span>';
+    } else {
+        my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_partRestriction"});
+        print "<input type=\"text\" name=\"golemReinforcement_$item{fieldName}_partRestriction\" value=\"$value\" list=\"golem-reinforcement-item-part-restriction-list\" />";
+    }
+    if ($item{additionalField}) {
+        print "<dt class=\"additional-field\">$item{additionalField}";
+        print "<dd class=\"additional-field\" data-kind=\"$item{additionalField}\">";
+        if ($item{additionalField} eq '詳細') {
+            my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_details"});
+            print "<textarea name=\"golemReinforcement_$item{fieldName}_details\">$value</textarea>";
+        } elsif ($item{additionalField} eq '打撃点') {
+            my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_damageOffset"});
+            print "+<input type=\"number\" name=\"golemReinforcement_$item{fieldName}_damageOffset\" value=\"$value\" />";
+        } elsif ($item{additionalField} eq '地上移動速度') {
+            my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_landMobility"});
+            print "<input type=\"text\" name=\"golemReinforcement_$item{fieldName}_landMobility\" value=\"$value\" />";
+        }
+    }
+    print "\n";
+    print '</dl>';
+}
+print <<"HTML";
+        </dl>
+        <datalist id="golem-reinforcement-item-part-restriction-list"></datalist>
       </div>
       <div class="box loots monster-only">
         <h2 class="in-toc">戦利品</h2>
