@@ -597,6 +597,8 @@ function delEffect(){
       const row = document.querySelector(`tbody#${id}`);
       if(!row) continue;
       replaceSortedNames(row,num,/^(effect)(?:Trash)?[0-9]+(.+)$/);
+      document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`effect${num}SourceName`);
+      document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`effect${num}SourcePage`);
       num++;
     }
     form.effectNum.value = num-1;
@@ -606,6 +608,8 @@ function delEffect(){
       if(!row) continue;
       del++;
       replaceSortedNames(row,'Trash'+del,/^(effect)(?:Trash)?[0-9]+(.+)$/);
+      document.querySelector(`#${id} [name$="SourceName"]`).setAttribute('name',`effectD${del}SourceName`);
+      document.querySelector(`#${id} [name$="SourcePage"]`).setAttribute('name',`effectD${del}SourcePage`);
     }
     effectTrashNum = del;
     if(!del){ document.getElementById('effect-trash').style.display = 'none' }

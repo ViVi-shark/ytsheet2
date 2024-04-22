@@ -320,6 +320,15 @@ table.edit-table {
     background-color: var(--box-even-rows-bg-color);
   }
 }
+table.game-data-list tr.source td {
+  text-align: right;
+}
+table.edit-table.game-data-list tr.source input[name$="SourceName"] {
+  width: 14em;
+}
+table.edit-table.game-data-list tr.source input[name$="SourcePage"] {
+  width: 5em;
+}
 
 ul.edit-table > li,
 dl.edit-table > * {

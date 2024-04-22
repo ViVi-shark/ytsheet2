@@ -366,6 +366,9 @@ foreach (1 .. $pc{effectNum}){
     RESTRICT => $pc{'effect'.$_.'Restrict'},
     NOTE     => $pc{'effect'.$_.'Note'},
     EXP      => ($pc{'effect'.$_.'Exp'} > 0 ? '+' : '').$pc{'effect'.$_.'Exp'},
+    "HAS_SOURCE" => $pc{'effect' . $_ . 'SourceName'} || $pc{'effect' . $_ . 'SourcePage'},
+    "SOURCE_NAME" => $pc{'effect' . $_ . 'SourceName'},
+    "SOURCE_PAGE" => $pc{'effect' . $_ . 'SourcePage'},
   });
 }
 $SHEET->param(Effects => \@effects);
@@ -561,6 +564,9 @@ foreach (1 .. $pc{itemNum}){
     TYPE  => textShrink(5,6,7,8,$pc{'item'.$_.'Type'}),
     SKILL => textSkill(textShrink(4,5,6,7,$pc{'item'.$_.'Skill'})),
     NOTE  => $pc{'item'.$_.'Note'},
+    "HAS_SOURCE" => $pc{'item' . $_ . 'SourceName'} || $pc{'item' . $_ . 'SourcePage'},
+    "SOURCE_NAME" => $pc{'item' . $_ . 'SourceName'},
+    "SOURCE_PAGE" => $pc{'item' . $_ . 'SourcePage'},
   });
 }
 $SHEET->param(Items => \@items);
