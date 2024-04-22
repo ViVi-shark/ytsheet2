@@ -123,6 +123,7 @@ if($pc{ver}){
       $pc{$_} = unescapeTagsLines($pc{$_});
     }
     $pc{$_} = unescapeTags($pc{$_});
+    $pc{$_} = splitParagraph($pc{$_}) if $_ =~ /^(?:items|freeNote|freeHistory|cashbook)$/;
 
     $pc{$_} = noiseTextTag $pc{$_} if $pc{forbiddenMode};
   }
