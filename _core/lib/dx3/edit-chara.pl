@@ -639,6 +639,9 @@ print <<"HTML";
 HTML
 foreach my $num ('TMPL',1 .. $pc{effectNum}) {
   if($num eq 'TMPL'){ print '<template id="effect-template">' }
+  if (!$pc{"effect${num}LvMode"}) {
+    $pc{"effect${num}LvMode"} = '自動判別';
+  }
 print <<"HTML";
           <tbody id="effect-row${num}">
             <tr>
@@ -658,10 +661,20 @@ print <<"HTML";
                 <b class="small">経験点修正</b>@{[input "effect${num}Exp",'number','calcEffect']}
                 <b>効果</b>@{[input "effect${num}Note"]}
               </div>
-            <tr class="source">
+            <tr class="third">
               <td colspan="10">
+                <label class="level-mode">
+                  <span>エフェクトレベルの上昇</span>
+                  <select name="effect${num}LvMode">
+                    <option value="自動判別" @{[$pc{"effect${num}LvMode"} eq '自動判別' ? 'selected' : '']}>自動判別</option>
+                    <option value="レベルアップする" @{[$pc{"effect${num}LvMode"} eq 'レベルアップする' ? 'selected' : '']}>レベルアップする</option>
+                    <option value="レベルアップしない" @{[$pc{"effect${num}LvMode"} eq 'レベルアップしない' ? 'selected' : '']}>レベルアップしない</option>
+                  </select>
+                </label>
+                <span class="source">
                 @{[input "effect${num}SourceName",'','','placeholder="出典" list="source-names"']}
                 @{[input "effect${num}SourcePage",'number','','placeholder="ページ"']}
+                </span>
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }

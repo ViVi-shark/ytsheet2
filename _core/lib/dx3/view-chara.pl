@@ -383,7 +383,7 @@ foreach (1 .. $pc{effectNum}){
     TYPE     => $pc{'effect'.$_.'Type'},
     NAME     => textShrink(13,15,17,21,$pc{'effect'.$_.'Name'}),
     LV       => $pc{'effect'.$_.'Lv'},
-    LEVEL_UP => levelUpByEncroach($pc{'effect'.$_.'Timing'}, $pc{'effect'.$_.'Target'}, $pc{'effect'.$_.'Note'}),
+    LEVEL_UP => levelUpByEncroach($pc{'effect'.$_.'LvMode'}, $pc{'effect'.$_.'Timing'}, $pc{'effect'.$_.'Target'}, $pc{'effect'.$_.'Note'}),
     TIMING   => textTiming($pc{'effect'.$_.'Timing'}),
     SKILL    => textSkill($pc{'effect'.$_.'Skill'}),
     DFCLTY   => textShrink(3,4,4,4,$pc{'effect'.$_.'Dfclty'}),
@@ -438,6 +438,7 @@ sub textShrink {
   return $text;
 }
 sub levelUpByEncroach {
+  my $levelMode = shift;
   my $timing = shift;
   my $target = shift;
   my $note = shift;
@@ -447,8 +448,9 @@ sub levelUpByEncroach {
           ($note eq '' || $note =~ /レベル|[LＬｌ][VＶｖ]/im)
   ) ? 1 : 0;
 
-  return (
-      $referLevel == 0 ||
+  return !($levelMode eq 'レベルアップする') && (
+      $levelMode eq 'レベルアップしない' ||
+          $referLevel == 0 ||
           $timing =~ /常時/ ||
           $note =~ /[侵浸][蝕食][率値](で|によって)(レベル|[LＬｌ][VＶｖ])(アップ|[UＵｕ][PＰｐ])(しない|せず)/im
   ) ? 0 : 1;
