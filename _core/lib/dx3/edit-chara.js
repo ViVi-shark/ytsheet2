@@ -954,7 +954,7 @@ setSortable('vehicle','#vehicle-table','tbody');
 // アイテム欄 ----------------------------------------
 // 追加
 function addItem(){
-  document.querySelector("#item-table tbody").append(createRow('item','itemNum'));
+  document.querySelector("#item-table").append(createRow('item','itemNum'));
 }
 // 削除
 function delItem(){
