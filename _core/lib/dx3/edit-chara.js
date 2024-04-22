@@ -940,7 +940,7 @@ setSortable('armor','#armor-table tbody','tr');
 // ヴィークル欄 ----------------------------------------
 // 追加
 function addVehicle(){
-  document.querySelector("#vehicle-table tbody").append(createRow('vehicle','vehicleNum'));
+  document.querySelector("#vehicle-table").append(createRow('vehicle','vehicleNum'));
 }
 // 削除
 function delVehicle(){
