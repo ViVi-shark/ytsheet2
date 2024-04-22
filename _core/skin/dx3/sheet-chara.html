@@ -493,7 +493,21 @@
                   <td><TMPL_VAR INITIATIVE>
                   <td><TMPL_VAR DODGE>
                   <td><TMPL_VAR ARMOR>
-                  <td class="left"><TMPL_VAR NOTE>
+                  <td class="left">
+                    <TMPL_IF HAS_SOURCE>
+                      <span class="source">
+                        <TMPL_IF SOURCE_NAME>
+                          <TMPL_UNLESS SOURCE_PAGE>
+                            <span class="source-name"><TMPL_VAR SOURCE_NAME></span>
+                          <TMPL_ELSE>
+                            <span class="source-name with-page"><TMPL_VAR SOURCE_NAME></span>
+                          </TMPL_UNLESS>
+                        </TMPL_IF>
+                        <TMPL_IF SOURCE_PAGE><span class="source-page"><TMPL_VAR SOURCE_PAGE></span></TMPL_IF>
+                      </span>
+                    </TMPL_IF>
+                    <TMPL_VAR NOTE>
+                  </td>
                 </TMPL_LOOP>
               </tbody>
             </table>
