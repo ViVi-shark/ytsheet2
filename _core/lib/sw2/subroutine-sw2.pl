@@ -23,6 +23,7 @@ sub createUnitStatus {
       }
       my %count;
       foreach my $i (1 .. $pc{statusNum}){
+        my $n = $i;
         my $partname = $pc{"part${i}"};
         if($pc{mount}){
           if($pc{lv}){
