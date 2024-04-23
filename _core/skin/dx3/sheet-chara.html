@@ -77,7 +77,7 @@
     </form>
   </TMPL_UNLESS>
 
-  <main id="character">
+  <main id="character" class="<TMPL_IF nonOvered>non-overed</TMPL_IF>">
     <TMPL_IF forbidden><aside class="information attention">
       閲覧が制限されているデータです。<br>
       <TMPL_IF yourAuthor>あなた以外には一部または全てのデータが伏せられます。(<a href="./?id=<TMPL_VAR id>&checkView=1">⇒確認</a>)</TMPL_IF>
