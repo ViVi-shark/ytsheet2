@@ -518,7 +518,7 @@ sub palettePreset {
       $weapon = '' if $::pc{partsNum} == 1;
       $weapon = "／$weapon" if $weapon ne '';
 
-      next if $weapon eq $lastPart && $::pc{'status'.$num.'Accuracy'} == $::pc{'status'.($num - 1).'Accuracy'} && $::pc{'status'.$num.'Damage'} == $::pc{'status'.($nm -1).'Damage'};
+      next if $weapon eq $lastPart && $::pc{'status'.$num.'Accuracy'} == $::pc{'status'.($num - 1).'Accuracy'} && $::pc{'status'.$num.'Damage'} == $::pc{'status'.($num -1).'Damage'};
       $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status'.$num.'Accuracy'} ne '';
       $text .= "{ダメージ$_}+{打撃修正} ダメージ".$weapon."\n" if $::pc{'status'.$num.'Damage'} ne '';
       $text .= "\n" if $::pc{'status'.$num.'Accuracy'} ne '' || $::pc{'status'.$num.'Damage'} ne '';
