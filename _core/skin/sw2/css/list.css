@@ -9,6 +9,57 @@ body {
     background-size: auto, 80%;
   }
 }
+
+main nav ul li {
+  a {
+    padding-top: 0.3em;
+    padding-bottom: 0.2em;
+    display: flex;
+    align-items: center;
+    line-height: 100%;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 1.5em;
+      height: 1.5em;
+      margin-right: 0.3em;
+      position: relative;
+      top: -0.1em;
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .night & {
+      &::before {
+        filter: invert();
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &.making a::before {
+    background-image: url(../img/icon_making.png);
+  }
+
+  &.character a::before {
+    background-image: url(../img/icon_character.png);
+  }
+
+  &.monster a::before {
+    background-image: url(../img/icon_monster.png);
+  }
+
+  &.item a::before {
+    background-image: url(../img/icon_item.png);
+  }
+
+  &.arts a::before {
+    background-image: url(../img/icon_arts.png);
+  }
+}
+
 /* // List
 ---------------------------------------------------------------------------------------------------- */
 .list table tr {
