@@ -196,6 +196,20 @@ header nav ul li.character-format {
       display: none;
     }
   }
+
+  &:has(#faith > dd:empty) {
+    #birth {
+      flex-basis: 39%;
+    }
+
+    #rank {
+      flex-basis: 60%;
+    }
+
+    #faith {
+      display: none;
+    }
+  }
 }
 
 /* Status */
