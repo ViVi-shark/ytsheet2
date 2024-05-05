@@ -1428,12 +1428,26 @@ input[type="submit"]:hover {
       > input[name="namePlate"] { max-width: 16em; }
       > input[name="nameColor"] { max-width:  6em; }
       > small { display: inline-block; }
-      #name-plate-view > span {
+      #name-plate-view {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: max-content 1fr max-content 1fr max-content 1fr max-content 1fr max-content;
+        padding-right: 0.5em;
+        width: 100%;
+      }
+      #name-plate-view > span:is(.label, .separator) {
+        display: inline-flex;
+        width: max-content;
+        justify-content: center;
+        align-items: center;
+      }
+      #name-plate-view > span.sample {
         display: inline-block;
         padding: 3px 5px;
         border-radius: 5px;
         font-weight: bold;
         font-family: "Meiryo";
+        word-break: keep-all;
         &.ytcha { color:#ffffff; background: #111111; font-family: "Yu Gothic", "YuGothic"; }
         &.tekey { color:#000000; background: #ffffff; }
         &.ccfol { color:#ffffff; background: #2a2a2a; }
