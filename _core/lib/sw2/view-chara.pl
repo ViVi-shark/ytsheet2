@@ -532,7 +532,7 @@ foreach my $class (@data::class_caster){
     MAGIC  => $magicname,
     POWER  => ($power ? '<span class="small">'.addNum($power).'=</span>' : '').$pc{'magicPower'.$id},
     CAST   => ($cast ? '<span class="small">'.addNum($cast).'=</span>' : '').($pc{'magicPower'.$id}+$cast),
-    DAMAGE => addNum($damage)||'+0',
+    DAMAGE => addNum($damage)||'',
   } );
 }
 
@@ -552,9 +552,9 @@ foreach my $class (@data::class_names){
     NAME => $class."<span class=\"small\">技能レベル</span>".$pc{'lv'.$id},
     OWN  => ($pc{'magicPowerOwn'.$id} ? '✔<span class="small">'.$stt.'+2</span>' : ''),
     MAGIC  => $name,
-    POWER  => ($pname) ? ($power ? '<span class="small">'.addNum($power).'=</span>' : '').$pc{'magicPower'.$id} : '―',
+    POWER  => ($pname) ? ($power ? '<span class="small">'.addNum($power).'=</span>' : '').$pc{'magicPower'.$id} : '',
     CAST   => ($cast ? '<span class="small">'.addNum($cast).'=</span>' : '').($pc{'magicPower'.$id}+$cast),
-    DAMAGE => ($pname) ? addNum($damage)||'+0' : '―',
+    DAMAGE => ($pname) ? addNum($damage)||'' : '',
   } );
 }
 $SHEET->param(MagicPowers => \@magic);

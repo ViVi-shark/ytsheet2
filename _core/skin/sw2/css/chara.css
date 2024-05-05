@@ -844,6 +844,17 @@ dl#level {
     font-size: 1.15em;
     line-height: 1.6;
     white-space: nowrap;
+
+    &.power:empty::before,
+    &.damage:empty::before {
+      content: "―";
+    }
+  }
+
+  & tbody td.power:not(:empty) ~ td.damage:empty {
+    &::before {
+      content: "+0";
+    }
   }
 
   &:not(:has(td.own:not(:empty))) {
