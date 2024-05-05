@@ -533,7 +533,7 @@
               </thead>
               <tbody>
                 <TMPL_IF MysticArtsHonor><tr><td>秘伝<td><TMPL_VAR MysticArtsHonor></TMPL_IF>
-                <TMPL_LOOP HonorItems><tr><td class="left"><TMPL_VAR NAME><td><TMPL_VAR PT></TMPL_LOOP>
+                <TMPL_LOOP HonorItems><tr><td class="left" <TMPL_UNLESS PT>colspan="2"</TMPL_UNLESS>><TMPL_VAR NAME><TMPL_IF PT><td><TMPL_VAR PT></TMPL_IF></TMPL_LOOP>
               </tbody>
             </table>
           </section>
