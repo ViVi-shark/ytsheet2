@@ -246,6 +246,7 @@ details:not([open]).box > summary:hover {
 .box p {
   margin: .3rem .5em 0;
   line-height: 1.8;
+  text-indent: 1em;
 }
 .box p:empty {
   display: none;
