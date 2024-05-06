@@ -1451,6 +1451,9 @@ form#monster div.parts input {
 form#monster div.parts input[name="partsNum"] {
   width: 5em;
 }
+form#monster fieldset.parts dl:has(input):not(:has(input:not([disabled]))) {
+  display: none;
+}
 @media screen and (max-width:735px){
   form#monster table.status { width: 50em; }
   form#monster div.parts dl { display: block; }
