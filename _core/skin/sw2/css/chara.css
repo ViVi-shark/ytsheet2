@@ -857,6 +857,12 @@ dl#level {
     }
   }
 
+  &:not(:has(td.damage:not(:empty))) {
+    :is(th, td).damage {
+      display: none;
+    }
+  }
+
   &:not(:has(td.own:not(:empty))) {
     :is(th, td).own {
       display: none;
