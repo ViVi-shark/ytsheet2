@@ -17,6 +17,7 @@ sub data_calc {
   $pc{description} =~ s/\r\n?|\n/<br>/g;
   $pc{chatPalette} =~ s/\r\n?|\n/<br>/g;
   $pc{additionalSkills} =~ s/\r\n?|\n/<br>/g;
+  $pc{additionalDescription} =~ s/\r\n?|\n/<br>/g;
   foreach (keys %pc) {
     if ($_ =~ /^golemReinforcement_.+_details$/) {
       $pc{$_} =~ s/\r\n?|\n/<br>/g;
