@@ -1359,6 +1359,10 @@ form#monster .individualization-area {
   & label {
     border: none;
   }
+
+  input[readonly] {
+    display: none;
+  }
 }
 form#monster :is(div, fieldset).box {
   margin: var(--box-v-gap) 0;
