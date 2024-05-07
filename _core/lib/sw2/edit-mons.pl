@@ -52,6 +52,7 @@ my $status_text_input = $pc{statusTextInput} || $pc{mount} || 0;
 $pc{skills}      =~ s/&lt;br&gt;/\n/g;
 $pc{description} =~ s/&lt;br&gt;/\n/g;
 $pc{chatPalette} =~ s/&lt;br&gt;/\n/g;
+$pc{additionalSkills} =~ s/&lt;br&gt;/\n/g;
 for my $key (keys %pc) {
     $pc{$key} =~ s/&lt;br&gt;/\n/g if $key =~ /^golemReinforcement_[A-Za-z]+_details$/;
 }
@@ -555,6 +556,10 @@ print <<"HTML";
           <code>[]</code>で漢字一文字を囲う記法は、行頭でなくても各マークに変換されます。
         </div>
         <div data-related-field="skills"></div>
+      </div>
+      <div class="box additional-skills individualization-only monster-only">
+        <h2>追加特殊能力</h2>
+        <textarea name="additionalSkills">$pc{additionalSkills}</textarea>
       </div>
       <div class="box reinforcement-items golem-only">
         <h2>ゴーレム強化アイテム</h2>
