@@ -15,6 +15,15 @@ sub addJsonData {
   if ($pc{type} eq 'm'){
     my @n2a = ('','A' .. 'Z');
 
+    if ($pc{individualization} && $pc{swordFragmentNum} > 0) {
+      my $resistanceOffset = min(ceil(($pc{swordFragmentNum}) / 5.0), 4);
+
+      $pc{vitResist} += $resistanceOffset;
+      $pc{vitResistFix} += $resistanceOffset;
+      $pc{mndResist} += $resistanceOffset;
+      $pc{mndResistFix} += $resistanceOffset;
+    }
+
     my $vitresist = "$pc{vitResist}\($pc{vitResistFix}\)";
     my $mndresist = "$pc{mndResist}\($pc{mndResistFix}\)";
     if($pc{statusNum} > 1){ # 2部位以上
