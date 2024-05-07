@@ -53,6 +53,7 @@ $pc{skills}      =~ s/&lt;br&gt;/\n/g;
 $pc{description} =~ s/&lt;br&gt;/\n/g;
 $pc{chatPalette} =~ s/&lt;br&gt;/\n/g;
 $pc{additionalSkills} =~ s/&lt;br&gt;/\n/g;
+$pc{additionalDescription} =~ s/&lt;br&gt;/\n/g;
 for my $key (keys %pc) {
     $pc{$key} =~ s/&lt;br&gt;/\n/g if $key =~ /^golemReinforcement_[A-Za-z]+_details$/;
 }
@@ -678,6 +679,8 @@ print <<"HTML";
         <h2 class="in-toc">解説</h2>
         <textarea name="description">$pc{description}</textarea>
         <div data-related-field="description"></div>
+        <h2 class="individualization-only">追加解説</h2>
+        <textarea name="additionalDescription" class="individualization-only">$pc{additionalDescription}</textarea>
       </div>
       </section>
       
