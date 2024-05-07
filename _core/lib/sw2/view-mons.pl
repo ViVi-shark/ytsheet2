@@ -567,7 +567,7 @@ sub formatMountEquipmentOffset {
 ### 戦利品 --------------------------------------------------
 my @loots;
 if ($pc{individualization} && $pc{swordFragmentNum} > 0) {
-  push(@loots, {NUM => '自動／全部位合計', ITEM => "〈剣のかけら〉×$pc{swordFragmentNum}"});
+  push(@loots, {NUM => '自動', ITEM => "〈剣のかけら〉×$pc{swordFragmentNum}"});
 }
 foreach (1 .. $pc{lootsNum}){
   next if !$pc{'loots'.$_.'Num'} && !$pc{'loots'.$_.'Item'};
