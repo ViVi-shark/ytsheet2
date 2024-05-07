@@ -2649,6 +2649,9 @@ form#monster.individualization textarea[name="description"] {
 form#monster.individualization #section-common > .loots:has(#source-loot-table:empty) {
   display: none;
 }
+form#monster.individualization #section-common > .loots {
+  border-width: 1px;
+}
 form#monster.individualization.golem #section-common > .loots > h2 label {
   display: inline-flex;
   height: 100%;
