@@ -517,27 +517,49 @@ sub resolveAdditionalSkills {
     }
 
     my %skillsByParts = ();
-    my $lastPartName = undef;
 
     if ($pc{swordFragmentNum} > 0) {
       my $text = "○剣のかけら＝$pc{swordFragmentNum}個<br>ＨＰ・ＭＰ・生命抵抗力・精神抵抗力が上昇しています。（いずれも反映済みです）";
       $skillsByParts{$partNames[0]} = [$text];
     }
 
-    for my $line (split(/&lt;br&gt;/i, $pc{skills})) {
-      next if $line =~ /^\s*$/;
+    my %skillIndexes = ();
 
-      if ($line =~ /^●\s*(.+?)\s*$/) {
-        $lastPartName = $1;
-        $skillsByParts{$lastPartName} = [] unless defined($skillsByParts{$lastPartName});
-      }
-      else {
-        $lastPartName = '' unless defined($lastPartName);
-        my @partSkills = @{$skillsByParts{$lastPartName} ? $skillsByParts{$lastPartName} : []};
-        push(@partSkills, '') if $line =~ /^(?:[○◯〇＞▶〆☆≫»□☐☑🗨▽▼]|>>)/;
-        $partSkills[$#partSkills] .= '<br>' if $partSkills[$#partSkills] ne '';
-        $partSkills[$#partSkills] .= $line;
-        $skillsByParts{$lastPartName} = \@partSkills;
+    for my $key ('skills', 'additionalSkills') {
+      my $lastPartName;
+      my $lastSkillIndex;
+
+      for my $line (split(/&lt;br&gt;/i, $pc{$key})) {
+        next if $line =~ /^\s*$/;
+
+        if ($line =~ /^●\s*(.+?)\s*$/) {
+          $lastPartName = $1;
+          $skillsByParts{$lastPartName} = [] unless defined($skillsByParts{$lastPartName});
+        }
+        else {
+          $lastPartName = '' unless defined($lastPartName);
+          my %currentPartSkillIndexes = %{$skillIndexes{$lastPartName} || {}};
+          my @partSkills = @{$skillsByParts{$lastPartName} || []};
+
+          if ($line =~ /^(?:[○◯〇＞▶〆☆≫»□☐☑🗨▽▼]|>>)/) {
+            unless ($currentPartSkillIndexes{$line}) {
+              push(@partSkills, '');
+              $lastSkillIndex = $#partSkills;
+              $currentPartSkillIndexes{$line} = $lastSkillIndex;
+            }
+            else {
+              $lastSkillIndex = $currentPartSkillIndexes{$line};
+              $partSkills[$lastSkillIndex] = '';
+            }
+          }
+
+          error unless defined($lastSkillIndex);
+
+          $partSkills[$lastSkillIndex] .= '<br>' if $partSkills[$lastSkillIndex] ne '';
+          $partSkills[$lastSkillIndex] .= $line;
+          $skillsByParts{$lastPartName} = \@partSkills;
+          $skillIndexes{$lastPartName} = \%currentPartSkillIndexes;
+        }
       }
     }
 
