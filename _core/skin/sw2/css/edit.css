@@ -1897,6 +1897,8 @@ form#monster.individualization:is(.mount, .golem) .sword-fragment-box {
   display: none;
 }
 form#monster.individualization .sword-fragment-box {
+  border-width: 1px;
+
   & label.num {
     display: flex;
     flex-flow: row;
