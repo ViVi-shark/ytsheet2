@@ -2169,7 +2169,8 @@ form#monster.individualization #section-common > .skills > .riding-checks {
 form#monster.individualization:not(.mount) #section-common > .skills > .riding-checks {
   display: none;
 }
-form#monster textarea[name="skills"] {
+form#monster textarea[name="skills"],
+form#monster textarea[name="additionalSkills"] {
   height: 16em;
   padding: 2px;
 }

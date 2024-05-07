@@ -90,7 +90,7 @@ if($pc{forbidden} && !$pc{yourAuthor}){
   $pc{sin} += $pc{sinOffset} if $pc{sin} ne '' && $pc{sinOffset};
 }
 
-### ゴーレム強化アイテムによる特殊能力 --------------------------------------------------
+### 個別化による特殊能力の追加や、ゴーレム強化アイテムによる特殊能力 --------------------------------------------------
 %pc = %{resolveAdditionalSkills(\%pc);};
 
 ### その他 --------------------------------------------------
@@ -98,7 +98,7 @@ $SHEET->param(rawName => $pc{characterName}?"$pc{characterName}（$pc{monsterNam
 
 ### タグ置換 #########################################################################################
 foreach (keys %pc) {
-  if($_ =~ /^(?:skills|description|golemReinforcement_.+_details)$/){
+  if($_ =~ /^(?:skills|additionalSkills|description|golemReinforcement_.+_details)$/){
     $pc{$_} = unescapeTagsLines($pc{$_});
   }
   $pc{$_} = unescapeTags($pc{$_});
