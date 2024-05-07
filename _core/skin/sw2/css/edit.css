@@ -2584,9 +2584,16 @@ form#monster.individualization .reinforcement-items {
 }
 
 form#monster.individualization #section-common > .description:has([data-related-field="description"]:empty) {
-  display: none;
+  > h2:first-child {
+    display: none;
+  }
+
+  > h2 {
+    margin-top: 0;
+  }
 }
-form#monster textarea[name="description"] {
+form#monster textarea[name="description"],
+form#monster textarea[name="additionalDescription"] {
   height: 16em;
   padding: 2px;
 }
