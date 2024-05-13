@@ -172,6 +172,14 @@ summary {
   font-weight: bold;
 }
 
+p {
+  text-indent: 1em;
+
+  *:not(p) {
+    text-indent: initial;
+  }
+}
+
 .box,
 .box-union {
   border-width: 1px;
@@ -246,11 +254,6 @@ details:not([open]).box > summary:hover {
 .box p {
   margin: .3rem .5em 0;
   line-height: 1.8;
-  text-indent: 1em;
-
-  *:not(p) {
-    text-indent: initial;
-  }
 }
 .box p:empty {
   display: none;
