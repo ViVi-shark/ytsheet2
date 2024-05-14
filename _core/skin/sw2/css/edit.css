@@ -638,6 +638,9 @@
   &:empty {
     display: none;
   }
+  p {
+    margin: 0;
+  }
 }
 @media screen and (width <= 735px){
   #area-actions {
