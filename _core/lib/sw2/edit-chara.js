@@ -2014,7 +2014,17 @@ function checkLanguage(){
       }
     }
   }
-  document.getElementById('language-notice').innerHTML = notice;
+  const noticeContainer = document.getElementById('language-notice');
+  noticeContainer.innerHTML = '';
+  noticeContainer.append(
+      ...(notice.split('<br>').filter(x => x !== '').map(
+          notice => {
+            const p = document.createElement('p');
+            p.textContent = notice;
+            return p;
+          }
+      ))
+  );
 }
 // 追加
 function addLanguage(){
