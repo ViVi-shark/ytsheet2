@@ -524,6 +524,9 @@
   &:empty {
     display: none;
   }
+  p {
+    margin: 0;
+  }
 }
 @media screen and (max-width:735px){
   #area-actions {
