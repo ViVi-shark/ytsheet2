@@ -527,13 +527,13 @@ sub resolveAdditionalSkills {
         next if $partName eq '';
         $partName =~ s/×(\d+)$//;
         my $count = $1;
+
+        push(@partNames, $partName) unless grep {$_ eq $partName} @partNames;
+
         if ($count && $count > 1) {
           foreach (('A' .. 'Z')[0 .. ($count - 1)]) {
             push(@partNames, $partName . $_);
           }
-        }
-        else {
-          push(@partNames, $partName);
         }
       }
     }
@@ -559,29 +559,68 @@ sub resolveAdditionalSkills {
 
         if ($line =~ /^●\s*(.+?)\s*$/) {
           $lastPartName = $1;
-          $skillsByParts{$lastPartName} = [] unless defined($skillsByParts{$lastPartName});
+
+          unless (defined($skillsByParts{$lastPartName})) {
+            $skillsByParts{$lastPartName} = [];
+
+            my $index = undef;
+
+            for my $i (0.. $#partNames) {
+              next if $partNames[$i] ne $lastPartName;
+              $index = $i;
+            }
+
+            unless (defined($index)) {
+              for my $i (0 .. $#partNames) {
+                my $partName = $partNames[$i];
+                if ($lastPartName =~ /^$partName/) {
+                  $index = $i;
+                  last;
+                }
+              }
+
+              if (defined($index)) {
+                splice(@partNames, $index, 0, ($lastPartName));
+              }
+              else {
+                push(@partNames, $lastPartName) unless grep {$_ eq $lastPartName} @partNames;
+              }
+            }
+          }
         }
         else {
           $lastPartName = '' unless defined($lastPartName);
           my %currentPartSkillIndexes = %{$skillIndexes{$lastPartName} || {}};
           my @partSkills = @{$skillsByParts{$lastPartName} || []};
 
-          if ($line =~ /^(?:[○◯〇＞▶〆☆≫»□☐☑🗨▽▼]|>>)/) {
-            unless ($currentPartSkillIndexes{$line}) {
+          my $row;
+          if ($line =~ /^(?:[○◯〇△＞▶〆☆≫»□☐☑🗨▽▼]|>>)/) {
+            (my $firstHalf, my $lastHalf) = $key eq 'skills' ? ($line, undef) : split(/\s*\|&gt;\s*/, $line);
+            $row = $lastHalf || $firstHalf;
+
+            unless ($currentPartSkillIndexes{$firstHalf}) {
               push(@partSkills, '');
               $lastSkillIndex = $#partSkills;
-              $currentPartSkillIndexes{$line} = $lastSkillIndex;
+              $currentPartSkillIndexes{$firstHalf} = $lastSkillIndex;
             }
             else {
-              $lastSkillIndex = $currentPartSkillIndexes{$line};
+              $lastSkillIndex = $currentPartSkillIndexes{$firstHalf};
               $partSkills[$lastSkillIndex] = '';
             }
+
+            if ($lastHalf) {
+              $currentPartSkillIndexes{$firstHalf} = undef;
+              $currentPartSkillIndexes{$lastHalf} = $lastSkillIndex;
+            }
+          }
+          else {
+            $row = $line;
           }
 
           error unless defined($lastSkillIndex);
 
           $partSkills[$lastSkillIndex] .= '<br>' if $partSkills[$lastSkillIndex] ne '';
-          $partSkills[$lastSkillIndex] .= $line;
+          $partSkills[$lastSkillIndex] .= $row;
           $skillsByParts{$lastPartName} = \@partSkills;
           $skillIndexes{$lastPartName} = \%currentPartSkillIndexes;
         }
@@ -591,9 +630,33 @@ sub resolveAdditionalSkills {
     if ($pc{golem}) {
       my @allItems = data::getGolemReinforcementItems($::SW2_0 ? '2.0' : '2.5');
 
-      for my $partIndex (0 .. ($#partNames + 1)) {
-        my $partName = $partIndex <= $#partNames ? $partNames[$partIndex + ((grep {$_ eq '全身'} @partNames) ? 1 : 0)] : "全身";
-        my $partSuffix = $partIndex <= $#partNames ? $partIndex + 1 : 'All';
+      my @golemPartNames;
+
+      if ($pc{parts} ne '') {
+        @golemPartNames = ('全身');
+
+        for my $partName (split(/[\/／]/, $pc{parts})) {
+          next if $partName eq '';
+          $partName =~ s/×(\d+)$//;
+          my $count = $1;
+
+          if ($count && $count > 1) {
+            foreach (('A' .. 'Z')[0 .. ($count - 1)]) {
+              push(@golemPartNames, $partName . $_);
+            }
+          }
+          else {
+            push(@golemPartNames, $partName);
+          }
+        }
+      }
+      else {
+        @golemPartNames = ('');
+      }
+
+      for my $partIndex (0 .. ($#golemPartNames + 1)) {
+        my $partName = $partIndex <= $#golemPartNames ? $golemPartNames[$partIndex + ((grep {$_ eq '全身'} @golemPartNames) ? 1 : 0)] : "全身";
+        my $partSuffix = $partIndex <= $#golemPartNames ? $partIndex + 1 : 'All';
         my @usingItems = ();
         my @ignoreItems = ();
 
@@ -671,7 +734,7 @@ sub resolveAdditionalSkills {
         my $originalPartName = $partName;
         $originalPartName =~ s/A$//;
 
-        if ($skillsByParts{$originalPartName}) {
+        if (!(grep {$_ eq $originalPartName} @partNames) && $skillsByParts{$originalPartName}) {
           $skills .= '<br>' if $skills ne '';
           $skills .= "●$originalPartName<br>" if $originalPartName ne '';
           $skills .= join('<br>', @{$skillsByParts{$originalPartName}});
