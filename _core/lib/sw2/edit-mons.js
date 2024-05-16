@@ -862,7 +862,20 @@ function individualizationSourceUrlChanged() {
                               for (const itemName of ['garnet-energy', 'garnet-life']) {
                                 const span = document.createElement('span');
                                 span.classList.add('offset', `offset-of-${itemName}`);
-                                td.appendChild(span);
+                                (td.querySelector('.standard') ?? td).appendChild(span);
+                              }
+                            }
+
+                            {
+                              const modificationInput = td.querySelector('.modification input');
+
+                              if (modificationInput != null) {
+                                const name = `status${partSerial}${propertyName !== 'Style' && level > levelMin ? `-${level - levelMin + 1}` : ''}${propertyName}Modification`;
+
+                                modificationInput.setAttribute('name', name);
+
+                                modificationInput.value =
+                                    document.querySelector(`#loaded-data [name="${name}"]`)?.value ?? '';
                               }
                             }
                           }

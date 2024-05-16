@@ -412,12 +412,55 @@ print <<"HTML";
           <tr>
             <th class="level mount-only">
             <td class="style">
-            <td class="accuracy" data-property-name="accuracy"><span class="base"><span class="value"></span><span class="offset equipment-offset"></span></span><span class="fixed monster-only"><span class="value"></span><span class="offset equipment-offset"></span></span>
-            <td class="damage" data-property-name="damage"><span class="value"></span><span class="offset equipment-offset"></span>
-            <td class="evasion" data-property-name="evasion"><span class="base"><span class="value"></span><span class="offset equipment-offset"></span></span><span class="fixed monster-only"><span class="value"></span><span class="offset equipment-offset"></span></span>
-            <td class="defense" data-property-name="defense"><span class="value"></span><span class="offset equipment-offset"></span>
-            <td class="hp" data-property-name="hp"><span class="value"></span><span class="offset hp-option-offset"></span><span class="offset equipment-offset"></span>
-            <td class="mp" data-property-name="mp"><span class="value"></span><span class="offset equipment-offset"></span>
+            <td class="accuracy" data-property-name="accuracy">
+              <span class="standard">
+                <span class="base">
+                  <span class="value"></span>
+                  <span class="offset equipment-offset"></span>
+                </span>
+                <span class="fixed monster-only">
+                  <span class="value"></span>
+                  <span class="offset equipment-offset"></span>
+                </span>
+              </span>
+              <span class="modification"><input type="number" class="modification" /></span>
+            <td class="damage" data-property-name="damage">
+              <span class="standard">
+                <span class="value"></span>
+                <span class="offset equipment-offset"></span>
+              </span>
+              <span class="modification"><input type="number" class="modification" /></span>
+            <td class="evasion" data-property-name="evasion">
+              <span class="standard">
+                <span class="base">
+                  <span class="value"></span>
+                  <span class="offset equipment-offset"></span>
+                </span>
+                <span class="fixed monster-only">
+                  <span class="value"></span>
+                  <span class="offset equipment-offset"></span>
+                </span>
+              </span>
+              <span class="modification"><input type="number" class="modification" /></span>
+            <td class="defense" data-property-name="defense">
+              <span class="standard">
+                <span class="value"></span>
+                <span class="offset equipment-offset"></span>
+              </span>
+              <span class="modification"><input type="number" class="modification" /></span>
+            <td class="hp" data-property-name="hp">
+              <span class="standard">
+                <span class="value"></span>
+                <span class="offset hp-option-offset"></span>
+                <span class="offset equipment-offset"></span>
+              </span>
+              <span class="modification"><input type="number" class="modification" /></span>
+            <td class="mp" data-property-name="mp">
+              <span class="standard">
+                <span class="value"></span>
+                <span class="offset equipment-offset"></span>
+              </span>
+              <span class="modification"><input type="number" class="modification" /></span>
             <td class="vit mount-only">
             <td class="mnd mount-only">
         </template>
@@ -713,7 +756,7 @@ if ($mode eq 'edit') {
 }
 print "<fieldset id=\"loaded-data\" style=\"display: none;\">\n";
 for my $key (keys %pc) {
-    next if $key !~ /^partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$|^swordFragment_[hm]pOffset_part\d+$/;
+    next if $key !~ /^status[-0-9]+[A-Z][a-z]+Modification$|partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$|^swordFragment_[hm]pOffset_part\d+$/;
     print "<input type=\"hidden\" name=\"$key\" value=\"$pc{$key}\" />\n";
 }
 print "</fieldset>\n";
