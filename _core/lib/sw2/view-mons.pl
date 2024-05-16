@@ -567,8 +567,16 @@ sub formatMountEquipmentOffset {
 
 ### 戦利品 --------------------------------------------------
 my @loots;
-if ($pc{individualization} && $pc{swordFragmentNum} > 0) {
-  push(@loots, {NUM => '自動', ITEM => "〈剣のかけら〉×$pc{swordFragmentNum}"});
+if ($pc{individualization}) {
+  push(@loots, {NUM => '自動', ITEM => "〈剣のかけら〉×$pc{swordFragmentNum}"}) if $pc{swordFragmentNum} > 0;
+
+  if ($pc{additionalLootsNum} > 0) {
+    foreach (1 .. $pc{additionalLootsNum}) {
+      my $loot = $pc{'additionalLoots' . $_ . 'Item'};
+      next unless $loot;
+      push(@loots, {'NUM' => '自動', 'ITEM' => $loot});
+    }
+  }
 }
 foreach (1 .. $pc{lootsNum}){
   next if !$pc{'loots'.$_.'Num'} && !$pc{'loots'.$_.'Item'};
