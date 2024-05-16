@@ -475,12 +475,21 @@ sub palettePreset {
   }
   ## 魔物
   elsif($type eq 'm') {
-    if ($::pc{mount} && $::pc{individualization}) {
-      foreach (1 .. $::pc{statusNum}) {
-        my $num = $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
-        $::pc{'status' . $num . 'Accuracy'} += $::pc{'partEquipment' . $_ . '-weapon-accuracy'} if $::pc{'status' . $num . 'Accuracy'} ne '';
-        $::pc{'status' . $num . 'Damage'} = addOffsetToDamage($::pc{'status' . $num . 'Damage'}, $::pc{'partEquipment' . $_ . '-weapon-damage'}) if $::pc{'status' . $num . 'Damage'} ne '';
-        $::pc{'status' . $num . 'Evasion'} += $::pc{'partEquipment' . $_ . '-armor-evasion'} if $::pc{'status' . $num . 'Evasion'} ne '';
+    if ($::pc{individualization}) {
+      if ($::pc{mount}) {
+        foreach (1 .. $::pc{statusNum}) {
+          my $num = $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
+          $::pc{'status' . $num . 'Accuracy'} += $::pc{'partEquipment' . $_ . '-weapon-accuracy'} if $::pc{'status' . $num . 'Accuracy'} ne '';
+          $::pc{'status' . $num . 'Damage'} = addOffsetToDamage($::pc{'status' . $num . 'Damage'}, $::pc{'partEquipment' . $_ . '-weapon-damage'}) if $::pc{'status' . $num . 'Damage'} ne '';
+          $::pc{'status' . $num . 'Evasion'} += $::pc{'partEquipment' . $_ . '-armor-evasion'} if $::pc{'status' . $num . 'Evasion'} ne '';
+        }
+      }
+      else {
+        foreach (1 .. $::pc{statusNum}) {
+          $::pc{'status' . $_ . 'Accuracy'} += $::pc{'status' . $_ . 'AccuracyModification'} if $::pc{'status' . $_ . 'Accuracy'} ne '' && $::pc{'status' . $_ . 'AccuracyModification'};
+          $::pc{'status' . $_ . 'Damage'} = addOffsetToDamage($::pc{'status' . $_ . 'Damage'}, $::pc{'status' . $_ . 'DamageModification'}) if $::pc{'status' . $_ . 'Damage'} ne '' && $::pc{'status' . $_ . 'DamageModification'};
+          $::pc{'status' . $_ . 'Evasion'} += $::pc{'status' . $_ . 'EvasionModification'} if $::pc{'status' . $_ . 'Evasion'} ne '' && $::pc{'status' . $_ . 'EvasionModification'};
+        }
       }
     }
 

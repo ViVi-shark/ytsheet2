@@ -224,6 +224,17 @@ if($pc{mndResist} ne ''){ $SHEET->param(mndResist => $pc{mndResist}.(!$pc{status
 my @status_tbody;
 my @status_row;
 foreach (1 .. $pc{statusNum}){
+  unless ($pc{mount}) {
+    $pc{'status'.$_.'Accuracy'} += $pc{'status'.$_.'AccuracyModification'} if $pc{'status'.$_.'Accuracy'} ne '' && $pc{'status'.$_.'AccuracyModification'};
+    $pc{'status'.$_.'AccuracyFix'} += $pc{'status'.$_.'AccuracyModification'} if $pc{'status'.$_.'AccuracyFix'} && $pc{'status'.$_.'AccuracyModification'};
+    $pc{'status'.$_.'Damage'} = addOffsetToDamage($pc{'status'.$_.'Damage'}, $pc{'status'.$_.'DamageModification'}) if $pc{'status'.$_.'Damage'} ne '' && $pc{'status'.$_.'DamageModification'};
+    $pc{'status'.$_.'Evasion'} += $pc{'status'.$_.'EvasionModification'} if $pc{'status'.$_.'Evasion'} ne '' && $pc{'status'.$_.'EvasionModification'};
+    $pc{'status'.$_.'EvasionFix'} += $pc{'status'.$_.'EvasionModification'} if $pc{'status'.$_.'EvasionFix'} && $pc{'status'.$_.'EvasionModification'};
+    $pc{'status'.$_.'Defense'} += $pc{'status'.$_.'DefenseModification'} if $pc{'status'.$_.'Defense'} ne '' && $pc{'status'.$_.'DefenseModification'};
+    $pc{'status'.$_.'Hp'} += $pc{'status'.$_.'HpModification'} if $pc{'status'.$_.'Hp'} ne '' && $pc{'status'.$_.'HpModification'};
+    $pc{'status'.$_.'Mp'} += $pc{'status'.$_.'MpModification'} if $pc{'status'.$_.'Mp'} ne '' && $pc{'status'.$_.'MpModification'};
+  }
+
   $pc{'status'.$_.'Accuracy'} += $pc{'partEquipment'.$_.'-weapon-accuracy'} if $pc{'status'.$_.'Accuracy'} ne '' && $pc{'partEquipment'.$_.'-weapon-accuracy'};
   $pc{'status'.$_.'Damage'} = addOffsetToDamage($pc{'status'.$_.'Damage'}, $pc{'partEquipment'.$_.'-weapon-damage'}) if $pc{'status'.$_.'Damage'} ne '' && $pc{'partEquipment'.$_.'-weapon-damage'};
   $pc{'status'.$_.'Evasion'} += $pc{'partEquipment'.$_.'-armor-evasion'} if $pc{'status'.$_.'Evasion'} ne '' && $pc{'partEquipment'.$_.'-armor-evasion'};
