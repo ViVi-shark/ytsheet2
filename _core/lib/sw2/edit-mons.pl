@@ -653,7 +653,7 @@ print <<"HTML";
       </div>
       <fieldset class="box loots monster-only">
         <h2 class="in-toc" data-content-title="戦利品">戦利品@{[ checkbox 'disableLoots','戦利品をもたない','switchLoots' ]}</h2>
-        <div id="loots-list">
+        <div id="loots-list" class="loots-list">
           <ul id="loots-num">
 HTML
 foreach my $num (1 .. $pc{lootsNum}){ print "<li id='loots-num${num}'><span class='handle'></span>".input("loots${num}Num"); }
@@ -672,6 +672,22 @@ print <<"HTML";
           <dt class="range">
           <dd class="content">
       </template>
+      <div class="additional-loots individualization-only monster-only">
+        <h2>追加戦利品</h2>
+        <div class="loots-list">
+          <ul id="additional-loots-item">
+HTML
+$pc{additionalLootsNum} ||= 1;
+foreach my $num (1 .. $pc{additionalLootsNum}){ print "<li id='additional-loots-item${num}'><span class='handle'></span>".input("additionalLoots${num}Item"); }
+print <<"HTML";
+          </ul>
+          <template id="template-of-additional-loot">
+            <li><span class='handle'></span><input type="text" />
+          </template>
+        </div>
+        <div class="add-del-button"><a onclick="addAdditionalLoots()">▼</a><a onclick="delAdditionalLoots()">▲</a></div>
+        @{[input('additionalLootsNum','hidden')]}
+      </div>
       </fieldset>
       <div class="box description">
         <h2 class="in-toc">解説</h2>

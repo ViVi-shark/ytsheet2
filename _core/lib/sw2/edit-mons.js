@@ -545,6 +545,31 @@ function delLoots(force = false){
 // ソート
 setSortable('loots','#loots-num');
 setSortable('loots','#loots-item');
+function addAdditionalLoots() {
+  const num = Number(form.additionalLootsNum.value) + 1;
+
+  const li = document.getElementById('template-of-additional-loot').content.firstElementChild.cloneNode(true);
+  li.id = idNumSet("additional-loots-item");
+  li.querySelector('input').setAttribute('name', `additionalLoots${num}Item`);
+  document.getElementById('additional-loots-item').appendChild(li);
+
+  form.additionalLootsNum.value = num;
+}
+function delAdditionalLoots() {
+  const num = Number(form.additionalLootsNum.value);
+
+  if (num > 1) {
+    if (form[`additionalLoots${num}Item`].value) {
+      if (!confirm(delConfirmText)) {
+        return false;
+      }
+    }
+
+    document.querySelector('#additional-loots-item > li:last-of-type').remove();
+    form.additionalLootsNum.value = num - 1;
+  }
+}
+setSortable('additionalLoots', '#additional-loots-item');
 
 // 個別化 ----------------------------------------
 let lastSourceTimestamp;

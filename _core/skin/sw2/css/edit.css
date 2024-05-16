@@ -2600,9 +2600,6 @@ form#monster textarea[name="additionalDescription"] {
 form#monster.individualization textarea[name="description"] {
   display: none;
 }
-form#monster.individualization #section-common > .loots:has(#source-loot-table:empty) {
-  display: none;
-}
 form#monster.individualization #section-common > .loots {
   border-width: 1px;
 }
@@ -2626,7 +2623,7 @@ form#monster.individualization #loots-list {
 form#monster.individualization #loots-list + .add-del-button {
   display: none;
 }
-form#monster div#loots-list {
+form#monster div.loots-list {
   display: grid;
   grid-template-columns: 7em auto;
   white-space: nowrap;
@@ -2655,7 +2652,6 @@ form#monster #source-loot-table {
   grid-template-columns: max-content 1fr;
   border-left-width: 0;
   border-right-width: 0;
-  border-bottom-width: 0;
 
   & dt {
     grid-column: 1 / 2;
@@ -2669,6 +2665,24 @@ form#monster #source-loot-table {
 form#monster #source-loot-table:empty,
 form#monster .loots-disabled #source-loot-table {
   display: none;
+}
+form#monster .additional-loots {
+  width: 100%;
+
+  > h2 {
+    width: 100%;
+    margin-top: 1em;
+  }
+
+  > .loots-list {
+    width: 100%;
+
+    #additional-loots-item {
+      grid-row: 1 / -1;
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+  }
 }
 
 form#monster .mount-equipments {
