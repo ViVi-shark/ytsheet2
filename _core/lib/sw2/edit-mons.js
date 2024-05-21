@@ -998,6 +998,7 @@ function individualizationSourceUrlChanged() {
 
             mountHpOptionsUpdated();
 
+            // ゴーレム強化アイテム
             {
               /**
                * @param {HTMLInputElement} checkboxNode
