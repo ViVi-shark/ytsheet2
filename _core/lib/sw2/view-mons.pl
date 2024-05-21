@@ -426,6 +426,7 @@ if ($pc{golem}) {
 
   $SHEET->param(golemReinforcementItems => \@expectedItems);
 }
+my @lootsByGolemReinforcement = ();
 if ($pc{golem} && $pc{individualization}) {
   my @partNames = ();
 
@@ -494,6 +495,7 @@ if ($pc{golem} && $pc{individualization}) {
       }
 
       push(@partItems, \%item);
+      push(@lootsByGolemReinforcement, \%item);
     }
 
     # ○移動力強化
@@ -561,6 +563,18 @@ sub formatMountEquipmentOffset {
 my @loots;
 if ($pc{individualization}) {
   push(@loots, {NUM => '自動', ITEM => "〈剣のかけら〉×$pc{swordFragmentNum}"}) if $pc{swordFragmentNum} > 0;
+
+  if ($pc{golem} && $#lootsByGolemReinforcement >= 0) {
+    foreach (@lootsByGolemReinforcement) {
+      my %item = %{$_};
+      $item{name} =~ /\((小|中|大|極大)\)$/;
+      my $grade = $1;
+      my %prices = %{$item{prices}};
+      my $price = commify($prices{$grade} / 2);
+      my $text = "〈$item{name}〉（売却価格${price}Ｇ／－）";
+      push(@loots, {NUM => 'ゴーレム強化アイテム', ITEM => $text});
+    }
+  }
 
   if ($pc{additionalLootsNum} > 0) {
     foreach (1 .. $pc{additionalLootsNum}) {
