@@ -157,6 +157,22 @@ sub createUnitStatus {
     push(@unitStatus, { $pc{"unitStatus${num}Label"} => $pc{"unitStatus${num}Value"} });
   }
 
+  if ($#unitStatus >= 0 && $target eq 'udonarium') {
+    foreach (0 .. $#unitStatus) {
+      my %sourceHash = %{$unitStatus[$_]};
+      my %destinationHash = ();
+
+      for my $sourceKey (keys %sourceHash) {
+        my $destinationKey = $sourceKey;
+        $destinationKey =~ s/:/_/g;
+
+        $destinationHash{$destinationKey} = $sourceHash{$sourceKey};
+      }
+
+      $unitStatus[$_] = \%destinationHash;
+    }
+  }
+
   return \@unitStatus;
 }
 
