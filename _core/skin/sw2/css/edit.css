@@ -1338,6 +1338,7 @@ form#monster .individualization-area {
 form#monster :is(div, fieldset).box {
   margin: var(--box-v-gap) 0;
   overflow-x: auto;
+  border-width: 1px;
 }
 form#monster .box h2 {
   font-size: 100%;
@@ -1902,6 +1903,9 @@ form#monster #source-status-table td .fixed::before {
 }
 form#monster #source-status-table td .fixed::after {
   content: ")";
+}
+form#monster.individualization fieldset.parts {
+  padding-left: 0.5em;
 }
 form#monster fieldset.parts input {
   width: auto;
