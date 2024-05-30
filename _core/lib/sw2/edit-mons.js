@@ -836,6 +836,7 @@ function individualizationSourceUrlChanged() {
 
             {
               const sourceStatusTable = document.getElementById('source-status-table');
+              sourceStatusTable.parentElement.dataset.taxa = source['taxa'] ?? '';
 
               sourceStatusTable.querySelectorAll('tbody').forEach(x => x.remove());
 

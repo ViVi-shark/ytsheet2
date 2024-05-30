@@ -1422,6 +1422,12 @@ form#monster.individualization #player-name [name="author"] {
 form#monster label:has(:is([name="exclusiveMount"], [name="ridingHpReinforcement"], [name="ridingHpReinforcementSuper"])) {
   border: none;
 
+  &:has([name="ridingHpReinforcement"], [name="ridingHpReinforcementSuper"]) {
+    [data-taxa="魔動機"] & {
+      display: none;
+    }
+  }
+
   & span {
     opacity: 1;
   }
