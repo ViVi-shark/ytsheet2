@@ -391,6 +391,8 @@ table.status {
 /* // 騎獣用武装
 ---------------------------------------------------------------------------------------------------- */
 section.mount-equipments {
+  margin-top: 1em;
+
   & .parts {
     width: 100%;
     display: grid;
