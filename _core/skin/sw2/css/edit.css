@@ -1644,6 +1644,10 @@ form#monster.individualization div.status .habitat {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: max-content max-content 1fr;
+
+  .mount & {
+    display: none;
+  }
 }
 form#monster.individualization div.status .habitat .replacement {
   padding-left: 0.75em;
