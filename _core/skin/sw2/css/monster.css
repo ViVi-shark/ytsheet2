@@ -393,6 +393,10 @@ table.status {
 section.mount-equipments {
   margin-top: 1em;
 
+  &:not(:has(dt)) {
+    display: none;
+  }
+
   & .parts {
     width: 100%;
     display: grid;
