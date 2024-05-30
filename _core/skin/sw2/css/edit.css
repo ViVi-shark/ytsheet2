@@ -1624,6 +1624,10 @@ form#monster div.status .language {
       margin: 0;
     }
   }
+
+  > dd:has(input[name="language"][value="なし"]) + .additional {
+    display: none;
+  }
 }
 form#monster.golem div.status .language .additional {
   display: none;
