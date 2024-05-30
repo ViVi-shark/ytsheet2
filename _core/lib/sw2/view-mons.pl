@@ -578,6 +578,11 @@ sub formatMountEquipmentOffset {
   return ($value > 0 ? '+' : '') . $value;
 }
 
+# 特殊能力関連の騎芸が不要なら非表示にする
+$SHEET->param(ridingMagicIndication => 0) unless $pc{skills} =~ /魔法指示/;
+$SHEET->param(ridingUnlockSpecialSkills => 0) unless $pc{skills} =~ /特殊能力解放/;
+$SHEET->param(ridingUnlockSpecialSkillsFully => 0) unless $pc{skills} =~ /特殊能力完全解放/;
+
 ### 戦利品 --------------------------------------------------
 my @loots;
 if ($pc{individualization}) {
