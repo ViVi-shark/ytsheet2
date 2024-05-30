@@ -2821,6 +2821,9 @@ form#monster .mount-equipments {
 
     & dt:is(.weapon, .armor) {
       grid-column: 1 / 2;
+      display: flex;
+      flex-flow: row;
+      align-items: center;
     }
 
     & dt:is(.weapon, .armor)::after {
@@ -2913,6 +2916,8 @@ form#monster .mount-equipments {
 }
 @media screen and (min-width: 736px) {
   form#monster .mount-equipments {
+    border-width: 1px;
+
     & .weapon-settings,
     & .armor-settings {
       & :is(dt, dd):not(.name) {
