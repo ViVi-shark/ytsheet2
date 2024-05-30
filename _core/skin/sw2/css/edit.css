@@ -1594,8 +1594,15 @@ form#monster.individualization div.status dl.material {
     content: ":";
   }
 }
-form#monster.individualization div.status .price [data-related-field]:empty::before {
-  content: "－";
+form#monster.individualization div.status .price [data-related-field]:empty {
+  &::before {
+    content: "－";
+  }
+}
+form#monster.individualization div.status .price {
+  > dd:has([data-related-field="priceRegenerate"]:empty) {
+    display: none;
+  }
 }
 form#monster.individualization div.status .sin [data-related-field="sin"]:empty::before {
   content: "0";
