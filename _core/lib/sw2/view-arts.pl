@@ -279,6 +279,13 @@ foreach my $lv (2,4,7,10,13){
 }
 $SHEET->param(MagicData => \@magics);
 
+### 流派 --------------------------------------------------
+foreach (keys %pc) {
+  next unless $_ =~ /^(?:schoolNote|schoolArts\d+Effect)$/;
+  $pc{$_} = splitParagraph($pc{$_});
+  $SHEET->param($_ => $pc{$_});
+}
+
 ### 流派装備 --------------------------------------------------
 my @items;
 foreach my $set_url (split ',',$item_urls){
