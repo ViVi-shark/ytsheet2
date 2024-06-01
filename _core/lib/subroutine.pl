@@ -657,6 +657,7 @@ sub nameToPlain {
 sub splitParagraph {
   my $text = shift;
 
+  $text =~ s#&lt;br&gt;#<br>#g;
   $text =~ s#<br>#</p><p>#gi;
   $text =~ s#(?:<p></p>)+<p>#<p class="before-margin">#gi;
   $text =~ s#<p></p><(h[1-6])>#<$1>#gi;
