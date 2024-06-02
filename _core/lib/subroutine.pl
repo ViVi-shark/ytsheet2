@@ -661,6 +661,7 @@ sub splitParagraph {
   $text =~ s#<br>#</p><p>#gi;
   $text =~ s#(?:<p></p>)+<p>#<p class="before-margin">#gi;
   $text =~ s#<p></p><(h[1-6])>#<$1>#gi;
+  $text =~ s#(<p>)　#$1#gi;
   $text =~ s#(^</p><p>|</p><p>$)##gi;
 
   return $text;
