@@ -121,7 +121,25 @@ sub outputChatPaletteTemplate {
   if(!$pc{paletteTool}){ $json{preset} = swapWordAndCommand($json{preset}); }
   $json{properties} .= "$_\n" foreach( paletteProperties($tool,$type) );
 
-  $json{unitStatus} = createUnitStatus(\%pc);
+  my @unitStatus = @{createUnitStatus(\%pc);};
+
+  foreach (0 .. $#unitStatus) {
+    my $index = $_;
+    my %item = %{$unitStatus[$index]};
+    my $isMemo;
+    foreach (keys %item) {
+      if ($_ eq 'メモ') {
+        $isMemo = 1;
+      }
+    }
+    next unless $isMemo;
+
+    splice(@unitStatus, $index, 1);
+    last;
+  }
+
+  $json{unitStatus} = \@unitStatus;
+
   print "Content-type: text/javascript; charset=UTF-8\n\n";
   print JSON::PP->new->canonical(1)->encode( \%json );
 }
