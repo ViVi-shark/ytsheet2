@@ -254,6 +254,15 @@ sub textSongPoint {
 sub magicItemViewOn {
   foreach my $name (@_){ $SHEET->param("magic${name}On" => 1); }
 }
+
+### 神格 --------------------------------------------------
+foreach (keys %pc) {
+  next unless $_ =~ /^god(?:Symbol|Deity|Note|Magic\d+Effect)$/;
+  next unless $pc{$_};
+  $pc{$_} = splitParagraph($pc{$_});
+  $SHEET->param($_ => $pc{$_});
+}
+
 ### 特殊神聖魔法 --------------------------------------------------
 my @magics;
 foreach my $lv (2,4,7,10,13){
