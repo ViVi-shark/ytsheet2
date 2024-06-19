@@ -1986,7 +1986,7 @@ function checkLanguage(){
         notice += `<li class="under"><span class="language-name">${langName}</span>の`;
         if(notT){ acqT[langName] = true; notice += '<span class="mode talk">会話</span>'+(notR ? '/' : '');  }
         if(notR){ acqR[langName] = true; notice += '<span class="mode read">読文</span>';  }
-        notice += 'が習得できます';
+        notice += 'が習得できます<br>';
       }
     }
   }
