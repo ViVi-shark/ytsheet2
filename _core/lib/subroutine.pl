@@ -593,6 +593,16 @@ sub unescapeTagsLines {
   
   return $text;
 }
+sub encodePalette {
+  my $source = shift;
+  $source =~ s/<br>/<!br!>/gi;
+  return $source;
+}
+sub decodePalette {
+  my $source = shift;
+  $source =~ s/&lt;!br!&gt;/<br>/g;
+  return $source;
+}
 
 sub generateTableCol {
   my @out;

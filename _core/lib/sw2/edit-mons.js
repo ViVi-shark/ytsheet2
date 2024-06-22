@@ -799,7 +799,8 @@ function individualizationSourceUrlChanged() {
                   control.value = value
                       .replaceAll('&lt;', '<')
                       .replaceAll('&gt;', '>')
-                      .replaceAll(/<br>/ig, '\n');
+                      .replaceAll(/<br>/ig, '\n')
+                      .replaceAll(/<!br!>/ig, '<br>');
                   control.setAttribute('readonly', '');
                 } else {
                   control.value = value != null ? value.toString() : '';

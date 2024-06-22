@@ -465,6 +465,8 @@ sub chatPaletteForm {
     $status = '<template id="unit-status-template">'.$status.'</template>' if $_ eq 'TMPL';
   }
   
+  my $chatPalette = decodePalette $::pc{chatPalette};
+  
   return <<"HTML";
     <section id="section-palette" style="display:none;">
       <div class="box" id="unit-setting">
@@ -521,7 +523,7 @@ sub chatPaletteForm {
               <option value="end"      @{[ $::pc{paletteInsertType} eq 'end'     ?'selected':'' ]}>プリセットの直後に挿入</option>
             </select>
           </p>
-          <textarea name="chatPalette" style="height:20em" placeholder="例）&#13;&#10;2d6+{冒険者}+{器用}&#13;&#10;&#13;&#10;※入力がない場合、プリセットが自動的に反映されます。">$::pc{chatPalette}</textarea>
+          <textarea name="chatPalette" style="height:20em" placeholder="例）&#13;&#10;2d6+{冒険者}+{器用}&#13;&#10;&#13;&#10;※入力がない場合、プリセットが自動的に反映されます。">$chatPalette</textarea>
           
           <div class="palette-column">
           <h2>デフォルト変数 （自動的に末尾に出力されます）</h2>
