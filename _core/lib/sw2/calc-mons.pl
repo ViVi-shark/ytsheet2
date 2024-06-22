@@ -16,6 +16,7 @@ sub data_calc {
   $pc{skills}      =~ s/\r\n?|\n/<br>/g;
   $pc{description} =~ s/\r\n?|\n/<br>/g;
   $pc{demonActionExplanation} =~ s/\r\n?|\n/<br>/g;
+  $pc{chatPalette} = encodePalette $pc{chatPalette};
   $pc{chatPalette} =~ s/\r\n?|\n/<br>/g;
   $pc{additionalSkills} =~ s/\r\n?|\n/<br>/g;
   $pc{additionalDescription} =~ s/\r\n?|\n/<br>/g;
