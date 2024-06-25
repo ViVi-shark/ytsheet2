@@ -551,11 +551,11 @@ body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks
     font-size: 110%;
   }
 
-  .part-group:first-of-type {
+  & section:is(.part-group, .part):first-of-type {
     margin-top: 0.75em;
   }
 
-  .part-group:not(:first-of-type) {
+  & section:is(.part-group, .part):not(:first-of-type) {
     margin-top: 1.75em;
   }
 
@@ -582,13 +582,29 @@ body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks
     }
   }
 
-  .skill {
+  .part-group .skill,
+  .part h4 {
     margin-top: 0.5em;
+  }
+
+  .part h4.has-prerequisite-item {
+    margin-top: 0;
+  }
+
+  .skill {
     position: relative;
   }
 
   .skill:has(h4.has-prerequisite-item) {
     margin-top: 0;
+  }
+
+  & p {
+    text-indent: 1em;
+  }
+
+  & p.notice-for-nothing {
+    margin-top: 0.5em;
   }
 }
 
