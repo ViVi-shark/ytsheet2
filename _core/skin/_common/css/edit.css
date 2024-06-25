@@ -1466,6 +1466,36 @@ input[type="submit"]:hover {
         display: none;
       }
 
+      &.status {
+        display: grid;
+        grid-template-columns: repeat(2, max-content) 1fr;
+        grid-template-rows: repeat(2, max-content);
+
+        #unit-status,
+        #unit-status-memo {
+          grid-column: 1 / 2;
+        }
+
+        #unit-status {
+          grid-row: 1 / 2;
+        }
+
+        #unit-status-memo {
+          grid-row: 2 / 3;
+          margin-top: 0.5em;
+
+          > tbody > tr > td:not(:last-child) {
+            border-top: 1px dashed var(--box-inside-border-color);
+            padding-top: 0.25em;
+          }
+        }
+
+        .annotate {
+          grid-row: 1 / -1;
+          grid-column: 2 / 3;
+        }
+      }
+
       table {
         float: left;
         margin-right: 5px;
