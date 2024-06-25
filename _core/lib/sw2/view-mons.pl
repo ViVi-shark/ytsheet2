@@ -654,6 +654,46 @@ foreach (1 .. $pc{lootsNum}){
 @loots = () if $pc{individualization} && $pc{disableLoots};
 $SHEET->param(Loots => \@loots);
 
+### 魔神行動表 --------------------------------------------------
+my $isDemon = $pc{taxa} eq '魔神';
+my $isDemonActions = $isDemon && $pc{enableDemonActions} && $::in{demon_action};
+if ($isDemonActions) {
+  $SHEET->param(isDemonActions => 1);
+  $SHEET->param(monsterUrl => './?id=' . $::in{id});
+  $SHEET->param(jsonUrl => './?id=' . $::in{id} . '&mode=json&demon_action=1');
+  $SHEET->param(paletteUrl => './?id=' . $::in{id} . '&mode=palette&demon_action=1');
+
+  $SHEET->param(demonSummoningMp => $pc{lv} ? $pc{lv} * 2 : '');
+  $SHEET->param(demonCancellationCost => $pc{lv} ? $pc{lv} : '');
+  $SHEET->param(demonSummoningOfferingPrice => commify $pc{demonSummoningOfferingPrice}) if $pc{demonSummoningOfferingPrice};
+  $SHEET->param(demonDeportationOfferingPrice => commify $pc{demonDeportationOfferingPrice}) if $pc{demonDeportationOfferingPrice};
+
+  my $explanation = '';
+  if ($pc{demonActionExplanation}) {
+    foreach (split '<br>', $pc{demonActionExplanation}) {
+      next if $_ =~ /^\s*$/;
+
+      if ($_ =~ s/^\*\s*(.+?)$//) {
+        my $headline = $1;
+        my $reference;
+        if ($headline =~ s/\s*[(（]\s*(?:⇒|=&gt;)\s*(.+?)\s*[）)]\s*$//) {
+          $reference = $1;
+        }
+
+        $explanation .= '</section>' if $explanation =~ /<section>/;
+        $explanation .= "<section><h4>$headline</h4>";
+        $explanation .= "<i class='reference'>$reference</i>" if $reference;
+      }
+      else {
+        $explanation .= "<p>$_</p>";
+      }
+    }
+
+    $explanation .= '</section>' if $explanation =~ /<section>/;
+  }
+  $SHEET->param(demonActionExplanation => $explanation);
+}
+
 ### バックアップ --------------------------------------------------
 if($::in{id}){
   my($selected, $list) = getLogList($set::char_dir, $main::file);
@@ -709,8 +749,11 @@ if(!$pc{modeDownload}){
     }
     else {
       if(!$pc{forbiddenMode}){
+        if ($isDemon && $pc{enableDemonActions} && !$isDemonActions) {
+          push(@menu, { TEXT => '魔神<br>行動表', TYPE => "href", VALUE => './?id=' . $::in{id} . '&demon_action=1',});
+        }
         push(@menu, { TEXT => 'パレット', TYPE => "onclick", VALUE => "chatPaletteOn()",   });
-        push(@menu, { TEXT => '出力'    , TYPE => "onclick", VALUE => "downloadListOn()",  });
+        push(@menu, { TEXT => '出力'    , TYPE => "onclick", VALUE => "downloadListOn()",  }) unless $isDemonActions;
         push(@menu, { TEXT => '過去ログ', TYPE => "onclick", VALUE => "loglistOn()",      });
       }
       if($pc{reqdPassword}){ push(@menu, { TEXT => '編集', TYPE => "onclick", VALUE => "editOn()", }); }

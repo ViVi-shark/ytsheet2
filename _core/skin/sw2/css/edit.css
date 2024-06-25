@@ -3051,6 +3051,87 @@ form#monster .mount-equipments {
   }
 }
 
+form#monster section.demon-actions {
+  #monster:not([data-taxa="魔神"]) & {
+    display: none;
+  }
+
+  &:not(.active) {
+    > *:not(label:first-child) {
+      display: none;
+    }
+  }
+
+  > label:has([name="enableDemonActions"]) {
+    border: none;
+    width: 100%;
+  }
+
+  > h2 {
+    margin: 0.25em auto 0 auto;
+    width: calc(100% - (0.5rem * 2));
+  }
+
+  > .outline {
+    > dd {
+      line-height: 100%;
+
+      input {
+        margin: 0;
+        width: 8em;
+      }
+    }
+
+    > dd.mnd-resistance {
+      .fixed {
+        &::before {
+          content: "(";
+        }
+
+        &::after {
+          content: ")";
+        }
+      }
+    }
+
+    > dd.summoning-offering {
+      [name="demonSummoningOfferingName"] {
+        width: 16em;
+      }
+
+      > .price {
+        &::before {
+          content: "（";
+        }
+
+        &::after {
+          content: "）";
+        }
+      }
+    }
+  }
+
+  > .explanation {
+    > h3 {
+      margin-top: 0;
+    }
+
+    textarea {
+      height: 8em;
+      margin-bottom: 0;
+    }
+
+    > .annotation {
+      margin-top: 0;
+      text-indent: 0;
+
+      &::before {
+        content: "※";
+      }
+    }
+  }
+}
+
 form#monster .color-sample .name {
   border-width: 2px 0 0;
   border-color: var(--monster-level-bg-color);

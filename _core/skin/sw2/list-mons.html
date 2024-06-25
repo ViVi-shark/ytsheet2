@@ -67,7 +67,7 @@
               <th class="date"><a href="./?type=m&<TMPL_VAR URL><TMPL_VAR qLinks>&sort=date">更新日時</a>
           </thead>
           <TMPL_LOOP Characters><tr<TMPL_IF HIDE> class="hide"</TMPL_IF>>
-            <td class="name"><a href="./?id=<TMPL_VAR ID>"><TMPL_VAR NAME></a>
+            <td class="name"><a href="./?id=<TMPL_VAR ID>"><TMPL_VAR NAME><TMPL_IF DEMON_ACTION><small class="demon-action">[<i class="icon"></i>魔神行動表]</small></TMPL_IF></a>
             <td class="author"><TMPL_VAR AUTHOR>
             <td class="taxa"><TMPL_VAR TAXA>
             <TMPL_IF GOLEM>

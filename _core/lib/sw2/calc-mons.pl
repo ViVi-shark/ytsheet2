@@ -15,6 +15,7 @@ sub data_calc {
   #### 改行を<br>に変換 --------------------------------------------------
   $pc{skills}      =~ s/\r\n?|\n/<br>/g;
   $pc{description} =~ s/\r\n?|\n/<br>/g;
+  $pc{demonActionExplanation} =~ s/\r\n?|\n/<br>/g;
   $pc{chatPalette} =~ s/\r\n?|\n/<br>/g;
   $pc{additionalSkills} =~ s/\r\n?|\n/<br>/g;
   $pc{additionalDescription} =~ s/\r\n?|\n/<br>/g;
@@ -44,10 +45,11 @@ sub data_calc {
   my $habitat     = $pc{mount} ? '' : $pc{habitat};
   my $price       = $pc{mount} ? "$pc{price}／$pc{priceRental}" : '';
   my $requiredConjurerLv = $pc{golem} ? $pc{requiredConjurerLv} : '';
+  my $demonAction = $taxa eq '魔神' && $pc{enableDemonActions} ? 1 : 0;
   $::newline = "$pc{id}<>$::file<>".
                 "$pc{birthTime}<>$::now<>$name<>$pc{author}<>$taxa<>$lv<>".
                 "$pc{intellect}<>$pc{perception}<>$disposition<>$pc{sin}<>$initiative<>$pc{weakness}<>".
-                "$pc{image}<> $pc{tags} <>$pc{hide}<>$pc{partsNum}<>$habitat<>$price<>$requiredConjurerLv";
+                "$pc{image}<> $pc{tags} <>$pc{hide}<>$pc{partsNum}<>$habitat<>$price<>$demonAction<>$requiredConjurerLv";
   
   return %pc;
 }
