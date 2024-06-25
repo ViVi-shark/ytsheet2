@@ -142,7 +142,7 @@ print <<"HTML";
 
       <aside class="message">$message</aside>
       
-      <section id="section-common">
+      <section id="section-common" style="$::commonSectionStyles">
 HTML
 if($set::user_reqd){
   print <<"HTML";

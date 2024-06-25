@@ -23,6 +23,21 @@ window.addEventListener('beforeunload', function(e) {
   }
 });
 
+{
+  const selectedSection = new URLSearchParams(location.search).get('selected_section');
+
+  if (selectedSection != null) {
+    window.addEventListener(
+        'DOMContentLoaded',
+        () => sectionSelect(
+            document.querySelector(`article > form > section#section-${selectedSection}`) != null
+                ? selectedSection
+                : 'common'
+        )
+    );
+  }
+}
+
 // 送信 ----------------------------------------
 let saving = 0;
 function formSubmit() {
@@ -615,6 +630,7 @@ function exportAsJson() {
 
 // セクション選択 ----------------------------------------
 function sectionSelect(id){
+  console.log(`sectionSelect(${id})`);
   document.querySelectorAll('article > form > section[id^="section"]').forEach( obj => {
     obj.style.display = 'none';
   });
