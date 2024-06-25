@@ -50,6 +50,28 @@ sub createUnitStatus {
           }
         }
 
+        if ($pc{golem} && $pc{individualization} && $partHp ne '') {
+          my $offset;
+          if ($pc{reinforcementItemGrade} eq '小') {
+            $offset = 5;
+          }
+          elsif ($pc{reinforcementItemGrade} eq '中') {
+            $offset = 10;
+          }
+          elsif ($pc{reinforcementItemGrade} eq '大') {
+            $offset = 15;
+          }
+          elsif ($pc{reinforcementItemGrade} eq '極大') {
+            $offset = 20;
+          }
+          else {
+            $offset = 0;
+          }
+
+          $hp += $offset if $pc{'golemReinforcement_garnetEnergy_part' . $n . '_using'};
+          $hp += $offset if $pc{'golemReinforcement_garnetLife_part' . $n . '_using'};
+        }
+
         push(@hp , {$partname.':HP' => "$hp/$hp"});
         push(@mp , {$partname.':MP' => "$mp/$mp"}) unless isEmptyValue($mp);
         push(@def, $partname.$def);
