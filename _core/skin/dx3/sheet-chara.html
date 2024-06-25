@@ -107,7 +107,7 @@
         <TMPL_LOOP Tags><a class="tag" href="./?tag=<TMPL_VAR URL>"><TMPL_VAR TEXT></a></TMPL_LOOP>
       </div>
       <div class="column column-status"><!-- COLUMN -->
-      <div id="area-status">
+      <div id="area-status" class="<TMPL_IF expUnlimited>exp-unlimited</TMPL_IF>">
         <TMPL_IF image> 
         <div id="image" class="image" style="background-image: url(<TMPL_VAR imageSrc>);background-size:<TMPL_VAR imageFit>;background-position:<TMPL_VAR imagePositionX>% <TMPL_VAR imagePositionY>%;">
         <div onclick="popImage()"><p class="words" style="<TMPL_VAR wordsX><TMPL_VAR wordsY>"><TMPL_VAR words></p></div>
@@ -645,7 +645,7 @@
                 <th>アイテム
                 <th>メモリー
                 <th>使用総計
-                <th>未使用／合計
+                <TMPL_UNLESS expUnlimited><th>未使用／合計</TMPL_UNLESS>
             <tbody>
               <tr>
                 <td><TMPL_VAR expUsedStatus>
@@ -655,7 +655,7 @@
                 <td><TMPL_VAR expUsedItem>
                 <td><TMPL_VAR expUsedMemory>
                 <td><TMPL_VAR expUsed>
-                <td><TMPL_VAR expRest>／<TMPL_VAR expTotal>
+                <TMPL_UNLESS expUnlimited><td><TMPL_VAR expRest>／<TMPL_VAR expTotal></TMPL_UNLESS>
             </tbody>
           </table>
         </section>
