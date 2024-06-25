@@ -18,6 +18,8 @@
                                 parts.push(`__${nodeToText(child)}__`);
                             } else if (child.classList.contains('oblique')) {
                                 parts.push(`<i>${nodeToText(child)}</i>`);
+                            } else if (child.classList.contains('condition')) {
+                                parts.push(nodeToText(child));
                             } else {
                                 console.warn(`Unexpected classes: ${[...child.classList].join(', ')}`);
                                 parts.push(child.textContent);

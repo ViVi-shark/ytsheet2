@@ -475,6 +475,15 @@ sub palettePreset {
   }
   ## 魔物
   elsif($type eq 'm') {
+    if ($::pc{mount} && $::pc{individualization}) {
+      foreach (1 .. $::pc{statusNum}) {
+        my $num = $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
+        $::pc{'status' . $num . 'Accuracy'} += $::pc{'partEquipment' . $_ . '-weapon-accuracy'} if $::pc{'status' . $num . 'Accuracy'} ne '';
+        $::pc{'status' . $num . 'Damage'} = addOffsetToDamage($::pc{'status' . $num . 'Damage'}, $::pc{'partEquipment' . $_ . '-weapon-damage'}) if $::pc{'status' . $num . 'Damage'} ne '';
+        $::pc{'status' . $num . 'Evasion'} += $::pc{'partEquipment' . $_ . '-armor-evasion'} if $::pc{'status' . $num . 'Evasion'} ne '';
+      }
+    }
+
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
     $text .= "//回避修正=0\n";
@@ -482,11 +491,12 @@ sub palettePreset {
     $text .= "2d+{精神抵抗}+{精神抵抗修正} 精神抵抗力\n";
     my $lastPart;
     foreach (1 .. $::pc{statusNum}){
+      my $num = $::pc{mount} && $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
       (my $part   = $::pc{'status'.$_.'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
       $part = '' if $::pc{partsNum} == 1;
       $part = "／$part" if $part ne '';
-      next if $part eq $lastPart && $::pc{'status'.$_.'Evasion'} == $::pc{'status'.($_ - 1).'Evasion'};
-      $text .= "2d+{回避$_}+{回避修正} 回避".$part."\n" if $::pc{'status'.$_.'Evasion'} ne '';
+      next if $part eq $lastPart && $::pc{'status'.$_.'Evasion'} == $::pc{'status'.($num - 1).'Evasion'};
+      $text .= "2d+{回避$_}+{回避修正} 回避".$part."\n" if $::pc{'status'.$num.'Evasion'} ne '';
       $lastPart = $part;
     }
     $text .= "\n";
@@ -495,15 +505,23 @@ sub palettePreset {
     $text .= "//打撃修正=0\n";
     my $lastWeapon;
     foreach (1 .. $::pc{statusNum}){
+      my $num = $::pc{mount} && $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
       (my $part   = $::pc{'status'.$_.'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
       (my $weapon = $::pc{'status'.$_.'Style'}) =~ s/^(.+?)[（(].+?[)）]$/$1/;
       if($part ne $weapon){ $weapon = $::pc{'status'.$_.'Style'}; }
+
+      $weapon .=
+          $::pc{mount} && $::pc{'partEquipment' . $num . '-weapon-name'}
+              ? extractWeaponMarks($::pc{'partEquipment' . $num . '-weapon-name'})
+              : '';
+
       $weapon = '' if $::pc{partsNum} == 1;
       $weapon = "／$weapon" if $weapon ne '';
-      next if $weapon eq $lastPart && $::pc{'status'.$_.'Accuracy'} == $::pc{'status'.($_ - 1).'Accuracy'} && $::pc{'status'.$_.'Damage'} == $::pc{'status'.($_ -1).'Damage'};
-      $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status'.$_.'Accuracy'} ne '';
-      $text .= "{ダメージ$_}+{打撃修正} ダメージ".$weapon."\n" if $::pc{'status'.$_.'Damage'} ne '';
-      $text .= "\n" if $::pc{'status'.$_.'Accuracy'} ne '' || $::pc{'status'.$_.'Damage'} ne '';
+
+      next if $weapon eq $lastPart && $::pc{'status'.$num.'Accuracy'} == $::pc{'status'.($num - 1).'Accuracy'} && $::pc{'status'.$num.'Damage'} == $::pc{'status'.($nm -1).'Damage'};
+      $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status'.$num.'Accuracy'} ne '';
+      $text .= "{ダメージ$_}+{打撃修正} ダメージ".$weapon."\n" if $::pc{'status'.$num.'Damage'} ne '';
+      $text .= "\n" if $::pc{'status'.$num.'Accuracy'} ne '' || $::pc{'status'.$num.'Damage'} ne '';
       $lastPart = $weapon;
     }
     my $skills = $::pc{skills};

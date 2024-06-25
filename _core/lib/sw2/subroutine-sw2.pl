@@ -37,6 +37,19 @@ sub createUnitStatus {
         my $hp  = s_eval($pc{"status${i}Hp"});
         my $mp  = s_eval($pc{"status${i}Mp"});
         my $def = s_eval($pc{"status${i}Defense"});
+
+        if ($pc{mount} && $pc{individualization}) {
+          $hp += $pc{'partEquipment' . $n . '-armor-hp'} if $hp ne '';
+          $mp += $pc{'partEquipment' . $n . '-armor-mp'} unless isEmptyValue($mp);
+          $def += $pc{'partEquipment' . $n . '-armor-defense'} if $def ne '';
+
+          if ($hp ne '') {
+            $hp += 10 if $pc{exclusiveMount};
+            $hp += 5 if $pc{ridingHpReinforcement};
+            $hp += 5 if $pc{ridingHpReinforcementSuper};
+          }
+        }
+
         push(@hp , {$partname.':HP' => "$hp/$hp"});
         push(@mp , {$partname.':MP' => "$mp/$mp"}) unless isEmptyValue($mp);
         push(@def, $partname.$def);
@@ -57,6 +70,19 @@ sub createUnitStatus {
       my $hp = s_eval($pc{"status${i}Hp"});
       my $mp = s_eval($pc{"status${i}Mp"});
       my $def = s_eval($pc{"status${i}Defense"});
+
+      if ($pc{mount} && $pc{individualization}) {
+        $hp += $pc{'partEquipment1-armor-hp'} if $hp ne '';
+        $mp += $pc{'partEquipment1-armor-mp'} unless isEmptyValue($mp);
+        $def += $pc{'partEquipment1-armor-defense'} if $def ne '';
+
+        if ($hp ne '') {
+          $hp += 10 if $pc{exclusiveMount};
+          $hp += 5 if $pc{ridingHpReinforcement};
+          $hp += 5 if $pc{ridingHpReinforcementSuper};
+        }
+      }
+
       push(@unitStatus, { 'HP' => "$hp/$hp" });
       push(@unitStatus, { 'MP' => "$mp/$mp" }) unless isEmptyValue($mp);
       push(@unitStatus, { '防護' => $def });
@@ -399,6 +425,23 @@ sub data_update_arts {
 sub isEmptyValue {
   my $value = shift;
   return defined($value) && $value ne '' && $value !~ /^[-ー－―]$/ ? 0 : 1;
+}
+
+sub addOffsetToDamage {
+  my $original = shift;
+  my $offset = shift;
+  return '' if $original eq '';
+  return $original if !defined($offset) || $offset eq '' || $offset == 0;
+
+  if ($original =~ /^(\d+[d]6?)[+]?(-?\d+)$/i) {
+    my $dice = $1;
+    my $fixed = $2;
+    $fixed += $offset;
+    return $dice if $fixed == 0;
+    return $dice . ($fixed > 0 ? '+' : '') . $fixed;
+  }
+
+  return $original;
 }
 
 1;
