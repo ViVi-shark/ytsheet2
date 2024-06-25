@@ -483,13 +483,21 @@ sub chatPaletteForm {
               <span class="sample udona"></span>
             </div>
           <dt>ステータス<br>
-          <dd>
+          <dd class="status">
             @{[ input 'unitStatusNotOutput','hidden' ]}
             @{[ input 'unitStatusNum','hidden' ]}
             <table id="unit-status">
               <tbody id="unit-status-default" class="highlight-hovered-row">
               <tbody id="unit-status-optional">$status
               <tfoot><tr><td colspan="3" class="add-del-button"><a onclick="addUnitStatus()">▼</a><a onclick="delUnitStatus()">▲</a></div>
+            </table>
+            <table id="unit-status-memo">
+              <tbody>
+                <tr>
+                  <td>
+                  <td>メモ
+                  <td>@{[ input "unitStatusMemo",'','' ]}
+                  <td>
             </table>
             <ul class="annotate">
               <li>デフォルトのステータス出力の他に、任意で項目を追加できます。<br>

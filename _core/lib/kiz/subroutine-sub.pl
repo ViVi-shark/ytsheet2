@@ -26,6 +26,8 @@ sub createUnitStatus {
     push(@unitStatus, { $pc{"unitStatus${num}Label"} => $pc{"unitStatus${num}Value"} });
   }
 
+  push(@unitStatus, {'メモ' => $pc{unitStatusMemo}}) if $pc{unitStatusMemo};
+
   return \@unitStatus;
 }
 
