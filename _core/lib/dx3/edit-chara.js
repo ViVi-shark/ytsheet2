@@ -337,6 +337,17 @@ function calcMemory() {
 
 // 経験点
 function calcExp(){
+  const unlimited = document.querySelector('input[name="expUnlimited"][type="checkbox"]').checked;
+
+  if (unlimited) {
+    form['history0Exp'].setAttribute('disabled', '');
+  } else {
+    form['history0Exp'].removeAttribute('disabled');
+  }
+
+  const expFooter = document.getElementById('exp-footer');
+  expFooter.classList.toggle('unlimited', unlimited);
+
   let total = makeExp + Number(form['history0Exp'].value);
   if(createType === 'C'){ total -= 130; }
 
@@ -359,6 +370,7 @@ function calcExp(){
     rest -= exps[key];
   }
   document.getElementById("exp-total").textContent = total;
+  document.getElementById("exp-used-total").textContent = [exps['status'] || 0, exps['skill'] || 0, exps['effect'] || 0, exps['magic'] || 0, exps['item'] || 0, exps['memory'] || 0].reduce((x, y) => x + y).toString();
   document.getElementById("exp-rest").textContent = rest;
 }
 
