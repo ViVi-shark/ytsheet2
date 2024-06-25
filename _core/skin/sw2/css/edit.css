@@ -1419,7 +1419,13 @@ form#monster.individualization #player-name dd {
 form#monster.individualization #player-name [name="author"] {
   display: none;
 }
-form#monster label:has(:is([name="exclusiveMount"], [name="ridingHpReinforcement"], [name="ridingHpReinforcementSuper"])) {
+form#monster label:has(:is(
+  [name="exclusiveMount"],
+  [name="ridingHpReinforcement"],
+  [name="ridingHpReinforcementSuper"],
+  [name="ridingMountReinforcement"],
+  [name="ridingMountReinforcementSuper"]
+)) {
   border: none;
 
   &:has([name="ridingHpReinforcement"], [name="ridingHpReinforcementSuper"]) {

@@ -414,10 +414,12 @@ print <<"HTML";
               <span class="standard">
                 <span class="base">
                   <span class="value"></span>
+                  <span class="offset acc-option-offset"></span>
                   <span class="offset equipment-offset"></span>
                 </span>
                 <span class="fixed monster-only">
                   <span class="value"></span>
+                  <span class="offset acc-option-offset"></span>
                   <span class="offset equipment-offset"></span>
                 </span>
               </span>
@@ -432,10 +434,12 @@ print <<"HTML";
               <span class="standard">
                 <span class="base">
                   <span class="value"></span>
+                  <span class="offset eva-option-offset"></span>
                   <span class="offset equipment-offset"></span>
                 </span>
                 <span class="fixed monster-only">
                   <span class="value"></span>
+                  <span class="offset eva-option-offset"></span>
                   <span class="offset equipment-offset"></span>
                 </span>
               </span>
@@ -463,10 +467,12 @@ print <<"HTML";
             <td class="mnd mount-only">
         </template>
       </table>
-        <fieldset class="mount-only individualization-only mount-hp-options">
-          @{[ checkbox 'exclusiveMount','専有','mountHpOptionsUpdated','data-hp="10"' ]}
-          @{[ checkbox 'ridingHpReinforcement','【ＨＰ強化】','mountHpOptionsUpdated','data-hp="5"' ]}
-          @{[ checkbox 'ridingHpReinforcementSuper','【ＨＰ超強化】','mountHpOptionsUpdated','data-hp="5"' ]}
+        <fieldset class="mount-only individualization-only mount-status-options">
+          @{[ checkbox 'exclusiveMount','専有','mountStatusOptionsUpdated','data-hp="10"' ]}
+          @{[ checkbox 'ridingHpReinforcement','【ＨＰ強化】','mountStatusOptionsUpdated','data-hp="5"' ]}
+          @{[ checkbox 'ridingHpReinforcementSuper','【ＨＰ超強化】','mountStatusOptionsUpdated','data-hp="5"' ]}
+          @{[ checkbox 'ridingMountReinforcement','【騎獣強化】','mountStatusOptionsUpdated','data-acc="1" data-eva="1"' ]}
+          @{[ checkbox 'ridingMountReinforcementSuper','【騎獣超強化】','mountStatusOptionsUpdated','data-acc="1" data-eva="1"' ]}
         </fieldset>
       </div>
       <fieldset class="box parts in-toc" data-content-title="部位数・コア部位">

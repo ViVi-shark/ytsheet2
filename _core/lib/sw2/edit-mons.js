@@ -852,6 +852,11 @@ function individualizationSourceUrlChanged() {
                       .map(x => parseInt(x))
                       .sort((x, y) => x - y);
 
+              const corePartName =
+                  source['coreParts'] != null && source['coreParts'] !== ''
+                      ? source['coreParts'].replace(/^.+[(（](.+?)[）)]$/, '$1')
+                      : null;
+
               for (let level = levelMin; level <= levelMax; level++) {
                 const tbody = document.createElement('tbody');
                 tbody.dataset.level = level.toString();
@@ -867,6 +872,17 @@ function individualizationSourceUrlChanged() {
                           propertyName => {
                             const key = `status${partSerial}${propertyName !== 'Style' && level > levelMin ? `-${level - levelMin + 1}` : ''}${propertyName}`;
                             const td = tr.querySelector(`.${propertyName.toLowerCase()}`);
+
+                            if (
+                                partSerials.length === 1 ||
+                                (
+                                    corePartName != null &&
+                                    propertyName === 'Style' &&
+                                    source[key].replace('（', '(').replace('）', ')').includes(`(${corePartName})`)
+                                )
+                            ) {
+                              td.closest('tr').classList.add('core');
+                            }
 
                             (td.querySelector('.base .value') ?? td.querySelector('.value') ?? td).textContent =
                                 source[key]?.toString();
@@ -1008,7 +1024,7 @@ function individualizationSourceUrlChanged() {
               offsetDistributionTable.dataset.partCount = partCount.toString();
             }
 
-            mountHpOptionsUpdated();
+            mountStatusOptionsUpdated();
 
             // ゴーレム強化アイテム
             {
@@ -1476,23 +1492,43 @@ function individualizationModeChanged() {
   sourceUrlInput.addEventListener('change', individualizationSourceUrlChanged);
   sourceUrlInput.dispatchEvent(new Event('change'));
 
-  mountHpOptionsUpdated();
+  mountStatusOptionsUpdated();
 }
-function mountHpOptionsUpdated() {
-  let offsetTotal = 0;
+function mountStatusOptionsUpdated() {
+  let hpOffsetTotal = 0;
+  let accOffsetTotal = 0;
+  let evaOffsetTotal = 0;
 
-  document.querySelectorAll('.mount-hp-options input[type="checkbox"][data-hp]').forEach(
+  document.querySelectorAll('.mount-status-options input[type="checkbox"]:is([data-hp], [data-acc], [data-eva])').forEach(
       checkbox => {
         if (!checkbox.checked) {
           return;
         }
 
-        offsetTotal += parseInt(checkbox.dataset.hp);
+        if (checkbox.dataset.hp != null && checkbox.dataset.hp !== '') {
+          hpOffsetTotal += parseInt(checkbox.dataset.hp);
+        }
+
+        if (checkbox.dataset.acc != null && checkbox.dataset.acc !== '') {
+          accOffsetTotal += parseInt(checkbox.dataset.acc);
+        }
+
+        if (checkbox.dataset.eva != null && checkbox.dataset.eva !== '') {
+          evaOffsetTotal += parseInt(checkbox.dataset.eva);
+        }
       }
   );
 
   document.querySelectorAll('#source-status-table .hp .hp-option-offset').forEach(
-      node => node.dataset.offset = offsetTotal.toString()
+      node => node.dataset.offset = hpOffsetTotal.toString()
+  );
+
+  document.querySelectorAll('#source-status-table tr.core .accuracy .acc-option-offset').forEach(
+      node => node.dataset.offset = accOffsetTotal.toString()
+  );
+
+  document.querySelectorAll('#source-status-table tr.core .evasion .eva-option-offset').forEach(
+      node => node.dataset.offset = evaOffsetTotal.toString()
   );
 }
 document.querySelectorAll('[data-related-field]').forEach(
