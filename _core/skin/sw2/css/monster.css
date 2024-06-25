@@ -216,7 +216,7 @@ div.status dl {
   }
 }
 
-.hp-options {
+.mount-options {
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: repeat(3, max-content);
@@ -239,12 +239,14 @@ div.status dl {
     font-family: "Material Symbols Outlined", sans-serif;
     font-variation-settings: 'FILL' 1;
   }
-}
-.hp-options:not(:has(.active)) {
-  display: none;
-}
-body:not(.individualization) .hp-options {
-  display: none;
+
+  &:not(:has(.active)) {
+    display: none;
+  }
+
+  body:not(.individualization) & {
+    display: none;
+  }
 }
 
 table.status {

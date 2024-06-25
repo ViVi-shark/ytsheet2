@@ -229,9 +229,13 @@ unless(
 $SHEET->param(exclusiveMount => $pc{exclusiveMount});
 $SHEET->param(ridingHpReinforcement => $pc{ridingHpReinforcement});
 $SHEET->param(ridingHpReinforcementSuper => $pc{ridingHpReinforcementSuper});
+$SHEET->param(ridingMountReinforcement => $pc{ridingMountReinforcement});
+$SHEET->param(ridingMountReinforcementSuper => $pc{ridingMountReinforcementSuper});
 if($pc{vitResist} ne ''){ $SHEET->param(vitResist => $pc{vitResist}.(!$pc{statusTextInput}?' ('.$pc{vitResistFix}.')':'')) }
 if($pc{mndResist} ne ''){ $SHEET->param(mndResist => $pc{mndResist}.(!$pc{statusTextInput}?' ('.$pc{mndResistFix}.')':'')) }
 
+my $corePartName = $pc{coreParts};
+$corePartName =~ /[(（]すべて[）)]$/ if $corePartName;
 my @status_tbody;
 my @status_row;
 foreach (1 .. $pc{statusNum}){
@@ -292,6 +296,22 @@ foreach (1 .. $pc{statusNum}){
     $pc{'status' . $_ . 'Hp'} += 5 if $pc{'ridingHpReinforcementSuper'};
   }
 
+  my $partName = $pc{'status' . $_ . 'Style'};
+  if ($partName) {
+    $partName =~ s/\(/（/g;
+    $partName =~ s/\)/）/g;
+  }
+
+  if ($pc{'status' . $_ . 'Accuracy'} ne '―' && index($partName, $corePartName) >= 0) {
+    $pc{'status' . $_ . 'Accuracy'} += 1 if $pc{'ridingMountReinforcement'};
+    $pc{'status' . $_ . 'Accuracy'} += 1 if $pc{'ridingMountReinforcementSuper'};
+  }
+
+  if ($pc{'status' . $_ . 'Evasion'} ne '―' && index($partName, $corePartName) >= 0) {
+    $pc{'status' . $_ . 'Evasion'} += 1 if $pc{'ridingMountReinforcement'};
+    $pc{'status' . $_ . 'Evasion'} += 1 if $pc{'ridingMountReinforcementSuper'};
+  }
+
   push(@status_row, {
     LV       => $pc{lvMin},
     STYLE    => $pc{'status'.$_.'Style'},
@@ -334,6 +354,22 @@ foreach my $lv (2 .. ($pc{lvMax}-$pc{lvMin}+1)){
       $pc{'status' . $num . 'Hp'} += 10 if $pc{'ridingHpReinforcement'};
       $pc{'status' . $num . 'Hp'} += 5 if $pc{'ridingHpReinforcement'};
       $pc{'status' . $num . 'Hp'} += 5 if $pc{'ridingHpReinforcementSuper'};
+    }
+
+    my $partName = $pc{'status' . $_ . 'Style'};
+    if ($partName) {
+      $partName =~ s/\(/（/g;
+      $partName =~ s/\)/）/g;
+    }
+
+    if ($pc{'status' . $num . 'Accuracy'} ne '―' && index($partName, $corePartName) >= 0) {
+      $pc{'status' . $num . 'Accuracy'} += 1 if $pc{'ridingMountReinforcement'};
+      $pc{'status' . $num . 'Accuracy'} += 1 if $pc{'ridingMountReinforcementSuper'};
+    }
+
+    if ($pc{'status' . $num . 'Evasion'} ne '―' && index($partName, $corePartName) >= 0) {
+      $pc{'status' . $num . 'Evasion'} += 1 if $pc{'ridingMountReinforcement'};
+      $pc{'status' . $num . 'Evasion'} += 1 if $pc{'ridingMountReinforcementSuper'};
     }
 
     push(@status_row, {
