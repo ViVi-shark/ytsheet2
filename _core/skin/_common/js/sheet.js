@@ -53,7 +53,9 @@ function chatPaletteOn() {
   cpOpenFirst++;
 }
 function chatPaletteSelect(tool) {
-  const url = './?mode=palette&id='+sheetId+'&tool='+tool;
+  const url =
+      document.querySelector('head link[rel="ytchat-palette-exporting-point"][href]').getAttribute('href') + '&tool=' + tool;
+
   fetch(url)
   .then(response => { return response.text(); })
   .then(text => { document.getElementById('chatPaletteBox').value = text; });

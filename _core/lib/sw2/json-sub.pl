@@ -43,14 +43,41 @@ sub addJsonData {
       $mndresist = $pc{mount} ? $pc{"status${i}Mnd"} : $pc{mndResist} . '（' . $pc{mndResistFix} . '）';
     }
 
-    my $taxa = "分類:$pc{taxa}";
-    my $data1 = "知能:$pc{intellect}　知覚:$pc{perception}".($pc{mount}?'':"　反応:$pc{disposition}");
-       $data1 .= "　穢れ:$pc{sin}" if $pc{sin};
-    my $data2  = "言語:$pc{language}".($pc{mount}?'':"　生息地:$pc{habitat}");
-    my $data3  = "弱点:$pc{weakness}\n".($pc{mount}?'':"先制値:$pc{initiative}　")."生命抵抗力:${vitresist}　精神抵抗力:${mndresist}";
-    $pc{sheetDescriptionS} = $taxa."\n".$data3;
-    $pc{sheetDescriptionM} = $taxa."　".$data1."\n".$data2."\n".$data3;
-    
+    if ($::in{demon_action}) {
+      my $level = $pc{lv} || 0;
+      my $summoningMp = $level * 2;
+      my $cancellationCost = $level;
+      my $summoningOffering = $pc{demonSummoningOfferingName} || '';
+      $summoningOffering .= '（' . commify($pc{demonSummoningOfferingPrice}) . 'G）' if $summoningOffering && $pc{demonSummoningOfferingPrice};
+      my $deportationOfferingPrice = $pc{demonDeportationOfferingPrice} ? commify($pc{demonDeportationOfferingPrice}) : '';
+
+      my $row1 = $level ? "レベル:$level" : '';
+      my $row2 = $level ? join('　', ("召喚時消費:MP$summoningMp", "キャンセルコスト:$cancellationCost")) : '';
+      my @row3Items = ();
+      push(@row3Items, "精神抵抗力:$mndresist") if $mndresist;
+      push(@row3Items, "必須供物:$summoningOffering") if $summoningOffering;
+      my $row3 = @row3Items >= 0 ? join('　', @row3Items) : '';
+      my $row4 = $deportationOfferingPrice ? "送還供物価格:${deportationOfferingPrice}G" : '';
+
+      my @rows = ();
+      push(@rows, $row1) if $row1;
+      $pc{sheetDescriptionS} = join("\n", @rows);
+
+      foreach ($row2, $row3, $row4) {
+        push(@rows, $_) if $_;
+      }
+      $pc{sheetDescriptionM} = join("\n", @rows);
+    }
+    else {
+      my $taxa = "分類:$pc{taxa}";
+      my $data1 = "知能:$pc{intellect}　知覚:$pc{perception}".($pc{mount}?'':"　反応:$pc{disposition}");
+         $data1 .= "　穢れ:$pc{sin}" if $pc{sin};
+      my $data2  = "言語:$pc{language}".($pc{mount}?'':"　生息地:$pc{habitat}");
+      my $data3  = "弱点:$pc{weakness}\n".($pc{mount}?'':"先制値:$pc{initiative}　")."生命抵抗力:${vitresist}　精神抵抗力:${mndresist}";
+      $pc{sheetDescriptionS} = $taxa."\n".$data3;
+      $pc{sheetDescriptionM} = $taxa."　".$data1."\n".$data2."\n".$data3;
+    }
+
     if($pc{statusNum} > 1){ $pc{unitExceptStatus} = { 'HP'=>1,'MP'=>1,'防護'=>1 } }
   }
   ### キャラクター --------------------------------------------------

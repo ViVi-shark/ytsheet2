@@ -96,6 +96,7 @@
     </aside></TMPL_IF>
     
     <article>
+      <TMPL_UNLESS isDemonActions>
       <div class="level-and-name">
         <TMPL_IF golem><div class="conjurer-lv"><TMPL_VAR requiredConjurerLv></div></TMPL_IF>
       <div id="area-name" class="color-set">
@@ -307,6 +308,67 @@
         <p><TMPL_VAR description></p>
       </section></TMPL_IF>
 
+      </TMPL_UNLESS>
+      <TMPL_IF isDemonActions>
+      <section class="demon-actions">
+        <div class="level-and-name">
+          <div class="area-name color-set">
+            <div class="lv"><TMPL_VAR lv></div>
+            <div class="name">
+              <h1>【<TMPL_VAR monsterName>】</h1>
+            </div>
+            <a class="link-to-monster-data" href="<TMPL_VAR monsterUrl>" target="_blank">魔物データ</a>
+          </div>
+        </div>
+        <dl class="outline">
+          <dt class="summoning-mp">召喚時消費
+          <dd class="summoning-mp">ＭＰ<span class="value"><TMPL_VAR demonSummoningMp></span>
+          <dt class="cancellation-cost">キャンセルコスト
+          <dd class="cancellation-cost">ＭＰ<span class="value"><TMPL_VAR demonCancellationCost></span>
+          <dt class="mnd-resistance">精神抵抗力
+          <dd class="mnd-resistance"><TMPL_VAR mndResist>
+          <dt class="summoning-offering">必須供物
+          <dd class="summoning-offering"><span class="name"><TMPL_VAR demonSummoningOfferingName></span><TMPL_IF demonSummoningOfferingPrice><span class="price">(<span class="value"><TMPL_VAR demonSummoningOfferingPrice></span>G)</span></TMPL_IF>
+          <dt class="deportation-offering-price">送還供物価格
+          <dd class="deportation-offering-price"><span class="value"><TMPL_VAR demonDeportationOfferingPrice></span><i class="unit">G</i>
+        </dl>
+        <table class="action-chart">
+          <thead>
+            <tr>
+              <th class="dice-number">1d
+              <th class="target">対象
+              <th class="range-and-action">射程と動作
+              <th class="action-value">達成値
+              <th class="damage">打撃点など
+          <tbody>
+            <tr data-dice-number="1">
+              <th class="dice-number">⚀
+              <td class="target"><TMPL_VAR demonAction1Target>
+              <td class="range-and-action"><TMPL_VAR demonAction1Action>
+              <td class="action-value"><TMPL_VAR demonAction1Value>
+              <td class="damage"><TMPL_VAR demonAction1Damage>
+            <tr data-dice-number="2,3">
+              <th class="dice-number">⚁⚂
+              <td class="target"><TMPL_VAR demonAction23Target>
+              <td class="range-and-action"><TMPL_VAR demonAction23Action>
+              <td class="action-value"><TMPL_VAR demonAction23Value>
+              <td class="damage"><TMPL_VAR demonAction23Damage>
+            <tr data-dice-number="4,5">
+              <th class="dice-number">⚃⚄
+              <td class="target"><TMPL_VAR demonAction45Target>
+              <td class="range-and-action"><TMPL_VAR demonAction45Action>
+              <td class="action-value"><TMPL_VAR demonAction45Value>
+              <td class="damage"><TMPL_VAR demonAction45Damage>
+            <tr data-dice-number="6">
+              <th class="dice-number">⚅
+              <td class="target"><TMPL_VAR demonAction6Target>
+              <td class="range-and-action"><TMPL_VAR demonAction6Action>
+              <td class="action-value"><TMPL_VAR demonAction6Value>
+              <td class="damage"><TMPL_VAR demonAction6Damage>
+        </table>
+        <div class="explanation"><TMPL_VAR demonActionExplanation></div>
+      </section>
+      </TMPL_IF>
       <div id="author">
         製作者：<TMPL_VAR author>
       </div>

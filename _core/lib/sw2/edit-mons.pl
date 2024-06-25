@@ -51,6 +51,7 @@ my $status_text_input = $pc{statusTextInput} || $pc{mount} || 0;
 ### 改行処理 --------------------------------------------------
 $pc{skills}      =~ s/&lt;br&gt;/\n/g;
 $pc{description} =~ s/&lt;br&gt;/\n/g;
+$pc{demonActionExplanation} =~ s/&lt;br&gt;/\n/g;
 $pc{chatPalette} =~ s/&lt;br&gt;/\n/g;
 $pc{additionalSkills} =~ s/&lt;br&gt;/\n/g;
 $pc{additionalDescription} =~ s/&lt;br&gt;/\n/g;
@@ -189,7 +190,7 @@ HTML
           <dt>分類</dt>
           <dd>
             <div class="select-input">
-              <select name="taxa" oninput="selectInputCheck(this,'その他')">
+              <select name="taxa" oninput="selectInputCheck(this,'その他');checkTaxa()">
 HTML
 foreach (@data::taxa){
   print '<option '.($pc{taxa} eq @$_[0] ? ' selected': '').'>'.@$_[0].'</option>';
@@ -204,7 +205,7 @@ my $golemChecked = $pc{golem} ? 'checked' : '';
 my $monsterChecked = !($pc{mount} || $pc{golem}) ? 'checked' : '';
 print <<"HTML";
               </select>
-              <input type="text" name="taxaFree">
+              <input type="text" name="taxaFree" oninput="checkTaxa()">
               <span data-related-field="taxa"></span>
             </div>
           <dd class="kind">
@@ -747,6 +748,60 @@ print <<"HTML";
         <h2 class="individualization-only">追加解説</h2>
         <textarea name="additionalDescription" class="individualization-only">$pc{additionalDescription}</textarea>
       </div>
+      <section class="box in-toc demon-actions" data-content-title="魔神行動表">
+        @{[ checkbox 'enableDemonActions','魔神行動表を設定する','switchDemonActions' ]}
+        <h2>魔神行動表</h2>
+        <dl class="outline">
+          <dt class="summoning-mp">召喚時消費
+          <dd class="summoning-mp"><span class="label">ＭＰ</span><span class="value"></span>
+          <dt class="cancellation-cost">キャンセルコスト
+          <dd class="cancellation-cost"><span class="label">ＭＰ</span><span class="value"></span>
+          <dt class="mnd-resistance">精神抵抗力
+          <dd class="mnd-resistance"><span class="value base"></span><span class="value fixed"></span>
+          <dt class="summoning-offering">必須供物
+          <dd class="summoning-offering">@{[input('demonSummoningOfferingName','text','','placeholder="名称" list="data-demon-summoning-offering-name"')]}<span class="price">@{[input('demonSummoningOfferingPrice','number','','placeholder="価格"')]}G</span>
+          <dt class="deportation-offering-price">送還供物価格
+          <dd class="deportation-offering-price">@{[input('demonDeportationOfferingPrice','number')]}G
+        </dl>
+        <table class="action-chart">
+          <thead>
+            <th class="dice-number">1d
+            <th class="target">対象
+            <th class="range-and-action">射程と動作
+            <th class="action-value">達成値
+            <th class="damage">打撃点など
+          <tbody>
+            <tr data-dice-number="1">
+              <th class="dice-number">⚀
+              <td class="target">@{[input('demonAction1Target','text','','list="data-demon-action-only-indiscriminate-target"')]}
+              <td class="range-and-action">@{[input('demonAction1Action','text','','list="data-demon-action-range-and-action"')]}
+              <td class="action-value">@{[input('demonAction1Value','text','','list="data-demon-action-value"')]}
+              <td class="damage">@{[input('demonAction1Damage','text','','list="data-demon-action-damage"')]}
+            <tr data-dice-number="2,3">
+              <th class="dice-number">⚁⚂
+              <td class="target">@{[input('demonAction23Target','text','','list="data-demon-action-target"')]}
+              <td class="range-and-action">@{[input('demonAction23Action','text','','list="data-demon-action-range-and-action"')]}
+              <td class="action-value">@{[input('demonAction23Value','text','','list="data-demon-action-value"')]}
+              <td class="damage">@{[input('demonAction23Damage','text','','list="data-demon-action-damage"')]}
+            <tr data-dice-number="4,5">
+              <th class="dice-number">⚃⚄
+              <td class="target">@{[input('demonAction45Target','text','','list="data-demon-action-target"')]}
+              <td class="range-and-action">@{[input('demonAction45Action','text','','list="data-demon-action-range-and-action"')]}
+              <td class="action-value">@{[input('demonAction45Value','text','','list="data-demon-action-value"')]}
+              <td class="damage">@{[input('demonAction45Damage','text','','list="data-demon-action-damage"')]}
+            <tr data-dice-number="6">
+              <th class="dice-number">⚅
+              <td class="target">@{[input('demonAction6Target','text','','list="data-demon-action-target"')]}
+              <td class="range-and-action">@{[input('demonAction6Action','text','','list="data-demon-action-range-and-action"')]}
+              <td class="action-value">@{[input('demonAction6Value','text','','list="data-demon-action-value"')]}
+              <td class="damage">@{[input('demonAction6Damage','text','','list="data-demon-action-damage"')]}
+        </table>
+        <section class="explanation">
+          <h3>動作の補足説明</h3>
+          @{[textarea('demonActionExplanation','','placeholder="*【ファイアボール】（⇒『Ⅰ』253頁）"')]}
+          <p class="annotation">先頭に <code>*</code> のある行を見出しにします</p>
+        </section>
+      </section>
       </section>
       
       @{[ chatPaletteForm ]}
@@ -807,6 +862,81 @@ print <<"HTML";
   <option value="属性ダメージ+3点">
   <option value="回復効果ダメージ+3点">
   <option value="なし">
+  </datalist>
+  <datalist id="data-demon-summoning-offering-name">
+    <option value="（Ｘ）">
+  </datalist>
+  <datalist id="data-demon-action-only-indiscriminate-target">
+    <option value="無差別">
+    <option value="無差別1体">
+    <option value="無差別2体">
+    <option value="無差別3体">
+    <option value="無差別5体">
+    <option value="無差別_体">
+  </datalist>
+  <datalist id="data-demon-action-target">
+    <option value="無差別">
+    <option value="無差別1体">
+    <option value="無差別2体">
+    <option value="無差別3体">
+    <option value="無差別5体">
+    <option value="無差別_体">
+    <option value="任意">
+    <option value="任意1体">
+    <option value="任意2体">
+    <option value="任意3体">
+    <option value="任意5体">
+    <option value="任意_体">
+    <option value="味方1体">
+  </datalist>
+  <datalist id="data-demon-action-range-and-action">
+    <option value="近接攻撃">
+    <option value="近接攻撃＆「」">
+    <option value="《》">
+    <option value="《》で近接攻撃">
+    <option value="「」">
+    <option value="「2回攻撃」">
+    <option value="「2回攻撃＆双撃」">
+    <option value="「2回攻撃＆双撃」で「」">
+    <option value="「3回攻撃」">
+    <option value="「射程:1(_m)」で「」">
+    <option value="「射程:2(_m)」で「」">
+    <option value="「射程:1(_m)」で遠隔攻撃">
+    <option value="「射程:2(_m)」で遠隔攻撃">
+    <option value="「射程:接触」で「」">
+    <option value="「射程:自身」で「」">
+    <option value="【】">
+    <option value="《》の宣言下で【】">
+    <option value="《マルチアクション》で近接攻撃＆【】">
+  </datalist>
+  <datalist id="data-demon-action-value">
+    <option value="_×2">
+    <option value="_×3">
+    <option value="_＆_">
+    <option value="―">
+  </datalist>
+  <datalist id="data-demon-action-damage">
+    <option value="2d+">
+    <option value="2d+_＆">
+    <option value="2d+_＆「」">
+    <option value="2d+_＆2d+_">
+    <option value="(2d+_)×2">
+    <option value="(2d+_)×3">
+    <option value="威力10／C⑩+">
+    <option value="威力20／C⑩+">
+    <option value="威力30／C⑩+">
+    <option value="威力40／C⑩+">
+    <option value="威力50／C⑩+">
+    <option value="威力_／C⑩+">
+    <option value="威力_／C_+">
+    <option value="2d+_＆威力10／C⑩+">
+    <option value="2d+_＆威力20／C⑩+">
+    <option value="2d+_＆威力30／C⑩+">
+    <option value="2d+_＆威力40／C⑩+">
+    <option value="2d+_＆威力50／C⑩+">
+    <option value="2d+_＆威力_／C⑩+">
+    <option value="2d+_＆威力_／C_+">
+    <option value="下記">
   </datalist>
   <script>
 @{[ &commonJSVariable ]}

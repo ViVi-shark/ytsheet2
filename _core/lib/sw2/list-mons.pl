@@ -218,8 +218,8 @@ foreach (@list) {
   my (
     $id, undef, undef, $updatetime, $name, $author, $taxa, $lv,
     $intellect, $perception, $disposition, $sin, $initiative, $weakness,
-    $image, $tags, $hide, $parts, $habitat, $price, $requiredConjurerLv
-  ) = (split /<>/, $_)[0..20];
+    $image, $tags, $hide, $parts, $habitat, $price, $demonAction, $requiredConjurerLv
+  ) = (split /<>/, $_)[0..21];
   
   #グループ
   my $taxa_full = $taxa =~ s/^その他://r;
@@ -240,6 +240,8 @@ foreach (@list) {
       $taxa = $taxa_query || 'すべて';
     }
   }
+  
+  $demonAction = 0 if $taxa ne '魔神';
   
   #カウント
   $count{$taxa}++;
@@ -275,6 +277,7 @@ foreach (@list) {
     "DISPOSITION" => $disposition,
     "HABITAT" => $habitat,
     "PRICE" => $price,
+    "DEMON_ACTION" => $demonAction,
     "TAGS" => $tags_links,
     "DATE" => $updatetime,
     "HIDE" => $hide,
