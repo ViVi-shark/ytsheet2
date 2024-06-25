@@ -66,6 +66,8 @@ if(!$LOGIN_ID && $mode =~ /^(?:blanksheet|copy|convert)$/){
   }
 }
 
+our $commonSectionStyles = $::in{selected_section} ? 'display: none;' : '';
+
 ### 各ゲームシステム処理 --------------------------------------------------
 require $set::lib_edit_char;
 
