@@ -2007,10 +2007,10 @@ function checkLanguage(){
         else if(v < 0){ notice += `<li class="over">${className}技能での習得が「${v*-1}」過剰です`; }
       }
       else if(classLv && (notT || notR)) {
-        notice += `<li class="under">${langName}の`;
-        if(notT){ acqT[langName] = true; notice += '会話'+(notR ? '/' : '');  }
-        if(notR){ acqR[langName] = true; notice += '読文';  }
-        notice += 'が習得できます';
+        notice += `<li class="under"><span class="language-name">${langName}</span>の`;
+        if(notT){ acqT[langName] = true; notice += '<span class="mode talk">会話</span>'+(notR ? '/' : '');  }
+        if(notR){ acqR[langName] = true; notice += '<span class="mode read">読文</span>';  }
+        notice += 'が習得できます<br>';
       }
     }
   }
@@ -2020,11 +2020,91 @@ function checkLanguage(){
       ...(notice.split('<br>').filter(x => x !== '').map(
           notice => {
             const p = document.createElement('p');
-            p.textContent = notice;
+            p.innerHTML = notice;
+
+            if (notice.endsWith('が習得できます')) {
+              const button = document.createElement('button');
+              button.textContent = "自動入力";
+              p.appendChild(button);
+
+              button.addEventListener(
+                  'click',
+                  e => {
+                    e.preventDefault();
+
+                    const p = e.target.closest('p');
+                    const languageName = p.querySelector('.language-name').textContent.trim();
+                    const mode = {};
+                    if (p.querySelector('.mode.talk') != null) {
+                      mode['talk'] = true;
+                    }
+                    if (p.querySelector('.mode.read') != null) {
+                      mode['read'] = true;
+                    }
+
+                    addLanguageAutomatically(languageName, mode);
+                  }
+              );
+            }
+
             return p;
           }
       ))
   );
+}
+
+/**
+ * @param {string} languageName
+ * @param {{talk?: boolean, read?: boolean}} mode
+ */
+function addLanguageAutomatically(languageName, mode) {
+  const table = document.getElementById('language-table');
+
+  /** @var {HTMLTableRowElement|null} */
+  let matchedRow = null;
+
+  for (const input of table.querySelectorAll('tbody tr input[type="text"][name^="language"]')) {
+    if (input.value !== languageName) {
+      continue;
+    }
+
+    matchedRow = input.closest('tr');
+    break;
+  }
+
+  if (matchedRow == null) {
+    for (const row of table.querySelectorAll('tbody tr')) {
+      if ([...row.querySelectorAll('input, select')].some(x => x.value !== '')) {
+        continue;
+      }
+
+      matchedRow = row;
+      break;
+    }
+  }
+
+  if (matchedRow == null) {
+    addLanguage();
+    matchedRow = table.querySelector('tbody tr:last-of-type');
+  }
+
+  {
+    const input = matchedRow.querySelector('input[type="text"][name^="language"]');
+    input.value = languageName;
+    input.dispatchEvent(new Event('input'));
+  }
+
+  if (mode.talk) {
+    const select = matchedRow.querySelector('select[name$="Talk"]');
+    select.value = 'auto';
+    select.dispatchEvent(new Event('input'));
+  }
+
+  if (mode.read) {
+    const select = matchedRow.querySelector('select[name$="Read"]');
+    select.value = 'auto';
+    select.dispatchEvent(new Event('input'));
+  }
 }
 // 追加
 function addLanguage(){

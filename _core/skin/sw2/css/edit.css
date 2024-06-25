@@ -555,6 +555,18 @@
   }
   p {
     margin: 0;
+    text-indent: 0;
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-end;
+    align-items: center;
+    word-break: keep-all;
+    white-space: nowrap;
+
+    button {
+      font-size: 85%;
+      padding: 0.2em;
+    }
   }
 }
 @media screen and (max-width:735px){
