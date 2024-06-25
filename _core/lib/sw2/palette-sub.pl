@@ -473,6 +473,154 @@ sub palettePreset {
     #
     $text .= "###\n" if $bot{YTC} || $bot{TKY};
   }
+  ## 魔神行動表
+  elsif($type eq 'm' && $::pc{enableDemonActions} && $::in{demon_action}) {
+    $text = "//魔神使いのユニット名=\n";
+
+    my $commandToDraw = '1$';
+    $commandToDraw .= '⚀' . $::pc{demonAction1Action};
+    $commandToDraw .= ',⚁' . $::pc{demonAction23Action};
+    $commandToDraw .= ',⚂' . $::pc{demonAction23Action};
+    $commandToDraw .= ',⚃' . $::pc{demonAction45Action};
+    $commandToDraw .= ',⚄' . $::pc{demonAction45Action};
+    $commandToDraw .= ',⚅' . $::pc{demonAction6Action};
+
+    if ($bot{BCD}) {
+      $commandToDraw =~ s/\s//g;
+      $commandToDraw =~ s/,/ /g;
+      $commandToDraw =~ s/^1\$/choice /;
+    }
+
+    $text .= "$commandToDraw\n";
+
+    if ($bot{YTC}) {
+      my $cancellationCost = $::pc{lv} ? $::pc{lv} : '';
+      $text .= "{魔神使いのユニット名}\@MP-$cancellationCost キャンセル\n" if $cancellationCost ne '';
+    }
+
+    $text .= "\n";
+
+    $text .= "//魔神の大型容器=0\n";
+    $text .= "//デモンズポテンシャル効果=0\n";
+    $text .= "//イビルコントラクト効果=0\n";
+    $text .= "//マイティデーモン効果=0\n";
+    $text .= "//その他の達成値修正=0\n";
+    $text .= "//その他のダメージ修正=0\n";
+    $text .= "//達成値修正合計={魔神の大型容器}+{デモンズポテンシャル効果}+{イビルコントラクト効果}+{その他の達成値修正}\n";
+    $text .= "//ダメージ修正合計={イビルコントラクト効果}+{マイティデーモン効果}+{その他のダメージ修正}\n\n";
+
+    sub makeActionPalette {
+      my $diceNumber = shift;
+      my $diceMark;
+      $diceMark = '⚀' if $diceNumber eq '1';
+      $diceMark = '⚁⚂' if $diceNumber eq '23';
+      $diceMark = '⚃⚄' if $diceNumber eq '45';
+      $diceMark = '⚅' if $diceNumber eq '6';
+
+      sub normalizeText {
+        my $t = shift;
+
+        $t =~ s/０/0/g;
+        $t =~ s/１/1/g;
+        $t =~ s/２/2/g;
+        $t =~ s/３/3/g;
+        $t =~ s/４/4/g;
+        $t =~ s/５/5/g;
+        $t =~ s/６/6/g;
+        $t =~ s/７/7/g;
+        $t =~ s/８/8/g;
+        $t =~ s/９/9/g;
+        $t =~ s/[Ｄｄ]/d/g;
+        $t =~ s/＋/+/g;
+        $t =~ s/[Ｃｃ]/C/g;
+        $t =~ s/C値?12/Ｃ⑫/ig;
+        $t =~ s/C値?11/Ｃ⑪/ig;
+        $t =~ s/C値?10/Ｃ⑩/ig;
+        $t =~ s/C値?9/Ｃ⑨/ig;
+        $t =~ s/C値?8/Ｃ⑧/ig;
+        $t =~ s/&/＆/g;
+
+        return $t;
+      }
+
+      my $target = $::pc{"demonAction${diceNumber}Target"};
+      my $actionAndRange = normalizeText $::pc{"demonAction${diceNumber}Action"};
+      my $actionValue = $::pc{"demonAction${diceNumber}Value"} || '―';
+      my $actionDamage = normalizeText $::pc{"demonAction${diceNumber}Damage"};
+
+      my $actionValueOffset = $actionValue ne '―' ? '+{達成値修正合計}' : '';
+
+      my $_text = "### $diceMark $actionAndRange\n"
+        . "$target ‖ <b>$actionAndRange</b> ‖ 達成値： $actionValue$actionValueOffset ‖ 効果:$actionDamage\n";
+
+      my @actionNames = split(/＆/, $actionAndRange);
+      my @actionDamages = split(/＆/, $actionDamage);
+
+      foreach (0 .. $#actionNames) {
+        my $actionName = $actionNames[$_];
+        my $damage = $actionDamages[$_] // '';
+
+        $actionName =~ s/《マルチアクション》で近接攻撃/近接攻撃/;
+        $actionName =~ s/《.+?》(?:の宣言下で|を宣言して)//;
+        $actionName =~ s/「射程[:：].+?」で//;
+        $actionName =~ s/\d+回攻撃|双撃/近接攻撃/;
+        $actionName =~ s/[「」]//g;
+
+        while ($damage =~ s/(2d\+\d+|(?:威力|k)(\d+)(?:[\/／]?[CＣ]([⑫⑪⑩⑨⑧]|なし))?(\+(\d+))?)//i) {
+          my $all = $1;
+
+          if ($all =~ /^2d/) {
+            # 2d+n 形式のダメージ
+            $_text .= "$all+{ダメージ修正合計} $actionName\n";
+            $_text .= "$all//+{ダメージ修正合計} $actionName（半減）\n" if $actionName !~ /(?:近接|遠隔)攻撃|魔力撃/ && $damage !~ /(?:[\/／]|抵抗[:：])(?:消滅|必中)/;
+          }
+          else {
+            # 威力
+
+            sub parseCritical {
+              my $source = shift;
+              return '' if $source eq 'なし';
+              return 12 if $source eq '⑫';
+              return 11 if $source eq '⑪';
+              return 10 if $source eq '⑩';
+              return 9 if $source eq '⑨';
+              return 8 if $source eq '⑧';
+              return undef;
+            }
+
+            my $rate = $2;
+            my $critical = parseCritical($3 || '⑩');
+            my $add = $4 || 0;
+
+            my $criticalOption = $critical && $critical ne 'なし' ? "[$critical]" : '';
+            my $addOption = $add ? ($add =~ /^\d/ ? '+' : '') . $add : '';
+
+            $_text .= "k$rate$criticalOption$addOption+{ダメージ修正合計} $actionName\n";
+            $_text .= "k$rate$addOption//+{ダメージ修正合計} $actionName （半減）\n" if $damage !~ /(?:[\/／]|抵抗[:：])(?:消滅|必中)/;
+          }
+        }
+      }
+
+      $_text =~ s/\n$//;
+
+      return $_text;
+    }
+
+    $text .= makeActionPalette('1') . "\n\n";
+    $text .= makeActionPalette('23') . "\n\n";
+    $text .= makeActionPalette('45') . "\n\n";
+    $text .= makeActionPalette('6');
+
+    unless ($bot{YTC}) {
+      $text =~ s#<b>(.+?)</b>#$1#g; # 強調記法の除去
+      $text =~ s/(^|\n)#{3}/$1■/g; # 折りたたみ記法をプレーンテキストの見出しに置き換え
+    }
+
+    if ($bot{BCD}) {
+      $text =~ s#(2d\+\d+)//\+#($1)/2U+#ig; # 2d+n の半減
+      $text =~ s#//\+#h+#g; # 威力表の半減
+    }
+  }
   ## 魔物
   elsif($type eq 'm') {
     if ($::pc{individualization}) {

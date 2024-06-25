@@ -43,7 +43,7 @@ article {
 
 /* // Font
 ---------------------------------------------------------------------------------------------------- */
-#area-name h1 {
+:is(#area-name, .area-name) h1 {
   font-family: var(--base-font-family-min);
 }
 
@@ -96,7 +96,7 @@ article {
     background-color: var(--monster-level-bg-color);
   }
 }
-#area-name {
+#area-name, .area-name {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -113,7 +113,7 @@ article {
     background-image: none;
   }
 }
-#area-name .lv {
+:is(#area-name, .area-name) .lv {
   order: -1;
   flex-shrink: 0;
   align-self: stretch;
@@ -129,7 +129,7 @@ article {
   font-size: 200%;
   font-weight: bold;
 }
-#area-name .name-taxa {
+:is(#area-name, .area-name) .name-taxa {
   flex-grow: 1;
   display: flex;
   justify-content: space-between;
@@ -137,7 +137,7 @@ article {
   flex-wrap: wrap;
   font-size: inherit;
 }
-#area-name h1 {
+:is(#area-name, .area-name) h1 {
   flex-grow: 1;
   padding: .25em 1rem;
   text-align: left;
@@ -150,7 +150,7 @@ article {
     line-height: 1;
   }
 }
-#area-name .taxa {
+:is(#area-name, .area-name) .taxa {
   position: absolute;
   top: -1.7em;
   left: 0;
@@ -737,7 +737,8 @@ body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks
   border-radius: 0;
   box-shadow: none !important;
 }
-.description :is(h2, h2:nth-child(n+2)) {
+.description :is(h2, h2:nth-child(n+2)),
+.demon-actions h2 {
   margin: 0;
   padding: 0 .3em;
   border-width: 1px 0px;
@@ -748,6 +749,197 @@ body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks
 }
 .box.description h2 ~ h2 {
   margin-top: 1em;
+}
+
+/* // 魔神行動表
+---------------------------------------------------------------------------------------------------- */
+#monster > header > nav ul li a[href$="&demon_action=1"] span {
+  line-height: 110%;
+}
+section.demon-actions {
+  .area-name {
+    display: grid;
+    grid-template-columns: repeat(2, max-content) 1fr max-content;
+
+    a.link-to-monster-data {
+      display: inline-grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: repeat(2, max-content);
+      grid-column: 4 / -1;
+      height: 3rem;
+      align-items: center;
+      text-decoration: underline;
+      background: hsla(var(--box-head-bg-color-h, 230), 100%, 80%, 0.5);
+
+      --padding-width: 2.0rem;
+      padding: 0 var(--padding-width);
+      clip-path: polygon(calc(100% - (var(--padding-width) / 2)) 0, 100% 50%, calc(100% - (var(--padding-width) / 2)) 100%, 0 100%, 0 0);
+
+      &:hover {
+        background: hsla(var(--box-head-bg-color-h, 230), 100%, 80%, 0.7);
+      }
+    }
+  }
+
+  > .outline {
+    margin-top: 0.5em;
+    padding-left: 0.5em;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      clear: both;
+    }
+
+    > dt,
+    > dd {
+      display: inline-flex;
+      flex-flow: row;
+      align-items: center;
+      float: left;
+      height: 1.5em;
+
+      &:not(.deportation-offering-price) {
+        margin-bottom: 0.35em;
+      }
+    }
+
+    > dt {
+      &::after {
+        content: ":";
+      }
+    }
+
+    > dt:is(.summoning-mp, .mnd-resistance, .deportation-offering-price) {
+      clear: left;
+    }
+
+    > dd:is(.summoning-mp, .mnd-resistance) {
+      margin-right: 1.5em;
+    }
+
+    > dd:is(.summoning-mp, .cancellation-cost, .mnd-resistance) {
+      display: inline-grid;
+      grid-template-columns: repeat(2, max-content);
+
+      &:is(.summoning-mp, .cancellation-cost):has(.value:empty) {
+        > .label {
+          display: none;
+        }
+      }
+    }
+
+    > dd.summoning-offering {
+      > .name {
+        margin-right: 0.5em;
+      }
+    }
+
+    > dd.mnd-resistance {
+      .fixed {
+        &:empty {
+          display: none;
+        }
+      }
+    }
+  }
+
+  > .action-chart {
+    margin: 1em auto 0 auto;
+    width: calc(100% - (0.5rem * 2));
+
+    tr {
+      > .target {
+        width: 9rem;
+      }
+
+      > .action-value {
+        width: 8rem;
+      }
+    }
+
+    tbody {
+      tr th.dice-number {
+        font-weight: normal;
+        font-size: 125%;
+        letter-spacing: 0.1em;
+      }
+    }
+
+    &:not(:has(input, textarea)) {
+      &, tr, th, td {
+        border: 1px solid #999;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background-color: hsl(225, calc(9% * 0.5), 20%);
+        color: white;
+      }
+
+      tbody {
+        tr:nth-of-type(even) {
+          background-color: var(--box-even-rows-bg-color);
+        }
+      }
+
+      th, td {
+        padding-top: 0.2em;
+        padding-bottom: 0.2em;
+      }
+
+      td {
+        text-align: center;
+      }
+    }
+  }
+
+  > .explanation {
+    margin-top: 1em;
+
+    section {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+
+      h4, .reference {
+        grid-row: 1 / 2;
+      }
+
+      h4 {
+        grid-column: 1 / 2;
+        font-weight: bold;
+        font-size: 100%;
+      }
+
+      .reference {
+        grid-column: 2 / 3;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 90%;
+        position: relative;
+        top: 0.11em;
+
+        &::before {
+          content: "（⇒";
+        }
+
+        &::after {
+          content: "）";
+        }
+      }
+
+      p {
+        grid-column: 1 / -1;
+        text-indent: 1em;
+      }
+    }
+
+    section + section {
+      margin-top: 1em;
+    }
+  }
 }
 
 /* // Author

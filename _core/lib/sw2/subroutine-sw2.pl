@@ -12,6 +12,7 @@ use Fcntl;
 sub createUnitStatus {
   my %pc = %{$_[0]};
   my $target = $_[1] || '';
+  return [] if $pc{type} eq 'm' && $::in{demon_action}; # 召喚された魔神はステータスをもたない
   my @unitStatus;
   my $memo;
   if ($pc{type} eq 'm'){

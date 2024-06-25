@@ -7,12 +7,16 @@ window.onload = function() {
   updatePartsAutomatically();
   updatePartList();
   selectInputCheck(form.taxa,'その他')
+  checkTaxa();
   checkKind();
+  checkLevel();
+  calcMnd();
   updateGolemReinforcementItemGrade(false);
   updateGolemReinforcementItemPartRestriction();
   switchHabitatReplacement();
   switchLoots();
   swordFragmentNumChanged();
+  switchDemonActions();
   individualizationModeChanged();
 
   changeColor();
@@ -104,6 +108,21 @@ function checkLevel(){
   if(mountFlag){
     checkMountLevel();
   }
+
+  const levelText = document.querySelector('[name="lv"]').value ?? '';
+  const levelInt = levelText !== '' ? parseInt(levelText) : 0;
+
+  document.querySelector('.demon-actions .outline .summoning-mp span.value').textContent = (levelInt * 2).toString();
+  document.querySelector('.demon-actions .outline .cancellation-cost span.value').textContent = levelInt.toString();
+}
+// 分類 ----------------------------------------
+function checkTaxa() {
+  const taxaSelect = document.querySelector('[name="taxa"]');
+  const taxaFree = document.querySelector('[name="taxa"]');
+
+  const taxa = (taxaSelect.value !== 'その他' ? taxaSelect.value : taxaFree.value) ?? '';
+
+  document.getElementById('monster').dataset.taxa = taxa;
 }
 // 各ステータス計算 ----------------------------------------
 function calcVit(){
@@ -116,7 +135,11 @@ function calcVitF(){
 }
 function calcMnd(){
   const val = form.mndResist.value;
-  form.mndResistFix.value = (val == '') ? '' : Number(val) + 7;
+  const valFixed = (val == '') ? '' : Number(val) + 7;
+  form.mndResistFix.value = valFixed;
+
+  document.querySelector('.demon-actions .outline .mnd-resistance .value.base').textContent = val;
+  document.querySelector('.demon-actions .outline .mnd-resistance .value.fixed').textContent = valFixed;
 }
 function calcMndF(){
   const val = form.mndResistFix.value;
@@ -1624,3 +1647,13 @@ function swordFragmentNumChanged() {
   }
 }
 document.querySelector('[name="swordFragmentNum"]').addEventListener('input', () => swordFragmentNumChanged());
+
+function switchDemonActions() {
+  const checkbox = document.querySelector('[name="enableDemonActions"]');
+
+  if (checkbox == null) {
+    return;
+  }
+
+  checkbox.closest('.demon-actions').classList.toggle('active', checkbox.checked);
+}
