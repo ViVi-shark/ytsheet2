@@ -1319,7 +1319,7 @@ form#monster {
 }
 form#monster:not(.individualization) .individualization-only,
 form#monster:not(.individualization) [data-related-field] {
-  display: none;
+  display: none !important;
 }
 .individualization-area {
   display: none;
@@ -1490,6 +1490,9 @@ form#monster div.status input {
   &[name="price"]    { width: 8em; }
   &[name="language"] {width: 25em; }
 }
+form#monster.individualization div.status [name="requiredConjurerLv"] {
+  display: none;
+}
 form#monster.golem div.status dl.material {
   display: grid;
   grid-template-rows: repeat(2, max-content);
@@ -1518,6 +1521,13 @@ form#monster.golem div.status dl.material {
     }
   }
 
+  & .normal-price,
+  & .higher-price {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
+
   & .normal-price {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
@@ -1542,6 +1552,41 @@ form#monster.golem div.status dl.material {
 
   & input[name^="materialPrice"] {
     width: 6em;
+  }
+}
+form#monster.individualization div.status dl.material {
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(4, max-content);
+
+  & input:is([name="materialName"], [name^="materialPrice"]) {
+    display: none;
+  }
+
+  & .material-name {
+    grid-row: 1 / -1;
+    grid-column: 2 / 3;
+
+    & .label {
+      display: none;
+    }
+  }
+
+  & .normal-price {
+    grid-row: 1 / -1;
+    grid-column: 3 / 4;
+  }
+
+  & .higher-price {
+    grid-row: 1 / -1;
+    grid-column: 4 / 5;
+  }
+
+  & :is(.normal-price, .higher-price) > .suffix {
+    display: none;
+  }
+
+  & [data-related-field^="materialPrice"]::before {
+    content: ":";
   }
 }
 form#monster.individualization div.status .price [data-related-field]:empty::before {
@@ -1573,6 +1618,38 @@ form#monster div.status .language {
     & input {
       width: 100%;
       margin: 0;
+    }
+  }
+}
+form#monster.golem div.status .language .additional {
+  display: none;
+}
+form#monster.individualization.golem #section-common > .status.remove-weakness {
+  .reputation [data-related-field="reputation+"],
+  .weakness [data-related-field] {
+    text-decoration-line: line-through;
+  }
+}
+form#monster.individualization #section-common > .status .mobility {
+  & dd.individualization-only > span:not(:first-child)::before {
+    content: "／";
+  }
+
+  & dd.individualization-only {
+    .offset:empty {
+      display: none;
+    }
+
+    .offset::before {
+      content: "+";
+    }
+
+    .form::before {
+      content: "（";
+    }
+
+    .form::after {
+      content: "）";
     }
   }
 }
@@ -1725,6 +1802,9 @@ form#monster.mount {
 form#monster #source-status-table td :is(.base, .fixed):has(.value:empty) {
   display: none;
 }
+form#monster #source-status-table td .offset:is([data-offset=""], :not([data-offset])):empty {
+  display: none;
+}
 form#monster #source-status-table td .offset[data-offset]:not([data-offset=""]):not([data-offset="0"]):not([data-offset^="-"])::after {
   content: "+" attr(data-offset);
 }
@@ -1747,6 +1827,9 @@ form#monster fieldset.parts input[name="partsNum"] {
   width: 5em;
 }
 form#monster fieldset.parts dl:has(input):not(:has(input:not([disabled]))) {
+  display: none;
+}
+form#monster.individualization fieldset.parts:is([data-part-count="1"], [data-part-count=""]) {
   display: none;
 }
 form#monster.individualization fieldset.parts :is(label, input) {
@@ -1971,6 +2054,284 @@ form#monster .reinforcement-items {
 
     & :is(dt, dd).part-restriction {
       display: none;
+    }
+  }
+}
+form#monster.individualization .reinforcement-items {
+  & :is(.max-count, .grade) {
+    margin-top: 0.5em;
+
+    [data-related-field]::before {
+      content: ":";
+    }
+  }
+
+  & .max-count,
+  & .grade {
+    display: none;
+  }
+
+  & .items {
+    display: none;
+
+    & :is(dt, dd).item:not(.supported) {
+      display: none;
+    }
+
+    & dt.item {
+      & input {
+        display: none;
+      }
+    }
+
+    & dl.item {
+      & dd.price,
+      & dd.part-restriction,
+      & dd.additional-field {
+        & input,
+        & textarea {
+          display: none;
+        }
+      }
+
+      & dt.price,
+      & dt.part-restriction,
+      & dt.additional-field[data-kind="詳細"] {
+        display: none;
+      }
+
+      & dd.price {
+        grid-column: 2 / 4;
+      }
+
+      & dd.part-restriction {
+        grid-column: 4 / 6;
+        margin-left: 0.75em;
+
+        & .requirement-all-parts::before {
+          display: none;
+        }
+      }
+
+      & dd.additional-field[data-kind="詳細"] {
+        & [data-related-field] {
+          width: 100%;
+          text-align: left;
+        }
+      }
+
+      & span[data-related-field] {
+        width: max-content;
+      }
+    }
+  }
+
+  & section.using-items {
+    display: grid;
+    margin: 0.5em 0.5em 0 0.5em;
+    padding-bottom: 0.7em;
+
+    & .part-restriction-group:first-of-type {
+      margin-top: 0;
+    }
+
+    & .part-restriction-group:not(:first-of-type) {
+      margin-top: 1.45em;
+    }
+
+    & .part-restriction-group {
+      & h4 {
+        margin: 0;
+
+        & .count {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 90%;
+
+          & .max::before {
+            content: "/";
+          }
+
+          & .max::after {
+            content: "個";
+          }
+        }
+
+        & .count::before {
+          content: "（";
+        }
+
+        & .count::after {
+          content: "）";
+        }
+      }
+
+      & h4.item-overflow {
+        background-image: linear-gradient(to right, rgba(255, 0, 0, 0.4), transparent);
+
+        & .count .current {
+          color: #c00;
+        }
+      }
+    }
+
+    & .part-restriction-group:has(h4.item-overflow) {
+      background-color: rgba(255, 0, 0, 0.1);
+    }
+
+    & .part-restriction-group[data-name="全部位必須"] {
+      & h4 {
+        & .count {
+          display: none;
+        }
+      }
+    }
+
+    & .using-items {
+      margin: 0;
+    }
+
+    & .using-item {
+      margin-top: 1.1em;
+      padding-left: 0.35em;
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: 1fr;
+
+      & label {
+        grid-row: 1 / -1;
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-rows: repeat(2, max-content);
+        grid-template-columns: repeat(3, max-content) 1fr;
+      }
+
+      & input.to-use {
+        grid-row: 1 / 2;
+        grid-column: 2 / 3;
+        margin: 0;
+        transform: initial;
+      }
+
+      & .name-area {
+        grid-row: 1 / 2;
+        grid-column: 3 / 4;
+        margin: 0;
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-start;
+        align-items: center;
+        line-height: 100%;
+
+        & span {
+          display: inline-flex;
+          flex-flow: row;
+          align-items: center;
+        }
+
+        & .item-grade,
+        & .item-price {
+          margin: 0 0.2em;
+        }
+
+        & :is(.item-grade, .item-price)::before {
+          content: "(";
+        }
+
+        & :is(.item-grade, .item-price)::after {
+          content: ")";
+        }
+      }
+
+      & .name-area::before {
+        content: "〈";
+      }
+
+      & .name-area::after {
+        content: "〉";
+      }
+
+      & .ability-outline {
+        grid-row: 1 / 2;
+        grid-column: 4 / 5;
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-start;
+        align-items: center;
+        line-height: 100%;
+      }
+
+      & .ability-outline:has(.ability-name:empty) {
+        display: none;
+      }
+
+      & .ability-outline::before {
+        content: "（";
+      }
+
+      & .ability-outline::after {
+        content: "）";
+      }
+
+      & .ability-details,
+      & .select-attribute {
+        margin-top: 0.25em;
+        border-left: 0.1em solid rgba(128, 128, 128, 0.2);
+        padding-left: 0.5em;
+      }
+
+      & .ability-details {
+        grid-row: 2 / 3;
+        grid-column: 2 / -1;
+        display: block;
+        text-align: left;
+        padding-right: 1em;
+      }
+
+      & .ability-details:empty {
+        display: none;
+      }
+
+      & .ability-details[data-kind="打撃点"]::before {
+        content: attr(data-kind) "＋";
+      }
+
+      & .ability-details[data-kind="地上移動速度"]::before {
+        content: attr(data-kind);
+      }
+
+      & .select-attribute {
+        grid-row: 2 / -1;
+        grid-column: 1 / -1;
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        & select {
+          width: max-content;
+        }
+      }
+    }
+
+    & .using-item.has-prerequisite-item {
+      margin-top: 0.4em;
+      grid-template-columns: max-content 1fr;
+
+      & label {
+        grid-column: 2 / 3;
+      }
+    }
+
+    & .using-item.has-prerequisite-item::before {
+      content: "└";
+      grid-column: 1 / 2;
+    }
+
+    & .using-item:has(.ability-details[data-kind="詳細"]:not(:empty)) {
+      & .ability-outline {
+        display: none;
+      }
     }
   }
 }

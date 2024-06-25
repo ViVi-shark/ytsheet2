@@ -422,6 +422,10 @@ function updatePartList() {
 
 // ゴーレム強化アイテム ----------------------------------------
 function updateGolemReinforcementItemGrade(force = true) {
+  if (form.classList.contains('individualization')) {
+    return;
+  }
+
   const gradeSelector = document.querySelector('[name="reinforcementItemGrade"]');
   const selectedGrade = gradeSelector.value;
   const gradeIndex = ['小', '中', '大', '極大'].indexOf(selectedGrade);
@@ -565,12 +569,14 @@ function individualizationSourceUrlChanged() {
             const isMount = source['mount']?.toString() === '1';
             const isGolem = source['golem']?.toString() === '1';
 
+            form.classList.toggle('mount', isMount);
+            form.classList.toggle('golem', isGolem);
             document.querySelector('#group span.is-mount').dataset.isMount = isMount.toString();
             document.querySelector('#group span.is-golem').dataset.isGolem = isGolem.toString();
 
-            ['description', 'skills'].forEach(
+            Object.keys(source).forEach(
                 key => {
-                  if (source[key] == null) {
+                  if (!/^(?:description|skills|golemReinforcement_.+_details)$/.test(key) || source[key] == null) {
                     return;
                   }
 
@@ -580,6 +586,10 @@ function individualizationSourceUrlChanged() {
                       .replaceAll(/<br>/gi, '\n');
                 }
             );
+
+            Object.keys(source)
+                .filter(x => /^(?:materialPrice(?:Normal|Higher))$/.test(x))
+                .forEach(x => source[x] = commify(source[x]));
 
             const statusNum = parseInt((
                 source['statusNum'] != null && source['statusNum'] !== ''
@@ -615,8 +625,13 @@ function individualizationSourceUrlChanged() {
 
               const oldValues = {};
 
-              document.querySelectorAll('#loaded-part-equipment [name]').forEach(
-                  x => oldValues[x.getAttribute('name')] = x.getAttribute('value')
+              document.querySelectorAll('#loaded-data [name]').forEach(
+                  x => {
+                    const name = x.getAttribute('name');
+                    if (name.startsWith('partEquipment')) {
+                      oldValues[name] = x.getAttribute('value');
+                    }
+                  }
               );
 
               mountEquipmentList.querySelectorAll('input[name]').forEach(
@@ -672,7 +687,7 @@ function individualizationSourceUrlChanged() {
             for (const [key, value] of Object.entries(source)) {
               if (
                   ['birthTime', 'id', 'mode', 'protect', 'protectOld', 'type', 'updateTime', 'ver'].includes(key) || // システム用の値
-                  /^(?:color(?:Base|Head)|forbidden$|hide$|palette|part\d+$|sheetDescription[SM]$|unit(?:Except)?Status|taxaSelect$)/i.test(key) || // このへんは無視する
+                  /^(?:color(?:Base|Head)|forbidden$|gameVersion$|hide$|palette|part\d+$|sheetDescription[SM]$|unit(?:Except)?Status|taxaSelect$)/i.test(key) || // このへんは無視する
                   key === 'individualization' || // 個別化チェックそのものは無視する
                   key === 'sourceMonsterUrl' || // 個別化の元データＵＲＬも無視する
                   ['characterName', 'tags'].includes(key) || // 名前・タグは上書き可能
@@ -705,7 +720,7 @@ function individualizationSourceUrlChanged() {
                     control.dispatchEvent(new Event('input'));
                     continue;
                   case 'checkbox':
-                    control.checked = value === '1' || value === 1 || value === true;
+                    control.checked = value === '1' || value === 1 || value === true || value === 'on';
                     control.dispatchEvent(new Event('input'));
                     continue;
                   case 'radio':
@@ -729,6 +744,42 @@ function individualizationSourceUrlChanged() {
 
               console.warn([key, control]);
             }
+
+            {
+              const container = document.querySelector('.status .mobility dd.individualization-only');
+              container.innerHTML = '';
+
+              source['mobility'].split(/[\/／]/).map(x => x.trim()).filter(x => x !== '').forEach(
+                  x => {
+                    const m = x.match(/^([0-9０１２３４５６７８９]+?)(?:[(（](.+?)[）)])?$/);
+                    const value = m != null ? m[1] : null;
+                    const form = m != null ? m[2] : null;
+
+                    const span = document.createElement('span');
+
+                    if (value == null) {
+                      span.textContent = x;
+                    } else {
+                      span.textContent = value;
+
+                      const offset = document.createElement('span');
+                      offset.classList.add('offset');
+                      span.appendChild(offset);
+
+                      if (form != null) {
+                        const formNode = document.createElement('span');
+                        formNode.classList.add('form');
+                        formNode.textContent = form;
+                        span.appendChild(formNode);
+                      }
+                    }
+
+                    container.appendChild(span);
+                  }
+              );
+            }
+
+            document.querySelector('#section-common > .parts').dataset.partCount = source['partsNum'] ?? '';
 
             {
               const sourceStatusTable = document.getElementById('source-status-table');
@@ -770,6 +821,14 @@ function individualizationSourceUrlChanged() {
                               (td.querySelector('.fixed .value') ?? td.querySelector('.fixed')).textContent =
                                   source[`${key}Fix`]?.toString();
                             }
+
+                            if (isGolem && (propertyName === 'Hp' || propertyName === 'Mp')) {
+                              for (const itemName of ['garnet-energy', 'garnet-life']) {
+                                const span = document.createElement('span');
+                                span.classList.add('offset', `offset-of-${itemName}`);
+                                td.appendChild(span);
+                              }
+                            }
                           }
                       );
                     }
@@ -788,6 +847,422 @@ function individualizationSourceUrlChanged() {
             }
 
             mountHpOptionsUpdated();
+
+            {
+              /**
+               * @param {HTMLInputElement} checkboxNode
+               */
+              function applyModifier(checkboxNode = null) {
+                if (checkboxNode != null && !checkboxNode.classList.contains('is-modifier')) {
+                  return;
+                }
+
+                const checkboxNodes =
+                    checkboxNode != null
+                        ? [checkboxNode]
+                        : [...document.querySelectorAll('.reinforcement-items .using-items input[type="checkbox"].to-use.is-modifier')];
+
+                checkboxNodes.forEach(
+                    checkbox => {
+                      if (checkbox.hasAttribute('data-hp-offset')) {
+                        const offset = checkbox.dataset.hpOffset;
+
+                        document.querySelectorAll(`#source-status-table tbody tr[data-part-serial="${checkbox.dataset.partSerial}"] td.hp`).forEach(
+                            td => {
+                              const offsetNode = td.querySelector(`.offset.offset-of-${checkbox.dataset.hpOffsetName}`);
+                              offsetNode.dataset.offset = checkbox.checked ? offset : '';
+                            }
+                        );
+                      }
+
+                      if (checkbox.hasAttribute('data-mobility-offset')) {
+                        const offset = checkbox.dataset.mobilityOffset;
+
+                        document.querySelectorAll('#section-common > .status .mobility .offset').forEach(
+                            offsetNode => {
+                              offsetNode.textContent = checkbox.checked ? offset : '';
+                            }
+                        );
+                      }
+
+                      if (checkbox.classList.contains('remove-weakness')) {
+                        document.querySelector('#section-common > .status').classList.toggle(
+                            'remove-weakness',
+                            checkbox.checked
+                        );
+
+                        refreshAttributeSelector();
+                      }
+                    }
+                );
+              }
+
+              function refreshAttributeSelector() {
+                const weakness =
+                    document.querySelector('#section-common > .status').classList.contains('remove-weakness')
+                        ? ''
+                        : document.querySelector('[data-related-field="weakness"]').textContent.trim();
+
+                const selector =
+                    document.querySelector('.reinforcement-items .using-items .resistance-attribute-selector');
+
+                selector.querySelectorAll('option').forEach(
+                    option => {
+                      const attribute = option.textContent.trim();
+
+                      if (attribute === '') {
+                        return;
+                      }
+
+                      if (weakness.includes(attribute)) {
+                        option.setAttribute('disabled', '');
+                      } else {
+                        option.removeAttribute('disabled');
+                      }
+                    }
+                );
+              }
+
+              /**
+               * @param {HTMLElement} itemNode
+               */
+              function refreshItemCount(itemNode = null) {
+                const sectionNodes =
+                    itemNode != null
+                        ? [itemNode.closest('.part-restriction-group')]
+                        : [...document.querySelectorAll('.reinforcement-items .using-items .part-restriction-group')];
+
+                const countOfRequirementAllPartsItem =
+                    document.querySelectorAll('.reinforcement-items .using-items .part-restriction-group[data-name="全部位必須"] input.to-use[type="checkbox"]:checked').length;
+
+                sectionNodes.forEach(
+                    sectionNode => {
+                      const headline = sectionNode.querySelector('h4');
+
+                      if (headline.dataset.content === "全部位必須") {
+                        return;
+                      }
+
+                      const currentCount =
+                          sectionNode.querySelectorAll('input.to-use[type="checkbox"]:checked').length +
+                          countOfRequirementAllPartsItem;
+
+                      headline.querySelector('.count .current').textContent = currentCount.toString();
+
+                      const maxCount = parseInt(headline.querySelector('.count .max').textContent.trim());
+
+                      headline.classList.toggle('item-overflow', currentCount > maxCount);
+                    }
+                );
+              }
+
+              /** @var {Object<string, boolean|string>} */
+              const oldValues = {};
+
+              document.querySelectorAll('#loaded-data [name]').forEach(
+                  x => {
+                    const name = x.getAttribute('name');
+                    if (name.startsWith('golemReinforcement_')) {
+                      const value = x.getAttribute('value');
+                      oldValues[name] = value === 'on' ? true : value;
+                    }
+                  }
+              );
+
+              const isSinglePart = document.querySelector('[name="partsNum"]').value === '1';
+              const itemGrade = document.querySelector('[name="reinforcementItemGrade"]').value.trim();
+
+              /** @var {Object<string, Array<{itemName: string, fieldName: string, abilityName: {html: string, suffix: string}, price: string, hasPrerequisiteItem: boolean, additionalField?: {name: string, contentHtml: string}}>>} */
+              const itemsByPartRestriction = {};
+
+              /** @var {string[]} */
+              const partRestrictions =
+                  document.querySelector('[name="parts"]').value.split(/[/／]/)
+                      .map(x => x.replace(/×\s*\d+\s*$/, '').trim())
+                      .filter(x => x !== '');
+
+              document.querySelectorAll('.reinforcement-items .items dd.item.supported[data-item-name]').forEach(
+                  x => {
+                    const itemName = x.dataset.itemName;
+                    const fieldName = x.dataset.fieldName;
+
+                    const hasPrerequisiteItem =
+                        (prerequisiteItem => prerequisiteItem != null && prerequisiteItem !== '')(
+                            x.previousElementSibling.dataset.prerequisiteItem
+                        );
+
+                    const abilityNode = x.querySelector('dd.ability');
+                    const abilityNameHtml = abilityNode.innerHTML;
+                    const abilityNameSuffix = abilityNode.dataset.suffix;
+
+                    const price = x.querySelector('[data-related-field$="_price"]').textContent;
+
+                    const partRestriction =
+                        isSinglePart
+                            ? "任意部位"
+                            : (partRestrictionNode => {
+                              if (partRestrictionNode.querySelector('.requirement-all-parts') != null) {
+                                return "全部位必須";
+                              }
+
+                              const partRestriction =
+                                  partRestrictionNode.querySelector('[data-related-field$="_partRestriction"]')
+                                      .textContent
+                                      .trim()
+                                      .replace(/\s*のみ\s*$/, '');
+
+                              return partRestriction !== '' ? partRestriction : "任意部位";
+                            })(x.querySelector('dd.part-restriction'));
+
+                    const additionalFieldName =
+                        x.querySelector('dt.additional-field')?.textContent.trim();
+
+                    const additionalFieldContentHtml =
+                        x.querySelector('dd.additional-field [data-related-field]')?.innerHTML;
+
+                    const item = {
+                      itemName,
+                      fieldName,
+                      abilityName: {
+                        html: abilityNameHtml,
+                        suffix: abilityNameSuffix,
+                      },
+                      price,
+                      hasPrerequisiteItem
+                    };
+
+                    if (additionalFieldName != null && additionalFieldContentHtml != null) {
+                      item['additionalField'] = {
+                        name: additionalFieldName,
+                        contentHtml: additionalFieldContentHtml
+                      };
+                    }
+
+                    if (!(partRestriction in itemsByPartRestriction)) {
+                      itemsByPartRestriction[partRestriction] = [];
+
+                      if (
+                          partRestriction !== "任意部位" &&
+                          partRestriction !== "全部位必須" &&
+                          !partRestrictions.includes(partRestriction)
+                      ) {
+                        partRestrictions.push(partRestriction);
+                      }
+                    }
+
+                    itemsByPartRestriction[partRestriction].push(item);
+                  }
+              );
+
+              if (partRestrictions.length > 0) {
+                if (itemsByPartRestriction["任意部位"] != null) {
+                  itemsByPartRestriction["任意部位"].reverse().forEach(
+                      item => partRestrictions.forEach(
+                          partName => {
+                            if (!(partName in itemsByPartRestriction)) {
+                              itemsByPartRestriction[partName] = [];
+                            }
+
+                            itemsByPartRestriction[partName].unshift(item);
+                          }
+                      )
+                  );
+                }
+
+                partRestrictions.push("全部位必須");
+              } else {
+                partRestrictions.push("任意部位");
+
+                if (!("任意部位" in itemsByPartRestriction)) {
+                  itemsByPartRestriction["任意部位"] = [];
+                }
+
+                if (itemsByPartRestriction["全部位必須"] != null) {
+                  itemsByPartRestriction["任意部位"].push(...itemsByPartRestriction["全部位必須"]);
+                }
+              }
+
+              const usingItems = document.querySelector('.reinforcement-items section.using-items');
+              usingItems.innerHTML = '';
+
+              const templateOfSection = document.getElementById('template-of-part-restriction-group');
+              const templateOfItem = document.getElementById('template-of-using-item');
+
+              /** @var {string[]} */
+              const partNames = [];
+              for (const partName of document.querySelector('[data-related-field="parts"]').textContent.trim().split(/[\/／]/)) {
+                const m = partName.match(/×(\d+)$/);
+
+                if (m == null) {
+                  partNames.push(partName);
+                } else {
+                  for (let i = 0; i < parseInt(m[1]); i++) {
+                    partNames.push(partName.replace(/×\d+$/, '') + String.fromCharCode('A'.charCodeAt(0) + i));
+                  }
+                }
+              }
+
+              if (partRestrictions.includes("任意部位")) {
+                partNames.unshift("任意部位");
+              }
+
+              if (partRestrictions.includes("全部位必須")) {
+                partNames.push("全部位必須");
+              }
+
+              partNames.forEach(
+                  (partName, partIndex) => {
+                    const partRestriction = partName.replace(/[A-Z]$/, '');
+
+                    if (
+                        itemsByPartRestriction[partRestriction] == null ||
+                        itemsByPartRestriction[partRestriction].length === 0
+                    ) {
+                      return;
+                    }
+
+                    const section = templateOfSection.content.firstElementChild.cloneNode(true);
+                    section.dataset.name = partName;
+
+                    const headline = section.querySelector('.part-restriction');
+                    headline.querySelector('.text').textContent = partName;
+                    headline.querySelector('.count .max').textContent = source['reinforcementItemMaxCount'] ?? '';
+                    headline.dataset.content = partName;
+
+                    const list = section.querySelector('.using-items');
+
+                    for (const item of itemsByPartRestriction[partRestriction]) {
+                      const itemNode = templateOfItem.content.firstElementChild.cloneNode(true);
+                      itemNode.classList.toggle('has-prerequisite-item', item.hasPrerequisiteItem);
+                      itemNode.querySelector('.item-name').innerHTML = item.itemName;
+                      itemNode.querySelector('.item-grade').textContent = itemGrade;
+                      itemNode.querySelector('.item-price').textContent = item.price;
+
+                      const abilityNameNode = itemNode.querySelector('.ability-name');
+                      abilityNameNode.innerHTML = item.abilityName.html;
+                      abilityNameNode.appendChild(document.createTextNode(item.abilityName.suffix));
+
+                      const abilityDetailsNode = itemNode.querySelector('.ability-details');
+                      if (item.additionalField != null) {
+                        abilityDetailsNode.dataset.kind = item.additionalField.name;
+                        abilityDetailsNode.innerHTML = item.additionalField.contentHtml;
+
+                        const detailsLabel = document.createElement('span');
+                        detailsLabel.classList.add('details-label');
+                        abilityDetailsNode.prepend(detailsLabel);
+                      } else {
+                        abilityDetailsNode.removeAttribute('data-kind');
+                        abilityDetailsNode.textContent = '';
+                      }
+
+                      if (item.itemName === "石英の途絶") {
+                        const label = document.createElement('label');
+                        label.classList.add('select-attribute');
+                        label.textContent = "耐性を得る属性：";
+
+                        {
+                          const name = 'golemReinforcement_quartzDisruption_attribute';
+
+                          const selector = document.createElement('select');
+                          selector.setAttribute('name', name);
+                          selector.classList.add('resistance-attribute-selector');
+
+                          for (const attribute of ['', '土', '水・氷', '炎', '風', '雷', '純エネルギー']) {
+                            const option = document.createElement('option');
+                            option.textContent = attribute;
+                            selector.appendChild(option);
+                          }
+
+                          if (oldValues[name] != null) {
+                            const index = [...selector.options].map(x => x.value).indexOf(oldValues[name]);
+
+                            if (index >= 0) {
+                              selector.selectedIndex = index;
+                            }
+                          }
+
+                          label.appendChild(selector);
+                        }
+
+                        itemNode.appendChild(label);
+                      }
+
+                      {
+                        const name =
+                            `golemReinforcement_${item.fieldName}_part${partName !== "全部位必須" ? partIndex + 1 : 'All'}_using`;
+
+                        const checkboxToUse = itemNode.querySelector('.to-use[type="checkbox"]');
+                        checkboxToUse.setAttribute('name', name);
+                        checkboxToUse.dataset.partSerial = (partIndex + 1).toString();
+
+                        switch (item.fieldName) {
+                          case 'garnetEnergy':
+                            checkboxToUse.classList.add('is-modifier');
+                            checkboxToUse.dataset.hpOffsetName = 'garnet-energy';
+                            break;
+                          case 'garnetLife':
+                            checkboxToUse.classList.add('is-modifier');
+                            checkboxToUse.dataset.hpOffsetName = 'garnet-life';
+                            break;
+                          case 'hematite':
+                            checkboxToUse.classList.add('is-modifier');
+                            checkboxToUse.dataset.mobilityOffset = '5';
+                            break;
+                          case 'moonstone':
+                            checkboxToUse.classList.add('is-modifier', 'remove-weakness');
+                            break;
+                        }
+
+                        if (checkboxToUse.hasAttribute('data-hp-offset-name')) {
+                          let offset;
+
+                          switch (itemGrade) {
+                            case '小':
+                              offset = 5;
+                              break;
+                            case '中':
+                              offset = 10;
+                              break;
+                            case '大':
+                              offset = 15;
+                              break;
+                            case '極大':
+                              offset = 20;
+                              break;
+                          }
+
+                          if (offset != null) {
+                            checkboxToUse.dataset.hpOffset = offset.toString();
+                          }
+                        }
+
+                        checkboxToUse.addEventListener(
+                            'input',
+                            () => {
+                              applyModifier(checkboxToUse);
+                              refreshItemCount(
+                                  partName !== "全部位必須"
+                                      ? itemNode
+                                      : null
+                              );
+                            }
+                        );
+
+                        if (oldValues[name]) {
+                          checkboxToUse.checked = true;
+                        }
+                      }
+
+                      list.appendChild(itemNode);
+                    }
+
+                    usingItems.appendChild(section);
+                  }
+              );
+
+              applyModifier();
+              refreshItemCount();
+            }
 
             {
               const sourceLootTable = document.querySelector('#source-loot-table');
@@ -872,7 +1347,10 @@ document.querySelectorAll('[data-related-field]').forEach(
                   .replaceAll(/'/g, '&#39;')
                   .replaceAll(/\n/g, '<br>');
             } else {
-              node.textContent = e.target.value;
+              node.textContent =
+                  e.target.getAttribute('type') === 'number'
+                      ? commify(e.target.value)
+                      : e.target.value;
             }
           }
       );
