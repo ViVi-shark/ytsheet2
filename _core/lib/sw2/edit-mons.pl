@@ -252,13 +252,13 @@ print <<"HTML";
         </dl>
         <dl class="golem-only">
           <dt>作製可能コンジャラーレベル
-          <dd>@{[ input 'requiredConjurerLv','number','','min="0"' ]}
+          <dd>@{[ input 'requiredConjurerLv','number','','min="0"' ]}<span data-related-field="requiredConjurerLv"></span>
         </dl>
         <dl class="golem-only material">
           <dt>ゴーレム作製素材
-          <dd class="material-name"><span class="label">名称</span>@{[ input 'materialName' ]}
-          <dd class="normal-price">通常素材価格@{[ input 'materialPriceNormal' ]}G
-          <dd class="higher-price">上級素材価格@{[ input 'materialPriceHigher' ]}G
+          <dd class="material-name"><span class="label">名称</span>@{[ input 'materialName' ]}<span data-related-field="materialName"></span>
+          <dd class="normal-price"><input type="radio" name="golemMaterialRank" value="normal" class="individualization-only" @{[$pc{golemMaterialRank} eq 'normal' ? 'checked' : '']} />通常素材<span class="suffix">価格</span>@{[ input 'materialPriceNormal' ]}<span data-related-field="materialPriceNormal"></span>G
+          <dd class="higher-price"><input type="radio" name="golemMaterialRank" value="higher" class="individualization-only" @{[$pc{golemMaterialRank} eq 'higher' ? 'checked' : '']} />上級素材<span class="suffix">価格</span>@{[ input 'materialPriceHigher' ]}<span data-related-field="materialPriceHigher"></span>G
         </dl>
         <dl class="level">
           <dt><span class="mount-only">騎獣</span>レベル
@@ -291,14 +291,14 @@ print <<"HTML";
           <dt>生息地
           <dd>@{[ input 'habitat' ]}<span data-related-field="habitat"></span>
         </dl>
-        <dl class="monster-only">
+        <dl class="monster-only reputation">
           <dt>知名度／弱点値
           <dd>@{[ input 'reputation' ]}<span data-related-field="reputation"></span>／@{[ input 'reputation+','','','list="list-of-reputation-plus"' ]}<span data-related-field="reputation+"></span>
           <datalist id="list-of-reputation-plus">
             <option>―</option>
           </datalist>
         </dl>
-        <dl>
+        <dl class="weakness">
           <dt>弱点
           <dd>@{[ input 'weakness','','','list="data-weakness"' ]}<span data-related-field="weakness"></span>
         </dl>
@@ -306,8 +306,9 @@ print <<"HTML";
           <dt>先制値
           <dd>@{[ input 'initiative' ]}<span data-related-field="initiative"></span>
         </dl>
-        <dl>
-          <dt>移動速度<dd>@{[ input 'mobility' ]}<span data-related-field="mobility"></span>
+        <dl class="mobility">
+          <dt>移動速度<dd>@{[ input 'mobility' ]}
+          <dd class="individualization-only">
         </dl>
         <dl class="monster-only">
           <dt>生命抵抗力
@@ -534,30 +535,36 @@ for my $itemAddress (@golemReinforcementItems) {
     my $checkState = $pc{"golemReinforcement_$item{fieldName}_supported"} ? 'checked' : '';
     print "<label><input type=\"checkbox\" name=\"golemReinforcement_$item{fieldName}_supported\" $checkState />$item{name}</label>";
     print "\n";
-    print "<dd class=\"item @{[$checkState eq 'checked' ? 'supported' : '']}\"><dl class=\"item\">";
+    print "<dd class=\"item @{[$checkState eq 'checked' ? 'supported' : '']}\" data-item-name=\"$item{name}\" data-field-name=\"$item{fieldName}\"><dl class=\"item\">";
     my %abilitySuffixes = $item{abilitySuffixes} ? %{$item{abilitySuffixes}} : ();
     print "<dt class=\"ability\">能力<dd class=\"ability\" data-suffixes=\"$abilitySuffixes{'小'}|$abilitySuffixes{'中'}|$abilitySuffixes{'大'}|$abilitySuffixes{'極大'}\">$item{ability}";
     my %prices = %{$item{prices}};
-    print "<dt class=\"price\">価格<dd class=\"price\"><input type=\"number\" name=\"golemReinforcement_$item{fieldName}_price\" data-prices=\"$prices{'小'}|$prices{'中'}|$prices{'大'}|$prices{'極大'}\" />G";
+    print "<dt class=\"price\">価格<dd class=\"price\"><input type=\"number\" name=\"golemReinforcement_$item{fieldName}_price\" data-prices=\"$prices{'小'}|$prices{'中'}|$prices{'大'}|$prices{'極大'}\" />";
+    print "<span data-related-field=\"golemReinforcement_$item{fieldName}_price\"></span>";
+    print 'G';
     print "<dt class=\"part-restriction\">部位制限<dd class=\"part-restriction\">";
     if ($item{requirementAllParts}) {
         print '<span class="requirement-all-parts">全部位必須</span>';
     } else {
         my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_partRestriction"});
         print "<input type=\"text\" name=\"golemReinforcement_$item{fieldName}_partRestriction\" value=\"$value\" list=\"golem-reinforcement-item-part-restriction-list\" />";
+        print "<span data-related-field=\"golemReinforcement_$item{fieldName}_partRestriction\"></span>";
     }
     if ($item{additionalField}) {
-        print "<dt class=\"additional-field\">$item{additionalField}";
+        print "<dt class=\"additional-field\" data-kind=\"$item{additionalField}\">$item{additionalField}";
         print "<dd class=\"additional-field\" data-kind=\"$item{additionalField}\">";
         if ($item{additionalField} eq '詳細') {
             my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_details"});
             print "<textarea name=\"golemReinforcement_$item{fieldName}_details\">$value</textarea>";
+            print "<div data-related-field=\"golemReinforcement_$item{fieldName}_details\"></div>";
         } elsif ($item{additionalField} eq '打撃点') {
             my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_damageOffset"});
             print "+<input type=\"number\" name=\"golemReinforcement_$item{fieldName}_damageOffset\" value=\"$value\" />";
+            print "<span data-related-field=\"golemReinforcement_$item{fieldName}_damageOffset\"></span>";
         } elsif ($item{additionalField} eq '地上移動速度') {
             my $value = escapeHTML($pc{"golemReinforcement_$item{fieldName}_landMobility"});
             print "<input type=\"text\" name=\"golemReinforcement_$item{fieldName}_landMobility\" value=\"$value\" />";
+            print "<span data-related-field=\"golemReinforcement_$item{fieldName}_landMobility\"></span>";
         }
     }
     print "\n";
@@ -566,6 +573,29 @@ for my $itemAddress (@golemReinforcementItems) {
 print <<"HTML";
         </dl>
         <datalist id="golem-reinforcement-item-part-restriction-list"></datalist>
+        <section class="using-items"></section>
+        <template id="template-of-part-restriction-group">
+            <section class="part-restriction-group">
+                <h4 class="part-restriction"><span class="text"></span><i class="count"><span class="current"></span><span class="max"></span></i></h4>
+                <ul class="using-items"></ul>
+            </section>
+        </template>
+        <template id="template-of-using-item">
+            <li class="using-item">
+                <label>
+                    <input type="checkbox" class="to-use" />
+                    <h5 class="name-area">
+                        <span class="item-name"></span>
+                        <span class="item-grade"></span>
+                        <span class="item-price"></span>
+                    </h5>
+                    <div class="ability-outline">
+                        <span class="ability-name"></span>
+                    </div>
+                    <div class="ability-details"></div>
+                </label>
+            </li>
+        </template>
       </div>
       <fieldset class="box loots monster-only">
         <h2 class="in-toc">戦利品</h2>
@@ -606,9 +636,9 @@ print <<"HTML";
     @{[ deleteForm($mode) ]}
 HTML
 if ($mode eq 'edit') {
-    print "<fieldset id=\"loaded-part-equipment\" style=\"display: none;\">\n";
+    print "<fieldset id=\"loaded-data\" style=\"display: none;\">\n";
     for my $key (keys %pc) {
-        next if $key !~ /^partEquipment\d/;
+        next if $key !~ /^partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$/;
         print "<input type=\"hidden\" name=\"$key\" value=\"$pc{$key}\" />\n";
     }
     print "</fieldset>\n";

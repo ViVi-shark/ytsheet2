@@ -470,4 +470,156 @@ sub addOffsetToDamage {
   return $original;
 }
 
+sub resolveAdditionalSkills {
+  my %pc = %{shift;};
+
+  if ($pc{golem} && $pc{individualization}) {
+    require $set::data_mons;
+
+    my @partNames;
+
+    if ($pc{parts} ne '') {
+      @partNames = ('全身');
+
+      for my $partName (split(/[\/／]/, $pc{parts})) {
+        next if $partName eq '';
+        $partName =~ s/×(\d+)$//;
+        my $count = $1;
+        if ($count && $count > 1) {
+          foreach (('A' .. 'Z')[0 .. ($count - 1)]) {
+            push(@partNames, $partName . $_);
+          }
+        }
+        else {
+          push(@partNames, $partName);
+        }
+      }
+    }
+    else {
+      @partNames = ('');
+    }
+
+    my %skillsByParts = ();
+    my $lastPartName = undef;
+
+    for my $line (split(/&lt;br&gt;/i, $pc{skills})) {
+      next if $line =~ /^\s*$/;
+
+      if ($line =~ /^●\s*(.+?)\s*$/) {
+        $lastPartName = $1;
+        $skillsByParts{$lastPartName} = [] unless defined($skillsByParts{$lastPartName});
+      }
+      else {
+        $lastPartName = '' unless defined($lastPartName);
+        my @partSkills = @{$skillsByParts{$lastPartName} ? $skillsByParts{$lastPartName} : []};
+        push(@partSkills, '') if $line =~ /^(?:[○◯〇＞▶〆☆≫»□☐☑🗨▽▼]|>>)/;
+        $partSkills[$#partSkills] .= '<br>' if $partSkills[$#partSkills] ne '';
+        $partSkills[$#partSkills] .= $line;
+        $skillsByParts{$lastPartName} = \@partSkills;
+      }
+    }
+
+    my @allItems = data::getGolemReinforcementItems($::SW2_0 ? '2.0' : '2.5');
+
+    for my $partIndex (0 .. ($#partNames + 1)) {
+      my $partName = $partIndex <= $#partNames ? $partNames[$partIndex + ((grep {$_ eq '全身'} @partNames) ? 1 : 0)] : "全身";
+      my $partSuffix = $partIndex <= $#partNames ? $partIndex + 1 : 'All';
+      my @usingItems = ();
+      my @ignoreItems = ();
+
+      for my $itemAddress (reverse @allItems) {
+        my %item = %{$itemAddress};
+        next if grep {$_ eq $item{name}} @ignoreItems;
+
+        my $key = "golemReinforcement_$item{fieldName}_part${partSuffix}_using";
+        next if $pc{$key} ne 'on';
+
+        push(@ignoreItems, $item{prerequisiteItem}) if $item{prerequisiteItem};
+        unshift(@usingItems, \%item);
+      }
+
+      my @partSkills = @{$skillsByParts{$partName} ? $skillsByParts{$partName} : []};
+
+      for my $itemAddress (@usingItems) {
+        my %item = %{$itemAddress};
+        my $keyForUsing = "golemReinforcement_$item{fieldName}_part${partSuffix}_using";
+
+        if ($pc{$keyForUsing} eq 'on') {
+          if ($item{name} eq '月長石の安らぎ') {
+            foreach (0 .. $#partSkills) {
+              next if $partSkills[$_] !~ /^[○◯〇][^\n<>&]+に弱い(?:<br>|$)/;
+              $partSkills[$_] = '';
+              last;
+            }
+
+            next;
+          }
+
+          my $keyForDetails = "golemReinforcement_$item{fieldName}_details";
+          if ($pc{$keyForDetails}) {
+            push(@partSkills, $pc{$keyForDetails});
+          }
+          elsif ($item{abilityRaw} eq '◯水中特化') {
+            foreach (0 .. $#partSkills) {
+              if ($partSkills[$_] =~ /^[○◯〇]水中専用/) {
+                $partSkills[$_] = '○水中特化<br>水中での行動で制限やペナルティ修正を受けません。<br>地上ではすべての行動判定に－２のペナルティ修正を受けます。';
+                last;
+              }
+            }
+          }
+          else {
+            push(@partSkills, $item{abilityRaw});
+
+            if ($item{abilitySuffixes}) {
+              my %suffixes = %{$item{abilitySuffixes}};
+              $partSkills[$#partSkills] .= $suffixes{$pc{reinforcementItemGrade}} || '';
+            }
+
+            if ($item{abilityRaw} =~ /^◯(?:ＨＰ超?強化|移動力強化)$/) {
+              $partSkills[$#partSkills] .= '<br>反映済み';
+            }
+            elsif ($item{abilityRaw} eq '▶振りかぶる') {
+              $partSkills[$#partSkills] .= "＝次手番必中、打撃点+$pc{golemReinforcement_sunstone_damageOffset}";
+            }
+            elsif ($item{abilityRaw} eq '◯属性耐性' && $pc{golemReinforcement_quartzDisruption_attribute}) {
+              my $attribute = $pc{golemReinforcement_quartzDisruption_attribute};
+              $partSkills[$#partSkills] .= "＝${attribute}";
+              $partSkills[$#partSkills] .= "<br>${attribute}属性のダメージを受けるときに、それを自動的に半減します。「抵抗：半減」の効果は、抵抗に成功すればいっさいダメージを受けません。<br>ダメージ以外の${attribute}属性による効果をいっさい受けません。";
+            }
+          }
+        }
+      }
+
+      $skillsByParts{$partName} = $#partSkills >= 0 ? \@partSkills : undef;
+    }
+
+    my $skills = '';
+
+    for my $partName (@partNames) {
+      if ($partName =~ /A$/) {
+        my $originalPartName = $partName;
+        $originalPartName =~ s/A$//;
+
+        if ($skillsByParts{$originalPartName}) {
+          $skills .= '<br>' if $skills ne '';
+          $skills .= "●$originalPartName<br>" if $originalPartName ne '';
+          $skills .= join('<br>', @{$skillsByParts{$originalPartName}});
+        }
+      }
+
+      if ($skillsByParts{$partName}) {
+        $skills .= '<br>' if $skills ne '';
+        $skills .= "●$partName<br>" if $partName ne '';
+        $skills .= join('<br>', @{$skillsByParts{$partName}});
+      }
+    }
+
+    $pc{skillsRaw} = $pc{skills};
+    $pc{skills} = $skills;
+    $pc{skills} =~ s/<br>/&lt;br&gt;/ig;
+  }
+
+  return \%pc;
+}
+
 1;
