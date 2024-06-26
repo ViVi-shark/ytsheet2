@@ -351,6 +351,19 @@ foreach (1 .. 7){
   my $isELois = $pc{'lois'.$_.'Relation'} =~ /^[EＥ](?:ロイス)?$/;
   my @note = $isDLois || $isELois ? parseLoisNote($pc{'lois'.$_.'Note'}) : ($pc{'lois'.$_.'Note'});
 
+  if ($_ > 3) {
+    if (
+        ($pc{'lois' . $_ . 'Relation'} // '') eq ''
+            && ($pc{'lois' . $_ . 'Name'} // '') eq ''
+            && $noEmotion
+            && ($pc{'lois' . $_ . 'Color'} // '') eq ''
+            && ($pc{'lois' . $_ . 'Note'} // '') eq ''
+            && ($pc{'lois' . $_ . 'State'} eq '' || $pc{'lois' . $_ . 'State'} eq 'ロイス')
+    ) {
+      next;
+    }
+  }
+
   push(@loises, {
     "RELATION" => $pc{'lois'.$_.'Relation'},
     "NAME"     => $pc{'lois'.$_.'Name'},
