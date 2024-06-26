@@ -156,7 +156,8 @@ sub class_color {
   return $text;
 }
 
-### タグ変換 --------------------------------------------------
+### テキスト整形 --------------------------------------------------
+# タグ変換
 sub textToIcon {
   my $text = shift;
   
@@ -176,6 +177,25 @@ sub textToIcon {
   }
   
   return $text;
+}
+# アイテムの山括弧を追加する
+sub formatItemName {
+  my $raw = shift;
+  return '' unless $raw;
+  return $raw if $raw =~ /[＜〈].+[〉＞]/; # すでに山括弧らしきものがあればそのままにする.
+
+  my $text = $raw;
+
+  my $prefixes = '';
+  my $suffixes = '';
+
+  $prefixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)魔(?:]|&#93;)"[^>]+?>)//;
+  $suffixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)刃(?:]|&#93;)"[^>]+?>)//;
+  $suffixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)打(?:]|&#93;)"[^>]+?>)//;
+
+  return $raw if $text =~ /^(?:[(（].+[）)]|[〃？])$/; # アイテム名ではなさそうな文字列ならそのままにする.
+
+  return "$prefixes〈$text〉$suffixes";
 }
 
 ### 妖精魔法ランク --------------------------------------------------

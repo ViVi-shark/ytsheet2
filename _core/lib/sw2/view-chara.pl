@@ -683,7 +683,7 @@ else {
     }
     $pc{'weapon'.$_.'Note'} = '<i class="own">専用</i>' . $pc{'weapon'.$_.'Note'} if $pc{'weapon'.$_.'Own'};
     push(@weapons, {
-      NAME     => $pc{'weapon'.$_.'Name'},
+      NAME     => formatItemName($pc{'weapon'.$_.'Name'}),
       PART     => $pc{'part'.$pc{'weapon'.$_.'Part'}.'Name'},
       ROWSPAN  => $rowspan,
       NAMEOFF  => $pc{'weapon'.$_.'NameOff'},
@@ -821,7 +821,7 @@ else {
 
     push(@armours, {
       TYPE => $pc{'armour'.$_.'Type'},
-      NAME => $pc{'armour'.$_.'Name'},
+      NAME => formatItemName($pc{'armour'.$_.'Name'}),
       REQD => $pc{'armour'.$_.'Reqd'},
       EVA  => $pc{'armour'.$_.'Eva'} // ($pc{'armour'.$_.'Category'} =~ /[鎧盾]/ ? '―' : ''),
       DEF  => $pc{'armour'.$_.'Def'} // ($pc{'armour'.$_.'Category'} =~ /[鎧盾]/ ? '0' : ''),
@@ -901,7 +901,7 @@ else {
     $pc{'accessory'.@$_[1].'Note'} = "<i class=\"own\" data-kind=\"$own\">専用</i>" . $pc{'accessory'.@$_[1].'Note'} if $own;
     push(@accessories, {
       TYPE => @$_[0],
-      NAME => $pc{'accessory'.@$_[1].'Name'},
+      NAME => formatItemName($pc{'accessory'.@$_[1].'Name'}),
       NOTE => $pc{'accessory'.@$_[1].'Note'},
     } );
   }
