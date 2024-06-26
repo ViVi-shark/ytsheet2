@@ -302,14 +302,39 @@ $SHEET->param(Skills => \@skills);
 my @loises;
 foreach (1 .. 7){
   my $color;
-  if   ($pc{'lois'.$_.'Color'} =~ /^(BK|BLA|黒)/i){ $color = 'hsla(  0,  0%,  0%,0.2)'; }
-  elsif($pc{'lois'.$_.'Color'} =~ /^(BL|青)/i    ){ $color = 'hsla(220,100%, 50%,0.2)'; }
-  elsif($pc{'lois'.$_.'Color'} =~ /^(GR|緑)/i    ){ $color = 'hsla(120,100%, 50%,0.2)'; }
-  elsif($pc{'lois'.$_.'Color'} =~ /^(OR|橙)/i    ){ $color = 'hsla( 30,100%, 50%,0.2)'; }
-  elsif($pc{'lois'.$_.'Color'} =~ /^(PU|紫)/i    ){ $color = 'hsla(270,100%, 50%,0.2)'; }
-  elsif($pc{'lois'.$_.'Color'} =~ /^(RE|赤)/i    ){ $color = 'hsla(  0,100%, 50%,0.2)'; }
-  elsif($pc{'lois'.$_.'Color'} =~ /^(WH|白)/i    ){ $color = 'hsla(  0,  0%,100%,0.2)'; }
-  elsif($pc{'lois'.$_.'Color'} =~ /^(YE|黄)/i    ){ $color = 'hsla( 60,100%, 50%,0.2)'; }
+  my $colorDescription;
+  if   ($pc{'lois'.$_.'Color'} =~ /^(BK|BLA|黒)/i){
+    $color = 'hsla(  0,  0%,  0%,0.2)';
+    $colorDescription = "判定の直前。その達成値を－20する（最小１）。累積不可。";
+  }
+  elsif($pc{'lois'.$_.'Color'} =~ /^(BL|青)/i    ){
+    $color = 'hsla(220,100%, 50%,0.2)';
+    $colorDescription = "自身がおこなうダメージロールの直前。そのダメージはガード値と装甲値を無視する。";
+  }
+  elsif($pc{'lois'.$_.'Color'} =~ /^(GR|緑)/i    ){
+    $color = 'hsla(120,100%, 50%,0.2)';
+    $colorDescription = "自身の判定の直前。その達成値を＋15する。";
+  }
+  elsif($pc{'lois'.$_.'Color'} =~ /^(OR|橙)/i    ){
+    $color = 'hsla( 30,100%, 50%,0.2)';
+    $colorDescription = "自身がおこなうダメージロールの直前。そのダメージを＋５Ｄする。ダメージがこのロイスの対象のみに与えられるなら、代わりに＋10Ｄする。";
+  }
+  elsif($pc{'lois'.$_.'Color'} =~ /^(PU|紫)/i    ){
+    $color = 'hsla(270,100%, 50%,0.2)';
+    $colorDescription = "イニシアチブプロセス。自身のＨＰを全回復する。";
+  }
+  elsif($pc{'lois'.$_.'Color'} =~ /^(RE|赤)/i    ){
+    $color = 'hsla(  0,100%, 50%,0.2)';
+    $colorDescription = "イニシアチブプロセス。ラウンド終了まで、自身が与えるダメージを＋10、自身が受けるＨＰダメージを－10する。";
+  }
+  elsif($pc{'lois'.$_.'Color'} =~ /^(WH|白)/i    ){
+    $color = 'hsla(  0,  0%,100%,0.2)';
+    $colorDescription = "ＨＰダメージの適用直前。キャラクター１体に適用されるＨＰダメージを０にする。そのキャラクターがこのロイスの対象であるなら、さらにその攻撃に付帯する不利な効果をすべて打ち消してもよい。";
+  }
+  elsif($pc{'lois'.$_.'Color'} =~ /^(YE|黄)/i    ){
+    $color = 'hsla( 60,100%, 50%,0.2)';
+    $colorDescription = "自身の判定の直後。その判定に対するリアクションの達成値は０となる。また、このロイスの対象のキャラクターは、リアクションをおこなえない。";
+  }
   $color = $color ? "background-color:${color};" : '';
   if (!($pc{'lois'.$_.'Relation'} || $pc{'lois'.$_.'Name'} || $pc{'lois'.$_.'Note'}) || $pc{'lois'.$_.'Relation'} =~ /[DＤEＥ]ロイス|^[DＤEＥ]$/) {
     $pc{'lois'.$_.'State'} = '';
@@ -328,6 +353,7 @@ foreach (1 .. 7){
     "NO-EMO"   => $noEmotion,
     "COLOR"    => $pc{'lois'.$_.'Color'},
     "COLOR-BG" => $color,
+    "COLOR-DESCRIPTION" => $colorDescription,
     "NOTE"     => $pc{'lois'.$_.'Note'},
     "S"        => $pc{'lois'.$_.'S'},
     "STATE"    => $pc{'lois'.$_.'State'},
