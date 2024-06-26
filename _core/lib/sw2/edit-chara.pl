@@ -645,6 +645,9 @@ foreach my $class (@data::class_names){
   if(exists $data::class{$class}{evaUnlock} && exists $data::class{$class}{evaUnlock}{craft}){
     $functions .= 'calcDefense();'
   }
+  if($class =~ /アルケミスト/){
+    $functions .= 'updateAlchemyIcon(this);';
+  }
   print <<"HTML";
             <div class="box" id="craft-${name}">
               <h2 class="in-toc">$data::class{$class}{craft}{jName}</h2>
@@ -662,6 +665,7 @@ HTML
         $item .= ' selected';
         $hit = 1;
       }
+      $item .= ' data-note="'.@$data[3].'"' if @$data[3];
       $item .= ' value="'.@$data[1].'">'.@$data[1];
       
       my $optgroupLabel;

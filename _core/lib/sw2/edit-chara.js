@@ -88,6 +88,7 @@ window.onload = function() {
   calcHonor();
   calcDishonor();
   calcCommonClass();
+  updateAlchemyIcon();
   
   imagePosition();
   changeColor();
@@ -1088,6 +1089,30 @@ function checkCraft() {
       }
     }
   }
+}
+
+/**
+ * @param {HTMLSelectElement|null} selector
+ */
+function updateAlchemyIcon(selector = null) {
+  (selector != null ? [selector] : [...document.querySelectorAll('select[name^="craftAlchemy"]')]).forEach(
+      /** @param {HTMLSelectElement|null} selector */selector => {
+        /** @var {HTMLOptionElement} */
+        const selectedOption = selector.selectedOptions[0] ?? selector.options[0];
+        const note = selectedOption?.dataset.note ?? '';
+
+        /** @var {string[]} */
+        const colors = [];
+
+        for (const color of ['赤', '緑', '黒', '白', '金']) {
+          if (note.includes(color)) {
+            colors.push(color);
+          }
+        }
+
+        selector.closest('.select-input').dataset.color = colors.join('＆');
+      }
+  );
 }
 
 // ＨＰＭＰ抵抗力計算 ----------------------------------------

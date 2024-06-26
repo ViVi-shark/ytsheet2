@@ -377,14 +377,30 @@ foreach my $class (@data::class_names){
           + $pc{ 'buildupAdd'.ucfirst($data::class{$class}{craft}{eName}) };
   next if !$lv;
   
+  my @data_list = @{$data::class{$class}{craft}{data}};
+  
   if($class eq 'アーティザン'){ $add += $pc{lvArt} >= 17 ? 2 : $pc{lvArt} >= 16 ? 1 : 0; }
 
   my @crafts;
   foreach (1 .. $lv + $add){
     my $craft = $pc{'craft'.ucfirst($data::class{$class}{craft}{eName}).$_};
     
+    my @craft_data;
+    foreach (@data_list) {
+      @craft_data = @{$_};
+      if ($craft_data[1] eq $craft) {
+        last;
+      } else {
+        @craft_data = undef;
+        next;
+      }
+    }
+    
     $acquired{$craft} = 1;
-    push(@crafts, { "ITEM" => $craft } );
+    
+    my %item = ("ITEM" => $craft);
+    $item{NOTE} = @craft_data[3] if @craft_data[3];
+    push(@crafts, \%item );
   }
   
   push(@craft_lists, { "jNAME" => $data::class{$class}{craft}{jName}, "eNAME" => $data::class{$class}{craft}{eName}, "CRAFTS" => \@crafts } );
