@@ -580,6 +580,105 @@ dl#level {
     transform: scale(0.7) translateY(-1.2em);
   }
 }
+#craft-alchemy li[id^="craft-alchemy"] {
+  [data-note]:not([data-note=""]) {
+    width: max-content;
+    display: inline-grid;
+    grid-template-columns: repeat(3, max-content);
+  }
+
+  [data-note]:not([data-note=""])::before,
+  [data-note]:not([data-note=""])::after {
+    font-family: "Material Symbols Outlined", sans-serif;
+    font-variation-settings: 'FILL' 1;
+    width: 1em;
+    height: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    grid-row: 1 / 2;
+  }
+
+  [data-note]:not([data-note=""])::before {
+    grid-column: 1 / 2;
+  }
+
+  [data-note]:not([data-note=""])::after {
+    grid-column: 2 / 3;
+  }
+
+  [data-note*="赤"]::before {
+    content:'\e91d';
+    color: #a00;
+  }
+
+  [data-note*="緑"]::before {
+    content:'\e123';
+    color: #0c3;
+  }
+
+  [data-note*="黒"]::before {
+    content:'\ead5';
+    color: #777;
+  }
+
+  [data-note*="白"]::before {
+    content:'\e87d';
+    color: #bbb;
+  }
+
+  [data-note*="金"]::before {
+    content:'\e3e4';
+    color: #f90;
+  }
+
+  [data-note*="赤"][data-note*="緑"]::before {
+    content:'\e91d';
+    color: #a00;
+  }
+
+  [data-note*="赤"][data-note*="緑"]::after {
+    content:'\e123';
+    color: #0c3;
+  }
+
+  [data-note*="白"][data-note*="黒"]::before {
+    content:'\e87d';
+    color: #bbb;
+  }
+
+  [data-note*="白"][data-note*="黒"]::after {
+    content:'\ead5';
+    color: #777;
+  }
+
+  .select-input:not(.free) {
+    &[data-color="赤"]::before {
+      content: '\e91d';
+      color: #a00;
+    }
+
+    &[data-color="緑"]::before {
+      content: '\e123';
+      color: #0c3;
+    }
+
+    &[data-color="黒"]::before {
+      content: '\ead5';
+      color: #777;
+    }
+
+    &[data-color="白"]::before {
+      content: '\e87d';
+      color: #bbb;
+    }
+
+    &[data-color="金"]::before {
+      content: '\e3e4';
+      color: #f90;
+    }
+  }
+}
 
 /* // Area-Actions & Language
 ---------------------------------------------------------------------------------------------------- */
