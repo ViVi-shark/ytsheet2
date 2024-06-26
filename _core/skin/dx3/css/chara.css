@@ -471,6 +471,9 @@ body {
   font-family: var(--font-proportional);
   font-feature-settings: "palt";
 }
+#lois:not(:has(table tbody tr td:is(.relation, .name, .emo, .color, .note, .state):not(:empty))) {
+  display: none;
+}
 #lois table tbody td {
   &:nth-child(1) { width: 6.2em; } /* 関係 */
   &:nth-child(2) { width: 14em;  }  /* 名前 */
