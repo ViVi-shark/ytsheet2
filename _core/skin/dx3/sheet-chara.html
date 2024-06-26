@@ -318,7 +318,21 @@
               <td><TMPL_UNLESS NO-EMO>／<TMPL_ELSE>―</TMPL_UNLESS>
               <td class="emo <TMPL_VAR N-CHECK>"><TMPL_VAR NEGA></td>
               <td class="color" style="<TMPL_VAR COLOR-BG>"><TMPL_VAR COLOR><TMPL_IF COLOR-DESCRIPTION><span class="color-description"><TMPL_VAR COLOR-DESCRIPTION></span></TMPL_IF></td>
-              <td class="left"<TMPL_UNLESS STATE> colspan="2"</TMPL_UNLESS>><TMPL_VAR NOTE>
+              <td class="note left"<TMPL_UNLESS STATE> colspan="2"</TMPL_UNLESS>>
+                <TMPL_IF HAS_SOURCE>
+                  <span class="source">
+                    <TMPL_IF SOURCE_NAME>
+                      <TMPL_UNLESS SOURCE_PAGE>
+                        <span class="source-name"><TMPL_VAR SOURCE_NAME></span>
+                      <TMPL_ELSE>
+                        <span class="source-name with-page"><TMPL_VAR SOURCE_NAME></span>
+                      </TMPL_UNLESS>
+                    </TMPL_IF>
+                    <TMPL_IF SOURCE_PAGE><span class="source-page"><TMPL_VAR SOURCE_PAGE></span></TMPL_IF>
+                  </span>
+                  <TMPL_IF NOTE><br /></TMPL_IF>
+                </TMPL_IF>
+                <TMPL_VAR NOTE>
               <TMPL_IF STATE><td class="state right <TMPL_IF S>sperior</TMPL_IF>"><span data-state="<TMPL_VAR STATE>"></span></td></TMPL_IF>
             </TMPL_LOOP>
           </tbody>
