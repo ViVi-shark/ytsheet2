@@ -50,7 +50,7 @@ sub createUnitStatus {
           }
         }
 
-        if ($pc{golem} && $pc{individualization} && $partHp ne '') {
+        if ($pc{golem} && $pc{individualization} && $hp ne '') {
           my $offset;
           if ($pc{reinforcementItemGrade} eq '小') {
             $offset = 5;
