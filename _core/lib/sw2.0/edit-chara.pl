@@ -331,7 +331,7 @@ HTML
 print <<"HTML";
           </dl>
           <dl class="box" id="sin">
-            <dt>穢れ<dd>@{[input('sin','number','','min="0"')]}
+            <dt>穢れ<dd class="base">@{[input('sin','number','','min="0"')]}<dd class="offset"></dd>
           </dl>
           <dl class="box" id="birth">
             <dt>生まれ<dd>@{[input('birth')]}
