@@ -73,6 +73,11 @@ sub createUnitStatus {
           $hp += $offset if $pc{'golemReinforcement_garnetLife_part' . $n . '_using'};
         }
 
+        if ($pc{individualization} && $pc{swordFragmentNum} > 0) {
+          $hp += $pc{"swordFragment_hpOffset_part$n"} unless isEmptyValue($hp);
+          $mp += $pc{"swordFragment_mpOffset_part$n"} unless isEmptyValue($mp);
+        }
+
         push(@hp , {$partname.':HP' => "$hp/$hp"});
         push(@mp , {$partname.':MP' => "$mp/$mp"}) unless isEmptyValue($mp);
         push(@def, $partname.$def);
@@ -104,6 +109,11 @@ sub createUnitStatus {
           $hp += 5 if $pc{ridingHpReinforcement};
           $hp += 5 if $pc{ridingHpReinforcementSuper};
         }
+      }
+
+      if ($pc{individualization} && $pc{swordFragmentNum} > 0) {
+        $hp += $pc{swordFragmentNum} * 5 unless isEmptyValue($hp);
+        $mp += $pc{swordFragmentNum} * 1 unless isEmptyValue($mp);
       }
 
       push(@unitStatus, { 'HP' => "$hp/$hp" });
