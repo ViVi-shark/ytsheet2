@@ -254,6 +254,9 @@ body:not(.mode-crc) .crc-only {
 }
 
 
+#status > summary #exp-skill.minus {
+  color: #e70;
+}
 #status dl#status-table {
   display: grid;
   grid-template-columns: 1fr .7fr 1fr .7fr 1fr .7fr 1fr .7fr;
@@ -979,6 +982,10 @@ body:not(.mode-crc) .crc-only {
   background: var(--bg-color);
   font-size: 85%;
   font-weight: bold;
+
+  .minus {
+    color: #e70;
+  }
 }
 #exp-footer input.auto {
   width: 2.5em;
