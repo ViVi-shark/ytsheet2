@@ -722,7 +722,10 @@ function individualizationSourceUrlChanged() {
             for (const [key, value] of Object.entries(source)) {
               if (
                   ['birthTime', 'id', 'mode', 'protect', 'protectOld', 'type', 'updateTime', 'ver'].includes(key) || // システム用の値
-                  /^(?:color(?:Base|Head)|forbidden$|gameVersion$|hide$|palette|part\d+$|sheetDescription[SM]$|unit(?:Except)?Status|taxaSelect$)/i.test(key) || // このへんは無視する
+                  (
+                      /^(?:color(?:Base|Head)|forbidden$|gameVersion$|hide$|palette|part\d+$|sheetDescription[SM]$|unit(?:Except)?Status|taxaSelect$)/i.test(key) &&
+                      key !== 'unitStatusNotOutput'
+                  ) || // このへんは無視する
                   key === 'individualization' || // 個別化チェックそのものは無視する
                   key === 'sourceMonsterUrl' || // 個別化の元データＵＲＬも無視する
                   ['characterName', 'tags'].includes(key) || // 名前・タグは上書き可能
@@ -745,7 +748,7 @@ function individualizationSourceUrlChanged() {
               if (control instanceof HTMLInputElement) {
                 switch (control.getAttribute('type').toLowerCase()) {
                   case 'hidden':
-                    if (/^(?:(?:loots|status)Num|mount|golem)$/i.test(key)) {
+                    if (/^(?:(?:loots|status)Num|mount|golem|unitStatusNotOutput)$/i.test(key)) {
                       control.value = value != null ? value.toString() : '';
                       continue;
                     }
