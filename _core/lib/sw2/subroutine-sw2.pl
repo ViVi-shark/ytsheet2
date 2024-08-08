@@ -212,6 +212,8 @@ sub class_color {
 sub textToIcon {
   my $text = shift;
   
+  $text =~ s{<i class="s-icon passive"><span class="raw">(\[[常準主補宣条選]])</span></i>}{$1}gi;
+  
   if($::SW2_0){
     $text =~ s{\[常\]|[○◯〇]}{<i class="s-icon passive"><span class="raw">[常]</span></i>}gi;
     $text =~ s{\[主\]|[＞▶〆]}{<i class="s-icon major0"><span class="raw">[主]</span></i>}gi;
