@@ -193,7 +193,8 @@ if ($pc{golem}) {
 
   foreach (@prices) {
     (my $term, my $value) = @{$_};
-    $price .= "<dt>$term</dt><dd>$value<small>G</small></dd>" if $value;
+    my $unit = $value =~ /\d$/ ? 'G' : '';
+    $price .= "<dt>$term</dt><dd>$value<small>$unit</small></dd>" if $value;
   }
 
   if(!$price){ $price = '―' }
