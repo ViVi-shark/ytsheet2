@@ -195,7 +195,7 @@ sub createUnitStatus {
     }
   }
 
-  return \@unitStatus;
+  return formatUnitStatus \@unitStatus;
 }
 
 ### クラス色分け --------------------------------------------------
