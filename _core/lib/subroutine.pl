@@ -453,6 +453,28 @@ sub escapeThanSign {
   return $text;
 }
 
+### unitStatus の整形
+sub formatUnitStatus {
+  my @unitStatus = @{shift;};
+
+  for my $i (0 .. $#unitStatus) {
+    my %sourceHash = %{$unitStatus[$i]};
+    my %destinationHash = ();
+
+    foreach (keys %sourceHash) {
+      $destinationHash{formatUnitStatusText($_)} = formatUnitStatusText($sourceHash{$_});
+    }
+
+    $unitStatus[$i] = \%destinationHash;
+  }
+
+  return \@unitStatus;
+}
+sub formatUnitStatusText {
+  my $text = shift;
+  $text =~ s/[|｜](.+?)《.+?》/$1/g;
+  return removeTags(unescapeTags($text));
+}
 ### タグ変換 --------------------------------------------------
 sub unescapeTags {
   my $text = shift;
