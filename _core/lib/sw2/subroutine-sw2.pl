@@ -168,6 +168,8 @@ sub createUnitStatus {
     }
   }
 
+  @unitStatus = @{formatUnitStatus \@unitStatus};
+
   foreach my $key (split ',', $pc{unitStatusNotOutput}){
     @unitStatus = grep { !exists $_->{$key} } @unitStatus;
   }
