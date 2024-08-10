@@ -219,18 +219,18 @@ sub textToIcon {
   $text =~ s{<i class="s-icon passive"><span class="raw">(\[[常準主補宣条選]])</span></i>}{$1}gi;
   
   if($::SW2_0){
-    $text =~ s{\[常\]|[○◯〇]}{<i class="s-icon passive"><span class="raw">[常]</span></i>}gi;
-    $text =~ s{\[主\]|[＞▶〆]}{<i class="s-icon major0"><span class="raw">[主]</span></i>}gi;
-    $text =~ s{\[補\]|[☆≫»]|&gt;&gt;}{<i class="s-icon minor0"><span class="raw">[補]</span></i>}gi;
-    $text =~ s{\[宣\]|[□☐☑🗨]}{<i class="s-icon active0"><span class="raw">[宣]</span></i>}gi;
-    $text =~ s{\[条\]|[▽]}{<i class="s-icon condition"><span class="raw">[条]</span></i>}gi;
-    $text =~ s{\[選\]|[▼]}{<i class="s-icon selection"><span class="raw">[選]</span></i>}gi;
+    $text =~ s{\[常\]|[○◯〇]}{<i class="s-icon passive"><span class="raw">[◯]</span></i>}gi;
+    $text =~ s{\[主\]|[＞▶〆]}{<i class="s-icon major0"><span class="raw">[〆]</span></i>}gi;
+    $text =~ s{\[補\]|[☆≫»]|&gt;&gt;}{<i class="s-icon minor0"><span class="raw">[☆]</span></i>}gi;
+    $text =~ s{\[宣\]|[□☐☑🗨]}{<i class="s-icon active0"><span class="raw">[☑]</span></i>}gi;
+    $text =~ s{\[条\]|[▽]}{<i class="s-icon condition"><span class="raw">[▽]</span></i>}gi;
+    $text =~ s{\[選\]|[▼]}{<i class="s-icon selection"><span class="raw">[▼]</span></i>}gi;
   } else {
-    $text =~ s{\[常\]|[○◯〇]}{<i class="s-icon passive"><span class="raw">[常]</span></i>}gi;
-    $text =~ s{\[準\]|[△]}{<i class="s-icon setup"><span class="raw">[準]</span></i>}gi;
-    $text =~ s{\[主\]|[＞▶〆]}{<i class="s-icon major"><span class="raw">[主]</span></i>}gi;
-    $text =~ s{\[補\]|[☆≫»]|&gt;&gt;}{<i class="s-icon minor"><span class="raw">[補]</span></i>}gi;
-    $text =~ s{\[宣\]|[□☐☑🗨]}{<i class="s-icon active"><span class="raw">[宣]</span></i>}gi;
+    $text =~ s{\[常\]|[○◯〇]}{<i class="s-icon passive"><span class="raw">[◯]</span></i>}gi;
+    $text =~ s{\[準\]|[△]}{<i class="s-icon setup"><span class="raw">[△]</span></i>}gi;
+    $text =~ s{\[主\]|[＞▶〆]}{<i class="s-icon major"><span class="raw">[▶]</span></i>}gi;
+    $text =~ s{\[補\]|[☆≫»]|&gt;&gt;}{<i class="s-icon minor"><span class="raw">[>>]</span></i>}gi;
+    $text =~ s{\[宣\]|[□☐☑🗨]}{<i class="s-icon active"><span class="raw">[🗨]</span></i>}gi;
   }
   
   return $text;
