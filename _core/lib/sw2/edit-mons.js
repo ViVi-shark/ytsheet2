@@ -778,7 +778,15 @@ function individualizationSourceUrlChanged() {
                     continue;
                 }
               } else if (control instanceof HTMLTextAreaElement) {
-                control.value = value != null ? value.toString() : '';
+                if (key === 'chatPalette') {
+                  control.value = value
+                      .replaceAll('&lt;', '<')
+                      .replaceAll('&gt;', '>')
+                      .replaceAll(/<br>/ig, '\n');
+                  control.setAttribute('readonly', '');
+                } else {
+                  control.value = value != null ? value.toString() : '';
+                }
                 control.dispatchEvent(new Event('input'));
                 continue;
               } else if (control instanceof HTMLSelectElement) {
