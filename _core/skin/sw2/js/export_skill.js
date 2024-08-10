@@ -25,7 +25,12 @@
                             break;
                         case 'I':
                             if (child.classList.contains('s-icon')) {
-                                parts.push(`[${child.textContent}]`);
+                                const textContent = child.textContent.trim();
+                                parts.push(
+                                    textContent.startsWith('[')
+                                        ? textContent
+                                        : `[${textContent}]`
+                                );
                             } else {
                                 parts.push(nodeToText(child));
                             }
