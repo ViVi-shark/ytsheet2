@@ -104,7 +104,9 @@
       <dl class="shape"><dt>形状<dd><div><TMPL_VAR shape></div></dl>
       <dl class="category"><dt>カテゴリ<dd><div><TMPL_VAR category></div></dl>
       <dl class="age"><dt>製作時期<dd><TMPL_VAR age></dl>
+      <TMPL_IF summary>
       <dl class="summary"><dt>概要<dd><TMPL_VAR summary></dl>
+      </TMPL_IF>
       <dl class="effects"><dt><TMPL_IF head_effects><TMPL_VAR head_effects><TMPL_ELSE>効果</TMPL_IF><dd class="box">
         <TMPL_VAR effects>
         <TMPL_IF WeaponData>
