@@ -149,6 +149,8 @@ foreach (1 .. $pc{armourNum}){
 }
 $SHEET->param(ArmourData => \@armours) if !$pc{forbiddenMode};
 
+$SHEET->param(no_effect => !$pc{effects} && $#weapons < 0 && $#armours < 0 ? 1 : 0);
+
 ### タグ --------------------------------------------------
 my @tags;
 foreach(split(/ /, $pc{tags})){
