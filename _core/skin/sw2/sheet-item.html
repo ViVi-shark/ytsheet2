@@ -111,6 +111,7 @@
       <TMPL_IF summary>
       <dl class="summary"><dt>概要<dd><TMPL_VAR summary></dl>
       </TMPL_IF>
+      <TMPL_UNLESS no_effect>
       <dl class="effects"><dt><TMPL_IF head_effects><TMPL_VAR head_effects><TMPL_ELSE>効果</TMPL_IF><dd class="box">
         <TMPL_VAR effects>
         <TMPL_IF WeaponData>
@@ -154,6 +155,7 @@
           </table>
         </TMPL_IF>
       </dl>
+      </TMPL_UNLESS>
       </div>
       
       <TMPL_IF description><section class="box description">
