@@ -107,6 +107,9 @@ $SHEET->param(price => commify $pc{price}) if $pc{price} =~ /\d{4,}/;
 ### 魔法の武器アイコン --------------------------------------------------
 $SHEET->param(magic => ($pc{magic} ? "<img class=\"i-icon\" src=\"${set::icon_dir}wp_magic.png\">" : ''));
 
+### 知名度
+$SHEET->param(noReputation => ($pc{reputation} // '') eq '');
+
 ### カテゴリ --------------------------------------------------
 $pc{category} =~ s/((?:\G|>)[^<]*?)[ 　]/$1<hr>/g;
 $SHEET->param(category => $pc{category});
