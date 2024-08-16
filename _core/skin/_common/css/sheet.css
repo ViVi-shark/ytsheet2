@@ -603,6 +603,10 @@ table.note-table {
   }
   & td {
     text-align: left;
+
+    &.align-center {
+      text-align: center;
+    }
   }
 }
 dl.note-description {
