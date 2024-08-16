@@ -127,6 +127,16 @@ div.data {
         grid-column-start: 1;
       }
     }
+
+    &:not(:has(dl.category)) {
+      > dl.reputation {
+        grid-column: 1 / -1;
+
+        dd {
+          justify-content: flex-start;
+        }
+      }
+    }
   }
 
   &:not(:has(dl.summary)) {
