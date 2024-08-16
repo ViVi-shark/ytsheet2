@@ -92,7 +92,9 @@
     <article class="item">
       <div id="area-name">
         <h1><TMPL_VAR magic><TMPL_VAR itemName></h1>
+        <TMPL_IF price>
         <div class="price">基本取引価格：<TMPL_VAR price></div>
+        </TMPL_IF>
       </div>
       
       <div id="tags">
