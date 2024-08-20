@@ -290,7 +290,7 @@ $SHEET->param(MagicData => \@magics);
 
 ### 流派 --------------------------------------------------
 foreach (keys %pc) {
-  next unless $_ =~ /^(?:schoolNote|school(?:Arts|Magic)\d+Effect)$/;
+  next unless $_ =~ /^(?:schoolNote|schoolItemNote|school(?:Arts|Magic)\d+Effect)$/;
   $pc{$_} = splitParagraph($pc{$_});
   $SHEET->param($_ => $pc{$_});
 }
