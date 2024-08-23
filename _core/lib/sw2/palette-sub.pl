@@ -727,7 +727,7 @@ sub palettePreset {
       $text .= "\@HP- ;魔法ダメージ\n";
     }
 
-    $text .= "\n### 回避\n";
+    $text .= "\n### 回避，物理ダメージ\n";
     $text .= "//回避修正=0\n";
     my $lastPart;
     foreach (1 .. $::pc{statusNum}){
@@ -741,9 +741,13 @@ sub palettePreset {
         $text .= "\n";
         $text .= "//${partName}_回避修正=0\n";
         $text .= "2d+{回避$_}+{${partName}_回避修正}+{回避修正} 回避".$part."\n";
+        my $def = $::pc{'status'.$num.'Defense'} // 0;
+        $text .= "\@${partName}:HP-+($def) ;物理ダメージ\n";
       }
       else {
         $text .= "2d+{回避$_}+{回避修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '';
+        my $def = $::pc{'status'.$_.'Defense'} // 0;
+        $text .= "\@HP-+($def) ;物理ダメージ\n";
       }
       $lastPart = $part;
     }
