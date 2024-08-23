@@ -711,11 +711,21 @@ sub palettePreset {
       }
     }
 
-    $text .= "### 抵抗\n";
+    $text .= "### 抵抗，魔法ダメージ\n";
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
     $text .= "2d+{生命抵抗}+{生命抵抗修正} 生命抵抗力\n";
     $text .= "2d+{精神抵抗}+{精神抵抗修正} 精神抵抗力\n";
+    $text .= "\n";
+    if ($::pc{statusNum} > 1) {
+      foreach (1 .. $::pc{statusNum}) {
+        (my $part = $::pc{'status' . $_ . 'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
+        $text .= "\@${part}:HP- ;魔法ダメージ\n";
+      }
+    }
+    else {
+      $text .= "\@HP- ;魔法ダメージ\n";
+    }
 
     $text .= "\n### 回避\n";
     $text .= "//回避修正=0\n";
