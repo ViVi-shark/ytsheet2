@@ -805,6 +805,7 @@ sub palettePreset {
       (?<head>
         (?<mark>(?:$skill_mark)+)
         (?<name>.+)
+        (
         [\/／]
         (
           (
@@ -816,12 +817,13 @@ sub palettePreset {
          |
          (?<fix>必中)
         )
+        )?
       )
       \s
       (?<note>[\s\S]*?)
       (?=^$skill_mark|^●|\z)
       /
-      $text .= convertMark($+{mark})."$+{name}／$+{fix}$+{other}\n"
+      $text .= convertMark($+{mark})."$+{name}".($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n"
             .($+{base} ne '' ?"2d+{$+{name}} ".convertMark($+{mark})."$+{name}$+{other}\n":'')
             .skillNote($+{head},$+{name},$+{note})."\n";
       /megix;
