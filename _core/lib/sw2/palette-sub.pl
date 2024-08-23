@@ -711,11 +711,14 @@ sub palettePreset {
       }
     }
 
+    $text .= "### 抵抗\n";
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
-    $text .= "//回避修正=0\n";
     $text .= "2d+{生命抵抗}+{生命抵抗修正} 生命抵抗力\n";
     $text .= "2d+{精神抵抗}+{精神抵抗修正} 精神抵抗力\n";
+
+    $text .= "\n### 回避\n";
+    $text .= "//回避修正=0\n";
     my $lastPart;
     foreach (1 .. $::pc{statusNum}){
       my $num = $::pc{mount} && $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
@@ -734,7 +737,7 @@ sub palettePreset {
       }
       $lastPart = $part;
     }
-    $text .= "\n";
+    $text .= "###\n\n";
 
     $text .= "//命中修正=0\n";
     $text .= "//打撃修正=0\n";
