@@ -870,18 +870,18 @@ sub palettePreset {
     my $text = shift;
     return $text if $bot{BCD}; #BCDは変換しない
     if($::SW2_0){
-      $text =~ s{[○◯〇]}{[常]}gi;
-      $text =~ s{[＞▶〆]}{[主]}gi;
-      $text =~ s{[☆≫»]|&gt;&gt;}{[補]}gi;
-      $text =~ s{[□☑🗨]}{[宣]}gi;
+      $text =~ s{[○◯〇]\[常]}{[◯]}gi;
+      $text =~ s{[＞▶〆]\[主]}{[〆]}gi;
+      $text =~ s{[☆≫»]|&gt;&gt;|\[補]}{[☆]}gi;
+      $text =~ s{[□☑🗨]|\[宣]}{[☑]}gi;
       $text =~ s{[▽]}{▽}gi;
       $text =~ s{[▼]}{▼}gi;
     } else {
-      $text =~ s{[○◯〇]}{[常]}gi;
-      $text =~ s{[△]}{[準]}gi;
-      $text =~ s{[＞▶〆]}{[主]}gi;
-      $text =~ s{[☆≫»]|&gt;&gt;}{[補]}gi;
-      $text =~ s{[□☑🗨]}{[宣]}gi;
+      $text =~ s{[○◯〇]|\[常]}{[◯]}gi;
+      $text =~ s{[△]|\[準]}{[△]}gi;
+      $text =~ s{[＞▶〆]|\[主]}{[▶]}gi;
+      $text =~ s{[☆≫»]|&gt;&gt;|\[補]}{[>>]}gi;
+      $text =~ s{[□☑🗨]|\[宣]}{[🗨]}gi;
     }
     
     return $text;
