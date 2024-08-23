@@ -774,6 +774,7 @@ sub palettePreset {
       $weapon = '' if $::pc{partsNum} == 1;
       $weapon = "／$weapon" if $weapon ne '';
 
+      $text .= "### 主動作：$part\n" if $::pc{statusNum} > 1;
       if ($::pc{statusNum} > 1 && $part ne '' && $::pc{'status'.$num.'Accuracy'} ne '' && $::pc{'status'.$num.'Damage'} ne '') {
         $text .= "//${part}_命中修正=0\n";
         $text .= "//${part}_打撃修正=0\n";
@@ -784,6 +785,7 @@ sub palettePreset {
         $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
         $text .= "{ダメージ$_}+{打撃修正} ダメージ" . $weapon . "\n" if $::pc{'status' . $num . 'Damage'} ne '';
       }
+      $text .= "###\n" if $::pc{statusNum} > 1;
       $text .= "\n" if $::pc{'status'.$num.'Accuracy'} ne '' || $::pc{'status'.$num.'Damage'} ne '';
       $lastPart = $weapon;
     }
