@@ -193,8 +193,13 @@ if ($pc{golem}) {
 
   foreach (@prices) {
     (my $term, my $value) = @{$_};
+    my $annotation = $value =~ s/([(（].+?[）)])$// ? $1 : '';
     my $unit = $value =~ /\d$/ ? 'G' : '';
-    $price .= "<dt>$term</dt><dd>$value<small>$unit</small></dd>" if $value;
+
+    $unit = "<small>$unit</small>" if $unit ne '';
+    $annotation = "<small>$annotation</small>" if $annotation ne '';
+
+    $price .= "<dt>$term</dt><dd>$value$unit$annotation</dd>" if $value;
   }
 
   if(!$price){ $price = '―' }
