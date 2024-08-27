@@ -625,6 +625,9 @@ body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks
 /* // Loots
 ---------------------------------------------------------------------------------------------------- */
 .loots {
+  .mount & {
+    display: none;
+  }
   margin-top: 1em;
   position: relative;
   & h2 {
