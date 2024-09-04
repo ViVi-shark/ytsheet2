@@ -111,9 +111,21 @@ div.data {
     }
   }
 
-  &:not(:has(dl.reputation)):not(:has(dl.shape)) {
+  &:not(:has(dl.shape)) {
     > dl.category {
-      grid-column: 1 / -1;
+      grid-column-end: -1;
+    }
+
+    &:has(dl.reputation) {
+      > dl.category {
+        grid-column-start: 2;
+      }
+    }
+
+    &:not(:has(dl.reputation)) {
+      > dl.category {
+        grid-column-start: 1;
+      }
     }
   }
 
@@ -195,7 +207,7 @@ div.data {
   > dl.category dd > div hr {
     opacity: 0.5;
   }
-  &:not(:has(dl.reputation)):not(:has(dl.shape)) {
+  &:not(:has(dl.shape)) {
     > dl.category dd {
       justify-content: flex-start;
       div {
