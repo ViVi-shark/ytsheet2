@@ -548,10 +548,32 @@ sub palettePreset {
       my $actionValue = $::pc{"demonAction${diceNumber}Value"} || '―';
       my $actionDamage = normalizeText $::pc{"demonAction${diceNumber}Damage"};
 
-      my $actionValueOffset = $actionValue ne '―' ? '+{達成値修正合計}' : '';
+      sub makeActionValue {
+        my $source = shift;
+        return $source if $source eq '―';
+
+        my @sourceParts = split('＆', normalizeText($source));
+        my @destination = ();
+
+        for my $i (0 .. $#sourceParts) {
+          my $part = $sourceParts[$i];
+
+          my $multiplier;
+          if ($part =~ s/(×\d+$)//) {
+            $multiplier = $1;
+          }
+
+          $part = "(${part}+{達成値修正合計})${multiplier}";
+          push(@destination, $part);
+        }
+
+        return join('＆', @destination);
+      }
+
+      $actionValue = makeActionValue $actionValue;
 
       my $_text = "### $diceMark $actionAndRange\n"
-        . "$target ‖ <b>$actionAndRange</b> ‖ 達成値： $actionValue$actionValueOffset ‖ 効果:$actionDamage\n";
+        . "$target ‖ <b>$actionAndRange</b> ‖ 達成値： $actionValue ‖ 効果:$actionDamage\n";
 
       my @actionNames = split(/＆/, $actionAndRange);
       my @actionDamages = split(/＆/, $actionDamage);
@@ -572,7 +594,7 @@ sub palettePreset {
           if ($all =~ /^2d/) {
             # 2d+n 形式のダメージ
             $_text .= "$all+{ダメージ修正合計} $actionName\n";
-            $_text .= "$all//+{ダメージ修正合計} $actionName（半減）\n" if $actionName !~ /(?:近接|遠隔)攻撃|魔力撃/ && $damage !~ /(?:[\/／]|抵抗[:：])(?:消滅|必中)/;
+            $_text .= "$all//+{ダメージ修正合計} $actionName（半減）\n" if $actionName !~ /(?:近接|遠隔)攻撃|魔力撃|テイルスイープ/ && $damage !~ /(?:[\/／]|抵抗[:：])(?:消滅|必中)/;
           }
           else {
             # 威力
