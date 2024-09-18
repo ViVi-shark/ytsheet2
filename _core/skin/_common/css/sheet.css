@@ -302,6 +302,7 @@ details:not([open]).box > summary:hover {
   margin: .1rem .2rem;
 }
 .box h2:nth-child(n+2),
+.box section:nth-child(n+2) h2,
 .box details h2,
 .box .header1 {
   margin: 1.8em 0 -1em;
