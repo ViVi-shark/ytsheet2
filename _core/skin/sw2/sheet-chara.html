@@ -503,7 +503,7 @@
           </dl>
           <section class="box" id="items">
             <h2><TMPL_IF head_items><TMPL_VAR head_items><TMPL_ELSE>所持品</TMPL_IF></h2>
-            <p><TMPL_VAR items></p>
+            <TMPL_VAR items>
           </section>
         </div>
         <div id="area-items-R">
@@ -571,12 +571,12 @@
       </div></TMPL_UNLESS>
       <section class="box" id="free-note">
         <h2><TMPL_IF head_freeNote><TMPL_VAR head_freeNote><TMPL_ELSE>容姿・経歴・その他メモ</TMPL_IF></h2>
-        <p><TMPL_VAR freeNote></p>
+        <TMPL_VAR freeNote>
       </section>
       <TMPL_IF freeHistory>
       <section class="box" id="free-history">
         <h2><TMPL_IF head_freeHistory><TMPL_VAR head_freeHistory><TMPL_ELSE>履歴</TMPL_IF></h2>
-        <p><TMPL_VAR freeHistory></p>
+        <TMPL_VAR freeHistory>
       </section>
       </TMPL_IF>
       <section class="box" id="history">
@@ -625,7 +625,7 @@
       <TMPL_IF cashbook>
       <section class="box" id="cashbook">
         <h2><TMPL_IF head_cashbook><TMPL_VAR head_cashbook><TMPL_ELSE>収支履歴</TMPL_IF></h2>
-        <div><p><TMPL_VAR cashbook></p></div>
+        <div><TMPL_VAR cashbook></div>
       </section>
       </TMPL_IF>
     </article>
