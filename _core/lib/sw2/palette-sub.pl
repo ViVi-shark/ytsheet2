@@ -715,7 +715,9 @@ sub palettePreset {
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
     $text .= "2d+{生命抵抗}+{生命抵抗修正} 生命抵抗力\n";
+    $text .= "$::pc{vitResist}（$::pc{vitResistFix}+{生命抵抗修正}） 生命抵抗力\n";
     $text .= "2d+{精神抵抗}+{精神抵抗修正} 精神抵抗力\n";
+    $text .= "$::pc{mndResist}（$::pc{mndResistFix}+{精神抵抗修正}） 精神抵抗力\n";
     $text .= "\n";
     if ($::pc{statusNum} > 1) {
       foreach (1 .. $::pc{statusNum}) {
@@ -746,6 +748,7 @@ sub palettePreset {
       }
       else {
         $text .= "2d+{回避$_}+{回避修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '';
+        $text .= "回避${part} {回避$_}（" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}）\n" if $::pc{'status' . $num . 'Evasion'} ne '';
         my $def = $::pc{'status'.$_.'Defense'} // 0;
         $text .= "\@HP-+($def) ;物理ダメージ\n";
       }
@@ -779,6 +782,7 @@ sub palettePreset {
       }
       else {
         $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
+        $text .= "命中力${weapon} {命中$_}（" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{命中修正}）\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
         $text .= "{ダメージ$_}+{打撃修正} ダメージ" . $weapon . "\n" if $::pc{'status' . $num . 'Damage'} ne '';
       }
       $text .= "###\n" if $::pc{statusNum} > 1;
