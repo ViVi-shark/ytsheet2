@@ -131,6 +131,7 @@ if($pc{ver}){
       while ($pc{$_} =~ s#(?<!<section class="level4">)<h4>(.+?)</h4>(.*?)(<(?:h[2-4]|section class="level[2-4]")(?:\s+.+?)?>|$)#<section class="level4"><h4>$1</h4>$2</section>$3#g) {};
       while ($pc{$_} =~ s#(?<!<section class="level3">)<h3>(.+?)</h3>(.*?)(<(?:h[2-3]|section class="level[2-3]")(?:\s+.+?)?>|$)#<section class="level3"><h3>$1</h3>$2</section>$3#g) {};
       while ($pc{$_} =~ s#(?<!<section class="level2">)<h2>(.+?)</h2>(.*?)(<(?:h[2]|section class="level[2]")(?:\s+.+?)?>|$)#<section class="level2"><h2>$1</h2>$2</section>$3#g) {};
+      $pc{$_} =~ s#<(h[1-6])>📋\s*(.+?)</(h[1-6])>#<$1 class="copyable">$2</$3>#g;
     }
 
     $pc{$_} = noiseTextTag $pc{$_} if $pc{forbiddenMode};

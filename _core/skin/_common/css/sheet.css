@@ -346,6 +346,44 @@ details:not([open]).box > summary:hover {
   line-height: 1.2;
   font-size: 100%;
 }
+.box {
+  h2, h3, h4, h5 {
+    &:has(.icon.to-copy) {
+      position: relative;
+    }
+
+    .icon.to-copy {
+      color: forestgreen;
+      opacity: 0.2;
+      font-style: normal;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: max-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        cursor: copy;
+        text-shadow: 0.1em 0.1em 0.05em rgba(128, 128, 128, 0.65);
+      }
+
+      &::before {
+        content: "\e14d";
+        font-family: "Material Symbols Outlined", sans-serif;
+        font-variation-settings: 'FILL' 1;
+        font-weight: 100;
+      }
+    }
+  }
+
+  section:hover > :is(h2, h3, h4, h5) > .icon.to-copy {
+      opacity: 0.5;
+    }
+  }
+}
 @media print {
   .box {
     & h2, & h3, & h4 {
