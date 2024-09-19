@@ -249,6 +249,22 @@ sub formatItemName {
   return "$prefixes〈$text〉$suffixes";
 }
 
+### 穢れの算出 --------------------------------------------------
+sub computeSin {
+  my %pc = %{$_[0]};
+
+  my $sin = $pc{sin} // 0;
+
+  foreach (keys %pc) {
+    next unless $_ =~ /^history\d+Note$/;
+    if ($pc{$_} =~ /\@穢れ?\+(\d+)/) {
+      $sin += $1;
+    }
+  }
+
+  return $sin;
+}
+
 ### 妖精魔法ランク --------------------------------------------------
 sub fairyRank {
   my $lv = shift;

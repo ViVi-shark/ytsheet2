@@ -187,13 +187,47 @@ header nav ul li.character-format {
   }
 }
 #personal {
-  &:has(#sin > dd:empty) {
+  &:has(#sin > dd:not(.offset):empty) {
     #race-ability {
       flex-basis: 100%;
     }
 
     #sin {
       display: none;
+    }
+  }
+
+  #sin {
+    dd.offset:empty {
+      display: none;
+    }
+
+    &:has(dd.offset:not(:empty)) {
+      grid-template-rows: max-content 1fr;
+      grid-template-columns: 1fr max-content;
+
+      dt {
+        grid-row: 1 / 2;
+        grid-column: 1 / -1;
+      }
+
+      dd.base,
+      dd.offset {
+        grid-row: 2 / -1;
+      }
+
+      dd.base {
+        grid-column: 1 / 2;
+      }
+
+      dd.offset {
+        grid-column: 2 / -1;
+        width: max-content;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 

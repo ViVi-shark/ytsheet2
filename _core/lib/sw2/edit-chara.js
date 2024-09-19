@@ -87,6 +87,7 @@ window.onload = function() {
   calcCash();
   calcHonor();
   calcDishonor();
+  calcSin();
   calcCommonClass();
   updateAlchemyIcon();
   
@@ -1875,6 +1876,22 @@ function calcCash(){
     form.deposit.readOnly = true;
   }
   else { form.deposit.readOnly = false; }
+}
+
+// 穢れの補正 ----------------------------------------
+function calcSin() {
+  let offset = 0;
+
+  document.querySelectorAll('#history-table tbody td.note input[name^="history"][name$="Note"]').forEach(
+      input => {
+        const m = (input.value ?? '').match(/@穢れ?\+(\d+)/);
+        if (m != null) {
+          offset += parseInt(m[1]);
+        }
+      }
+  );
+
+  document.querySelector('#sin dd.offset').textContent = offset > 0 ? `+${offset}` : '';
 }
 
 // 装飾品欄 ----------------------------------------

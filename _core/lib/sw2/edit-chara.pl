@@ -342,7 +342,7 @@ HTML
 print <<"HTML";
           </dl>
           <dl class="box" id="sin">
-            <dt>穢れ<dd>@{[input('sin','number','','min="0"')]}
+            <dt>穢れ<dd class="base">@{[input('sin','number','','min="0"')]}<dd class="offset"></dd>
           </dl>
           <dl class="box" id="birth">
             <dt>生まれ<dd>@{[input('birth')]}
@@ -1422,7 +1422,7 @@ print <<"HTML";
               <td class="gm    ">@{[input("history${num}Gm")]}
               <td class="member">@{[input("history${num}Member")]}
             <tr>
-              <td colspan="6" class="left">@{[input("history${num}Note",'','','placeholder="備考"')]}
+              <td colspan="6" class="left note">@{[input("history${num}Note",'','calcSin','placeholder="備考"')]}
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
