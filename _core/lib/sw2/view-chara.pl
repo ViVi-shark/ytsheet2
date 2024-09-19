@@ -983,6 +983,7 @@ $SHEET->param(History => \@history);
 $SHEET->param(historyExpTotal   => commify $pc{historyExpTotal}   );
 $SHEET->param(historyHonorTotal => commify $pc{historyHonorTotal} );
 $SHEET->param(historyMoneyTotal => commify $pc{historyMoneyTotal} );
+$SHEET->param(sin => computeSin(\%pc));
 
 
 ### 名誉アイテム --------------------------------------------------
