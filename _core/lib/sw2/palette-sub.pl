@@ -834,8 +834,10 @@ sub palettePreset {
         )
         )?
       )
+      (?:
       \s
       (?<note>[\s\S]*?)
+      )?
       (?=^$skill_mark|^●|\z)
       /
       $text .= convertMark($+{mark})."$+{name}".($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n"
