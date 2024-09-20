@@ -811,6 +811,26 @@ sub palettePreset {
     $skills =~ s/\|/｜/g;
     $skills =~ s/<br>/\n/gi;
     $skills = convertFairyAttribute($skills) if $::pc{taxa} eq '妖精';
+
+    while ($skills =~ s/(?:^|\n)(?:[○◯〇＞▶〆□☑🗨]+)魔法適性[^\n]*\n[^\n]*?((?:《.+?》、?)+)[^\n]*?//) {
+      my $featNames = $1;
+      while ($featNames =~ s/(《.+?》)//) {
+        my $featName = $1;
+        my $mark;
+        if ($featName =~ /ターゲッティング|鷹の目|[MＭ][PＰ]軽減|マリオネット|魔晶石の達人|足さばき|ランアンドガン|マナセーブ|ルーンマスター|魔法拡大の達人/) {
+          $mark = '◯';
+        }
+        elsif ($featName =~ /魔法(?:収束|制御)|魔法拡大(?:[\/／]|すべて)|バイオレントキャスト|マルチアクション|クリティカルキャスト|ダブルキャスト|カニングキャスト|クイックキャスト/) {
+          $mark = '🗨';
+        }
+        elsif ($featName =~ /ワードブレイク/) {
+          $mark = '▶'
+        }
+        $text .= "[${mark}]${featName}\n";
+      }
+      $text .= "\n";
+    }
+
     $skills =~ s/^
       (?:$skill_mark)+
       (?<name>.+?)
