@@ -801,9 +801,9 @@ sub palettePreset {
       (?: [0-9]+(?:レベル|LV)|\(.+\) )*
       [\/／]
       (?:魔力)
-      ([0-9]+)
+      (?<power>[0-9]+)
       (?:[(（][0-9]+[）)])?
-      /$text .= "2d+{$+{name}} $+{name}\n\n";/megix;
+      /$text .= "2d+{$+{name}} $+{name}\n" . "$+{power}（" . ($+{power} + 7) . "） $+{name}\n\n";/megix;
     
     $skills =~ s/^
       (?<head>
