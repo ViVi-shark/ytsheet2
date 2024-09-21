@@ -529,7 +529,7 @@ sub unescapeTags {
       $text =~ s/「((?:[○◯〇△＞▶〆☆≫»□☐☑🗨]|&gt;&gt;)+)/"「".&textToIcon($1);/egi;
     }
 
-    $text =~ s/\\◯/◯/g;
+    $text =~ s/\\([◯△])/$1/g;
   }
   
   return $text;
