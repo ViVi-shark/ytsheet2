@@ -183,6 +183,22 @@ main nav ul li {
   & .habitat     { grid-area: HABIT; }
   & .date        { grid-area: DATE; }
 
+  & td.name {
+    .mount & {
+      a {
+        flex-direction: row;
+
+        &::before {
+          content: "【";
+        }
+
+        &::after {
+          content: "】";
+        }
+      }
+    }
+  }
+
   & th:is(.level, .parts) span.small {
     display: inline-block;
     transform: scaleY(calc(1/0.8));
