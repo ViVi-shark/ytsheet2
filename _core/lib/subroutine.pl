@@ -649,7 +649,7 @@ sub generateTable {
       if   ($col eq '&gt;'){ $colspan++; next; }
       elsif($col eq '~')   { next; }
       elsif($col =~ s/^~//){ $td = 'th' }
-      elsif($col =~ s/^CENTER://i){ push(@classes, 'align-center'); }
+      elsif($col =~ s/^(CENTER|RIGHT)://i){ push(@classes, 'align-' . lc($1)); }
       $output .= "<$td";
       if($colspan > 1){ $output .= ' colspan="'.$colspan.'"'; $colspan = 1; }
       if($rowspan > 1){ $output .= ' rowspan="'.$rowspan.'"'; }
