@@ -168,9 +168,7 @@
         <h2><TMPL_IF head_description><TMPL_VAR head_description><TMPL_ELSE>由来・逸話</TMPL_IF></h2>
         <p><TMPL_VAR description></p>
       </section></TMPL_IF>
-      <div id="author">
-        製作者：<TMPL_VAR author>
-      </div>
+      <div id="author"><TMPL_IF author>製作者：<TMPL_VAR author></TMPL_IF></div>
     </article>
     <div class="back-button"><a href="./?type=i">⏎</a></div>
     <TMPL_IF image><div id="image-box" onclick="closeImage()">
