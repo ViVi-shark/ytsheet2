@@ -652,6 +652,9 @@ table.note-table {
       text-align: right;
     }
   }
+  & tbody tr td span.number {
+    white-space: nowrap;
+  }
 }
 dl.note-description {
   display: grid;
