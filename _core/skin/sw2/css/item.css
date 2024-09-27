@@ -305,6 +305,17 @@ div.data {
       border-top-style: solid;
     }
   }
+  > dl.effects {
+    &:first-child:last-child:has(dd.box:first-of-type:last-of-type) {
+      > dt {
+        display: none;
+      }
+
+      > dd {
+        grid-column: 1 / -1;
+      }
+    }
+  }
 }
 
 
