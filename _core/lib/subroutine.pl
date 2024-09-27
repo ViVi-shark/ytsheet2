@@ -704,6 +704,8 @@ sub splitParagraph {
   $text =~ s#(<p>)　#$1#gi;
   $text =~ s#(^</p><p>|</p><p>$)##gi;
 
+  $text =~ s/{br}/<br>/gi;
+
   return $text;
 }
 
