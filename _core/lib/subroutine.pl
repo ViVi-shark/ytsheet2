@@ -499,6 +499,8 @@ sub unescapeTags {
       $text =~ s|\[刃\]|<img alt="&#91;刃&#93;" class="i-icon" src="data:image/webp;base64,UklGRmgAAABXRUJQVlA4TFwAAAAvD8ADECcgECD8r1ix5EMgQOhXpkaDgrQNmPq33J35D8B/Cs4KriLZDZv9EAIHgs2gAiCNzR+VyiGi/wGIWX8565unQe15VkDtBrkCr3ZDnhVQt41fgHwX6nojAA==">|gi;
       $text =~ s|\[打\]|<img alt="&#91;打&#93;" class="i-icon" src="data:image/webp;base64,UklGRnAAAABXRUJQVlA4TGMAAAAvD8ADEB+gkG0EODSdId0jEEgC2V9sEQVpG7C49roz/wF8ppPAprb2Ji8JxUO38jthZ84eCzQJHTURgQSmbiOi/4GE4Cs4f8Xxx4x/SfOVNJdDdkez1dghIZdQYvAKLJADIQAA">|gi;
     }
+
+    $text =~ s|\[([特流アテ])\]|<i class="i-icon" data-kind="$1"></i>|g;
   }
   
   
