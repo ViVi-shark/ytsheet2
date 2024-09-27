@@ -305,6 +305,11 @@ div.data {
 
       > dd {
         grid-column: 1 / -1;
+
+        > table:first-child:last-child {
+          margin: 0;
+          width: 100%;
+        }
       }
     }
   }
