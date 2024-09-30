@@ -528,6 +528,8 @@ sub unescapeTags {
   $text =~ s/\n/<br>/gi;
 
   if($set::game eq 'sw2'){
+
+    $text =~ s/\\([◯△])/$1/g;
   }
   
   return $text;
