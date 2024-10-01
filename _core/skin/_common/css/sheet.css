@@ -644,6 +644,9 @@ table.note-table {
   & td {
     text-align: left;
   }
+  & tbody tr td span.number {
+    white-space: nowrap;
+  }
 }
 dl.note-description {
   display: grid;
