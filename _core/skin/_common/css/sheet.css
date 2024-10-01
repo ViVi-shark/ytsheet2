@@ -643,6 +643,14 @@ table.note-table {
   }
   & td {
     text-align: left;
+
+    &.align-center {
+      text-align: center;
+    }
+
+    &.align-right {
+      text-align: right;
+    }
   }
   & tbody tr td span.number {
     white-space: nowrap;
