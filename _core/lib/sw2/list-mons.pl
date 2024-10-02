@@ -223,6 +223,7 @@ foreach (@list) {
   
   $price =~ s#^／#―／#;
   $price =~ s#／$#／―#;
+  $price = commify $price;
   
   #グループ
   my $taxa_full = $taxa =~ s/^その他://r;

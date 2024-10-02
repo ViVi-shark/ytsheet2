@@ -192,6 +192,7 @@ if ($pc{golem}) {
     my $annotation = $value =~ s/([(（].+?[）)])$// ? $1 : '';
     my $unit = $value =~ /\d$/ ? 'G' : '';
 
+    $value = commify $value;
     $unit = "<small>$unit</small>" if $unit ne '';
     $annotation = "<small>$annotation</small>" if $annotation ne '';
 
