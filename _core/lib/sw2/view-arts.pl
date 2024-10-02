@@ -240,6 +240,8 @@ $SHEET->param(Tags => \@tags);
   else {
     magicItemViewOn('Cost','Target','Range','Duration','Resist',($pc{magicElement}?'Element':undef));
   }
+
+  $SHEET->param(magicEffect => splitParagraph $pc{magicEffect});
 }
 sub textMagic {
   $_[0] =~ s#／#／<br>#;
