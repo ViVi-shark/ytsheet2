@@ -221,6 +221,9 @@ foreach (@list) {
     $image, $tags, $hide, $parts, $habitat, $price, $demonAction, $requiredConjurerLv
   ) = (split /<>/, $_)[0..21];
   
+  $price =~ s#^／#―／#;
+  $price =~ s#／$#／―#;
+  
   #グループ
   my $taxa_full = $taxa =~ s/^その他://r;
   $taxa_full = "<span class=\"small\">$taxa_full</span>" if length($taxa_full) >= 6;
