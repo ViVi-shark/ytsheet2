@@ -652,6 +652,14 @@ if(!$pc{forbiddenMode}){
 $SHEET->param(AttackClasses => \@atacck);
 
 ### 武器 --------------------------------------------------
+sub replaceModificationNotation {
+  my $sourceText = shift // '';
+
+  $sourceText =~ s#[\@＠](回避力?|防(?:護点?)?)[+＋](\d+)#<span class="modification">$1+$2</span>#g;
+
+  return $sourceText;
+}
+
 my @weapons;
 if($pc{forbiddenMode}){
   push(@weapons,{
@@ -707,7 +715,7 @@ else {
       CRIT     => $pc{'weapon'.$_.'Crit'},
       DMG      => addNum($pc{'weapon'.$_.'Dmg'}),
       DMGTOTAL => $pc{'weapon'.$_.'DmgTotal'},
-      NOTE     => $pc{'weapon'.$_.'Note'},
+      NOTE     => replaceModificationNotation $pc{'weapon'.$_.'Note'},
       NOTESPAN => $pc{'weapon'.$_.'NoteSpan'},
       NOTEOFF  => $pc{'weapon'.$_.'NoteOff'},
       CLOSE    => ($pc{'weapon'.$_.'NameOff'} || $first ? 0 : 1),
@@ -797,6 +805,20 @@ if(!$pc{forbiddenMode}){
       EVA  => $pc{partEnhance},
     } );
   }
+
+  my @modifications = @{extractModifications(\%pc)};
+  foreach (@modifications) {
+    my %mod = %{$_;};
+
+    if ($mod{evasion} || $mod{defense}) {
+      my %item = (NAME => $mod{name});
+      $item{EVA} = $mod{evasion} if $mod{evasion};
+      $item{DEF} = $mod{defense} if $mod{defense};
+
+      push(@evasion, \%item);
+    }
+  }
+
   $SHEET->param(EvasionClasses => \@evasion);
 }
 ### 防具 --------------------------------------------------
@@ -911,10 +933,12 @@ else {
 
     my $own = $pc{'accessory'.@$_[1].'Own'};
     $pc{'accessory'.@$_[1].'Note'} = "<i class=\"own\" data-kind=\"$own\">専用</i>" . $pc{'accessory'.@$_[1].'Note'} if $own;
+    my $name = formatItemName($pc{'accessory'.@$_[1].'Name'});
+    my $note = $pc{'accessory'.@$_[1].'Note'};
     push(@accessories, {
       TYPE => @$_[0],
-      NAME => formatItemName($pc{'accessory'.@$_[1].'Name'}),
-      NOTE => $pc{'accessory'.@$_[1].'Note'},
+      NAME => $name,
+      NOTE => replaceModificationNotation $note,
     } );
   }
   $SHEET->param(Accessories => \@accessories);
