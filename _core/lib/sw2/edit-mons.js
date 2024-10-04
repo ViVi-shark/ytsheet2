@@ -329,11 +329,7 @@ function updatePartList() {
           .split(/[/／]/)
           .map(x => x.trim())
           .filter(x => x !== '')
-          .map(
-              part => /[*×]\d+$/.test(part)
-                  ? `${part.replace(/[*×]\d+$/, '')}（すべて）`
-                  : part
-          );
+          .map(part => part.replace(/[*×][\d０１２３４５６７８９]+$/, '（すべて）'));
 
   const datalist = document.getElementById('list-of-core-part');
   datalist.innerHTML = '';
