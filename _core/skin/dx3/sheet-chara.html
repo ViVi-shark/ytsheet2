@@ -662,7 +662,7 @@
         </section>
       </div>
       <div id="enc-bonus" <TMPL_IF encroachFixed>class="encroach-fixed"</TMPL_IF>>
-        <details class="box">
+        <details class="box" open>
           <summary>侵蝕率効果表</summary>
           <p>
             <span class="encroach-prefix">現在</span>侵蝕率:<TMPL_IF encroachFixed><span class="encroach-fixed-value"><TMPL_VAR encroachFixedValue></span><TMPL_ELSE><input type="number" id="current-encroach" value="<TMPL_VAR currentEncroach>" oninput="encroachBonusSet(this.value);"></TMPL_IF>
