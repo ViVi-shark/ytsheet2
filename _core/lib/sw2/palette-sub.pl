@@ -789,6 +789,7 @@ sub palettePreset {
         $text .= "//${part}_命中修正=0\n";
         $text .= "//${part}_打撃修正=0\n";
         $text .= "2d+{命中$_}+{${part}_命中修正}+{命中修正} 命中力$weapon\n";
+        $text .= "命中力${weapon} {命中${_}}（" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${part}_命中修正}+{命中修正}）\n";
         $text .= "{ダメージ$_}+{${part}_打撃修正}+{打撃修正} ダメージ".$weapon."\n";
       }
       else {
