@@ -819,7 +819,7 @@ sub palettePreset {
     $skills =~ s/^
       (?<head>
         (?<mark>(?:$skill_mark)+)
-        (?<name>.+)
+        (?<name>.+?)
         (
         [\/／]
         (
