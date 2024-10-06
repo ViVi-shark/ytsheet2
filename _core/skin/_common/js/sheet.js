@@ -259,3 +259,115 @@ async function downloadAsFullSet(){
       URL.revokeObjectURL(url);
     });
 }
+
+window.addEventListener(
+    'load',
+    () => {
+      /**
+       * @param {string} source
+       * @return {string}
+       */
+      function makeSnippet(source) {
+        const matches = source.matchAll(/[1-2][dｄＤ](?:\[[\d>=:\-+]+])?(?:[-－+＋*×]\S+)?|k\d+(?:\[\d+])?(?:[-－+＋]\S+)?|@[HM]P[-+]\d+/gi);
+        let lastIndex = 0;
+        const parts = [];
+
+        for (const match of matches) {
+          parts.push(source.substring(lastIndex, match.index));
+          parts.push(`<snippet>${match[0]}</snippet>`);
+          lastIndex = match.index + match[0].length;
+        }
+
+        parts.push(source.substring(lastIndex));
+
+        return parts.join('');
+      }
+
+      /**
+       * @param {HTMLElement} element
+       * @param {string} mode
+       * @return {string}
+       */
+      function elementToText(element, mode) {
+        /** @var {string[]} */
+        const parts = [];
+
+        for (/** @var {HTMLElement} child */const child of element.childNodes) {
+          switch (child.nodeName) {
+            case '#text':
+              parts.push(makeSnippet(child.textContent));
+              continue;
+            case 'SECTION':
+              continue;
+            case 'H1':
+            case 'H2':
+            case 'H3':
+            case 'H4':
+            case 'H5':
+            case 'H6':
+              parts.push(`<b>${elementToText(child, 'inline')}</b>`);
+              continue;
+            case 'P':
+              parts.push(elementToText(child, 'inline'));
+              continue;
+            case 'DL':
+              if (child.classList.contains('note-description')) {
+                const items = [];
+                let lastTerm;
+                child.querySelectorAll('& > :is(dt, dd)').forEach(
+                    x => {
+                      switch (x.nodeName) {
+                        case 'DT':
+                          lastTerm = elementToText(x, 'inline');
+                          break;
+                        case 'DD':
+                          items.push(`${lastTerm}：${elementToText(x, 'inline')}`);
+                          lastTerm = null;
+                          break;
+                      }
+                    }
+                );
+                parts.push(items.map(x => `・${x}`).join('\n'));
+                continue;
+              }
+              break;
+            case 'I':
+              if (child.classList.contains('s-icon')) {
+                parts.push(child.textContent.trim());
+                continue;
+              }
+              break;
+            case 'SPAN':
+              switch (child.getAttribute('class') ?? '') {
+                case 'underline':
+                  parts.push(`__${elementToText(child, 'inline')}__`);
+                  continue;
+              }
+              break;
+          }
+
+          console.warn('Unexpected node type: ' + child.nodeName);
+          console.warn(child);
+        }
+
+        return parts.join(mode === 'block' ? '\n' : '');
+      }
+
+      document.querySelectorAll('section > :is(h1, h2, h3, h4, h5, h6).copyable').forEach(
+          headlineElement => {
+            const section = headlineElement.closest('section');
+            const text = elementToText(section, 'block');
+
+            const icon = document.createElement('i');
+            icon.classList.add('icon', 'to-copy');
+
+            icon.addEventListener(
+                'click',
+                () => navigator.clipboard.writeText(text)
+            );
+
+            headlineElement.appendChild(icon);
+          }
+      );
+    }
+);
