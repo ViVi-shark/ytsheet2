@@ -318,8 +318,6 @@ function updatePartsAutomatically() {
       }
   );
   partsNamesInput.dispatchEvent(new Event('input'));
-
-  updatePartList();
 }
 function updatePartList() {
   const partsText = document.querySelector('input[name="parts"]').value.trim();
