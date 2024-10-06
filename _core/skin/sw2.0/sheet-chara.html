@@ -552,12 +552,12 @@
       </div></TMPL_UNLESS>
       <section class="box" id="free-note">
         <h2><TMPL_IF head_freeNote><TMPL_VAR head_freeNote><TMPL_ELSE>容姿・経歴・その他メモ</TMPL_IF></h2>
-        <p><TMPL_VAR freeNote></p>
+        <TMPL_VAR freeNote>
       </section>
       <TMPL_IF freeHistory>
       <section class="box" id="free-history">
         <h2><TMPL_IF head_freeHistory><TMPL_VAR head_freeHistory><TMPL_ELSE>履歴</TMPL_IF></h2>
-        <p><TMPL_VAR freeHistory></p>
+        <TMPL_VAR freeHistory>
       </section>
       </TMPL_IF>
       <section class="box" id="history">
