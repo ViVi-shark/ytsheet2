@@ -570,6 +570,7 @@ print <<"HTML";
       </fieldset>
       <div class="box skills">
         <h2 class="in-toc">特殊能力</h2>
+        <button class="to-add-template">雛形を自動生成する</button>
         <fieldset class="riding-checks individualization-only">
           @{[ checkbox 'ridingMagicIndication','【魔法指示】' ]}
           @{[ checkbox 'ridingUnlockSpecialSkills','【特殊能力解放】' ]}

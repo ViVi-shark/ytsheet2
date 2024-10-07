@@ -1387,6 +1387,16 @@ form#monster :is(div, fieldset).box {
 form#monster .box h2 {
   font-size: 100%;
 }
+form#monster {
+  position: relative;
+
+  button.to-add-template {
+    position: absolute;
+    top: 0.2em;
+    right: 0.2em;
+    font-size: 80%;
+  }
+}
 form#monster #group dl {
   grid-template-columns: 3em max-content max-content max-content 3fr;
 
