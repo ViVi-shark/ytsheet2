@@ -529,6 +529,46 @@ document.querySelectorAll('.reinforcement-items [type="checkbox"][name$="_suppor
         )
 );
 
+// 特殊能力 ----------------------------------------
+/**
+ * @return {string|null}
+ */
+function makeSkillTemplate() {
+  const parts = (document.querySelector('input[name="parts"]').value ?? '')
+      .split(/[\/／]/)
+      .map(x => x.trim().replace(/×\d+$/, ''))
+      .filter(x => x !== '');
+
+  if (parts.length === 0) {
+    return null;
+  }
+
+  parts.unshift('全身');
+
+  return parts.map(x => `●${x}`).join('\n\n\n') + '\n';
+}
+document.querySelector('.skills button.to-add-template').addEventListener(
+    'click',
+    e => {
+      e.preventDefault();
+
+      const template = makeSkillTemplate();
+
+      if (template != null) {
+        const textarea = document.querySelector('textarea[name="skills"]');
+
+        if ((textarea.value ?? '') !== '' && textarea.value !== template) {
+          if (!confirm("すでに入力されている内容に対して上書きしますか？")) {
+            return;
+          }
+        }
+
+        textarea.value = template;
+        textarea.dispatchEvent(new Event('input'));
+      }
+    }
+);
+
 // 戦利品欄 ----------------------------------------
 // 追加
 function addLoots(){
