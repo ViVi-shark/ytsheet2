@@ -708,7 +708,7 @@ print <<"HTML";
         <div id="loots-list" class="loots-list">
           <ul id="loots-num">
 HTML
-foreach my $num (1 .. $pc{lootsNum}){ print "<li id='loots-num${num}'><span class='handle'></span>".input("loots${num}Num"); }
+foreach my $num (1 .. $pc{lootsNum}){ print "<li id='loots-num${num}'><span class='handle'></span>".input("loots${num}Num",'','','list="data-roots-num"'); }
 print <<"HTML";
           </ul>
           <ul id="loots-item">
@@ -862,6 +862,9 @@ print <<"HTML";
   <option value="属性ダメージ+3点">
   <option value="回復効果ダメージ+3点">
   <option value="なし">
+  </datalist>
+  <datalist id="data-roots-num">
+    <option value="自動">
   </datalist>
   <datalist id="data-demon-summoning-offering-name">
     <option value="（Ｘ）">
