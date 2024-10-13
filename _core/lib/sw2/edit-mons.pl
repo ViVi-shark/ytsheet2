@@ -287,7 +287,7 @@ print <<"HTML";
         </dl>
         <dl class="language">
           <dt>言語
-          <dd>@{[ input 'language' ]}<span data-related-field="language"></span>
+          <dd>@{[ input 'language','','','list="data-language"' ]}<span data-related-field="language"></span>
           <dd class="additional individualization-only"><span class="label">追加：</span>@{[ input 'additionalLanguage' ]}
         </dl>
         <dl class="habitat monster-only">
@@ -854,6 +854,9 @@ print <<"HTML";
   <option value="敵対的">
   <option value="腹具合による">
   <option value="命令による">
+  </datalist>
+  <datalist id="data-language">
+  <option value="なし">
   </datalist>
   <datalist id="data-weakness">
   <option value="命中力+1">
