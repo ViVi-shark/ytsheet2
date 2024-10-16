@@ -299,7 +299,7 @@ sub selectBox {
   my $attributes;
   ($attributes) = @others if $itemsReceivedByReference;
   if($func && $func !~ /\(.*?\)$/){ $func .= '()'; }
-  my $text = '<select name="'.$name.'" oninput="'.$func.'"'.($attributes ne '' ? " ${attributes}" : '').'>'.option($name, @items).'</select>';
+  my $text = '<select'.($name ? ' name="'.$name.'"' : '').' oninput="'.$func.'"'.($attributes ne '' ? " ${attributes}" : '').'>'.option($name, @items).'</select>';
   return $text;
 }
 sub selectInput {
