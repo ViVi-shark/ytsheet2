@@ -23,6 +23,104 @@ our @taxa = (
   ['その他'    , '88' , ''],
 );
 
+our @treasureEnhancements = (
+    {
+        'name'      => '弱点値上昇',
+        'fieldName' => 'increaseWeaknessGuard',
+        'steps'     => {
+            1  => '+1',
+            2  => '+2',
+            4  => '+3',
+            6  => '+4',
+            8  => '+5',
+            10 => '+6',
+        },
+    },
+    {
+        'name'      => '先制値上昇',
+        'fieldName' => 'increaseInitiative',
+        'steps'     => {
+            1  => '+1',
+            2  => '+2',
+            4  => '+3',
+            6  => '+4',
+            8  => '+5',
+            10 => '+6',
+        },
+    },
+    {
+        'name'      => '瞬間打撃点',
+        'fieldName' => 'momentaryDamage',
+        'steps'     => {
+            1  => '+2',
+            2  => '+4',
+            3  => '+6',
+            4  => '+8',
+            6  => '+10',
+            8  => '+12',
+            10 => '+14',
+        },
+    },
+    {
+        'name'      => '瞬間防護点',
+        'fieldName' => 'momentaryDefense',
+        'steps'     => {
+            1  => '+2',
+            2  => '+4',
+            3  => '+6',
+            4  => '+8',
+            6  => '+10',
+            8  => '+12',
+            10 => '+14',
+        },
+    },
+    {
+        'name'      => '瞬間達成値',
+        'fieldName' => 'momentaryAchievement',
+        'steps'     => {
+            1  => '+1',
+            2  => '+2',
+            4  => '+3',
+            6  => '+4',
+            8  => '+5',
+            10 => '+6',
+        },
+    },
+    {
+        'name'      => '追加攻撃',
+        'fieldName' => 'additionalAttack',
+        'steps'     => {
+            1  => '⑥／1',
+            2  => '⑤⑥／1',
+            4  => '⑤⑥／2',
+            7  => '④⑤⑥／2',
+            10 => '④⑤⑥／3',
+        },
+    },
+    {
+        'name'      => '呪いの波動',
+        'fieldName' => 'curseWave',
+        'steps'     => {
+            1  => '１点',
+            3  => '２点',
+            5  => '３点',
+            7  => '４点',
+            10 => '５点',
+        },
+    },
+    {
+        'name'      => '世界の汚染',
+        'fieldName' => 'worldPollution',
+        'steps'     => {
+            2  => '威力10',
+            4  => '威力20',
+            6  => '威力30',
+            8  => '威力40',
+            10 => '威力50',
+        },
+    },
+);
+
 my @golemReinforcementItems = (
     {name => "猫目石の鋲", fieldName => "catsEye", prices => {"小" => 200, "中" => 800, "大" => 4000}, ability => "▶２回攻撃"},
     {name => "猫目石の金鋲", fieldName => "catsEyeGold", prices => {"小" => 200, "中" => 800, "大" => 4000}, ability => "▶２回攻撃＆双撃", prerequisiteItem => "猫目石の鋲"},
