@@ -292,8 +292,10 @@ sub option {
 sub selectBox {
   my $name = shift;
   my $func = shift;
+  my @items = @_;
+  @items = @{$items[0]} if ref $items[0];
   if($func && $func !~ /\(.*?\)$/){ $func .= '()'; }
-  my $text = '<select name="'.$name.'" oninput="'.$func.'">'.option($name, @_).'</select>';
+  my $text = '<select name="'.$name.'" oninput="'.$func.'">'.option($name, @items).'</select>';
   return $text;
 }
 sub selectInput {
