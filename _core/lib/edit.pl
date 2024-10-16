@@ -293,9 +293,13 @@ sub selectBox {
   my $name = shift;
   my $func = shift;
   my @items = @_;
-  @items = @{$items[0]} if ref $items[0];
+  my $itemsReceivedByReference = !!(ref $items[0]);
+  my @others = @items[1, $#items];
+  @items = @{$items[0]} if $itemsReceivedByReference;
+  my $attributes;
+  ($attributes) = @others if $itemsReceivedByReference;
   if($func && $func !~ /\(.*?\)$/){ $func .= '()'; }
-  my $text = '<select name="'.$name.'" oninput="'.$func.'">'.option($name, @items).'</select>';
+  my $text = '<select name="'.$name.'" oninput="'.$func.'"'.($attributes ne '' ? " ${attributes}" : '').'>'.option($name, @items).'</select>';
   return $text;
 }
 sub selectInput {
