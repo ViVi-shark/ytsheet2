@@ -192,7 +192,7 @@ sub input {
   if($oninput && $oninput !~ /\(.*?\)$/){ $oninput .= '()'; }
   '<input'.
   ' type="'.($type?$type:'text').'"'.
-  ' name="'.$name.'"'.
+  ($name ? ' name="'.$name.'"' : '').
   ' value="'.($_[1] eq 'checkbox' ? 1 : $::pc{$name}).'"'.
   ($other?" $other":"").
   ($type eq 'checkbox' && $::pc{$name}?" checked":"").
