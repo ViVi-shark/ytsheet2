@@ -1495,6 +1495,10 @@ form#monster {
     top: 0.2em;
     right: 0.2em;
     font-size: 80%;
+
+    .individualization & {
+      display: none;
+    }
   }
 }
 form#monster #group dl {
