@@ -299,7 +299,7 @@ print <<"HTML";
         </dl>
         <dl class="monster-only reputation">
           <dt>知名度／弱点値
-          <dd>@{[ input 'reputation' ]}<span data-related-field="reputation"></span>／@{[ input 'reputation+','','','list="list-of-reputation-plus"' ]}<span data-related-field="reputation+"></span>
+          <dd>@{[ input 'reputation' ]}<span data-related-field="reputation"></span>／@{[ input 'reputation+','','','list="list-of-reputation-plus"' ]}<span data-related-field="reputation+"></span><span class="offset-by-treasure-enhancement"></span>
           <datalist id="list-of-reputation-plus">
             <option>―</option>
           </datalist>
@@ -308,9 +308,9 @@ print <<"HTML";
           <dt>弱点
           <dd>@{[ input 'weakness','','','list="data-weakness"' ]}<span data-related-field="weakness"></span>
         </dl>
-        <dl class="monster-only">
+        <dl class="monster-only initiative">
           <dt>先制値
-          <dd>@{[ input 'initiative' ]}<span data-related-field="initiative"></span>
+          <dd>@{[ input 'initiative' ]}<span data-related-field="initiative"></span><span class="offset-by-treasure-enhancement"></span>
         </dl>
         <dl class="mobility">
           <dt>移動速度<dd>@{[ input 'mobility' ]}
@@ -530,6 +530,64 @@ print <<"HTML";
                 <td class="mp offset">+<input type="number" min="0" />=
                 <td class="mp total">
         </template>
+      </fieldset>
+      <fieldset class="box monster-only individualization-only treasure-drop-enhancement">
+        <h2>トレジャー強化能力</h2>
+        <dl class="treasure-enhancement-abilities">
+HTML
+foreach (@data::treasureEnhancements) {
+    my %enhancement = %{$_};
+
+    my $enhancementName = $enhancement{name};
+    my $enhancementFieldName = $enhancement{fieldName};
+    my $nameTemplate =
+        'treasureEnhancement_'
+            . ($enhancementName ne '弱点値上昇' && $enhancementName ne '先制値上昇' ? 'part_' : '')
+            . $enhancementFieldName;
+    my %steps = %{$enhancement{steps};};
+
+    my @options = ('def=');
+    foreach (sort {$a <=> $b} keys %steps) {
+        my $key = $_;
+        my $value = $steps{$key};
+
+        push(@options, "${key}|<${value}>");
+    }
+
+    if ($enhancementName eq '瞬間打撃点') {
+        # 瞬間打撃点以降は部位ごと
+        print <<"HTML";
+        </dl>
+        <template id="template-of-treasure-enhancement-part">
+        <fieldset class="part">
+          <h3 class="part-name"></h3>
+          <dl class="treasure-enhancement-abilities">
+HTML
+    }
+
+    print <<"HTML";
+              <dt data-name="${enhancementName}"><label>${enhancementName}</label>
+              <dd data-name="${enhancementName}" class="extent">
+                  @{[ selectBox($nameTemplate !~ /_part_/ ? $nameTemplate : '','',\@options,$nameTemplate =~ /_part_/ ? "data-name-template=\"${nameTemplate}\"" : undef) ]}
+HTML
+    if ($enhancementName eq '瞬間打撃点') {
+        # 瞬間打撃点だけは複数を設定できるので、数を設定するためのフィールドをもうける.
+        print <<"HTML";
+                  <i class="multiplication-sign">×</i>@{[ input '','number','','min="1" class="count"' ]}
+HTML
+    }
+    print <<"HTML";
+              <dd data-name="${enhancementName}" class="point"></dd>
+HTML
+}
+print <<"HTML";
+              <dt class="total">小計
+              <dd class="total point"></dd>
+          </dl>
+        </fieldset>
+        </template>
+        <span class="total">合計トレジャーポイント:<span class="value"></span></span>
+        <input type="hidden" name="treasurePointTotal" value="" />
       </fieldset>
       <fieldset class="box mount-only individualization-only mount-equipments">
         <h2>騎獣用武装</h2>
@@ -818,7 +876,7 @@ if ($mode eq 'edit') {
 }
 print "<fieldset id=\"loaded-data\" style=\"display: none;\">\n";
 for my $key (keys %pc) {
-    next if $key !~ /^status[-0-9]+[A-Z][a-z]+Modification$|partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$|^swordFragment_[hm]pOffset_part\d+$/;
+    next if $key !~ /^status[-0-9]+[A-Z][a-z]+Modification$|partEquipment\d|^golemReinforcement_(?:[A-Za-z]+_part(?:\d+|All)_using|quartzDisruption_attribute)$|^swordFragment_[hm]pOffset_part\d+$|^treasureEnhancement_/;
     print "<input type=\"hidden\" name=\"$key\" value=\"$pc{$key}\" />\n";
 }
 print "</fieldset>\n";

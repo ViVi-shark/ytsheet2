@@ -1082,6 +1082,149 @@ function individualizationSourceUrlChanged() {
               offsetDistributionTable.dataset.partCount = partCount.toString();
             }
 
+            // トレジャー強化能力
+            {
+              const treasureDropEnhancementElement = document.querySelector('.treasure-drop-enhancement');
+              const partTemplate = document.getElementById('template-of-treasure-enhancement-part');
+              const sourceStatusTable = document.getElementById('source-status-table');
+
+              /** @var {Object<string, int>} */
+              const oldValues = {};
+
+              document.querySelectorAll('#loaded-data [name]').forEach(
+                  x => {
+                    const name = x.getAttribute('name');
+                    if (/^treasureEnhancement_/.test(name)) {
+                      const value = x.getAttribute('value');
+                      oldValues[name] = /^\d+$/.test(value) ? parseInt(value) : null;
+                    }
+                  }
+              );
+
+              sourceStatusTable.querySelectorAll('tbody tr').forEach(
+                  sourceRow => {
+                    const partName = sourceRow.querySelector('.style').textContent.trim()
+                        .replace(/^.+[(（](.+?)[）)]$/, '$1');
+
+                    const partSerial = sourceRow.dataset.partSerial;
+
+                    /** @var {HTMLElement} */
+                    const partElement = partTemplate.content.firstElementChild.cloneNode(true);
+                    partElement.querySelector('.part-name').textContent = partName;
+                    partElement.dataset.partSerial = partSerial;
+
+                    partElement.querySelectorAll('[data-name-template]').forEach(
+                        select => {
+                          const nameTemplate = select.dataset.nameTemplate;
+                          const name = nameTemplate.replace('_part_', `_part${partSerial}_`);
+
+                          select.setAttribute('id', name);
+                          select.setAttribute('name', name);
+                          delete select.dataset.nameTemplate;
+
+                          const enhancementName = select.closest('[data-name]').dataset.name;
+                          select
+                              .closest('dl')
+                              .querySelector(`dt[data-name="${enhancementName}"] label`)
+                              .setAttribute('for', name);
+
+                          const countInput = select.parentElement.querySelector('input.count');
+                          if (countInput != null) {
+                            countInput.setAttribute('name', `${name}_count`);
+                          }
+                        }
+                    );
+
+                    treasureDropEnhancementElement.appendChild(partElement);
+                  }
+              );
+
+              treasureDropEnhancementElement.querySelectorAll(':is(select, input)[name]').forEach(
+                  x => {
+                    const name = x.getAttribute('name');
+                    if (name in oldValues) {
+                      x.value = oldValues[name];
+                    }
+                  }
+              );
+
+              /** @var {Object<string, Object<string, int>>} */
+              const points = {common: {}};
+
+              treasureDropEnhancementElement
+                  .querySelectorAll('dl.treasure-enhancement-abilities [data-name].extent select')
+                  .forEach(
+                      /** @param {HTMLSelectElement} select */select => {
+                        const enhancementName = select.closest('[data-name]').dataset.name;
+                        const pointElement = select.closest('dl.treasure-enhancement-abilities')
+                            .querySelector(`[data-name="${enhancementName}"].point`);
+                        /** @var {HTMLElement|null} */
+                        const partElement = select.closest('.part');
+                        /** @var {HTMLInputElement|null} */
+                        const countInput = partElement?.querySelector(`[name="${select.getAttribute('name')}_count"]`);
+
+                        const update = () => {
+                          const count = countInput?.value != null && countInput.value !== '' ? parseInt(countInput.value) : 1;
+                          const value = (select.selectedOptions[0]?.textContent.trim() ?? '').replace(/^[-+]/, '');
+                          const point = (select.value !== '' ? parseInt(select.value) : 0) * count;
+
+                          pointElement.textContent = point > 0 ? point.toString() : '';
+
+                          if (partElement != null) {
+                            // 部位に属する項目であれば、部位のポイント小計に反映する.
+
+                            const partSerial = partElement.dataset.partSerial;
+
+                            if (!(partSerial in points)) {
+                              points[partSerial] = {};
+                            }
+
+                            points[partSerial][enhancementName] = point;
+
+                            const totalOfPart = Object.values(points[partSerial]).reduce((x, y) => x + y);
+                            partElement.querySelector('.total.point').textContent = totalOfPart.toString();
+                          } else {
+                            points['common'][enhancementName] = point;
+
+                            switch (enhancementName) {
+                              case "弱点値上昇":
+                                document.querySelector('.status .reputation .offset-by-treasure-enhancement').textContent = value;
+                                break;
+                              case "先制値上昇":
+                                document.querySelector('.status .initiative .offset-by-treasure-enhancement').textContent = value;
+                                break;
+                            }
+                          }
+
+                          // 総計に反映する.
+                          {
+                            const totalPoint =
+                                Object.values(points)
+                                    .map(x => Object.values(x))
+                                    .flat()
+                                    .reduce((x, y) => x + y);
+
+                            treasureDropEnhancementElement.querySelector('span.total .value').textContent =
+                                totalPoint.toString();
+
+                            treasureDropEnhancementElement.querySelector('input[name="treasurePointTotal"]').value =
+                                totalPoint.toString();
+                          }
+                        };
+
+                        select.addEventListener('input', () => update());
+
+                        // 瞬間打撃点の数が変更されたらポイントの再計算を誘発させる.
+                        countInput?.addEventListener(
+                            'input',
+                            () => select.dispatchEvent(new Event('input'))
+                        );
+
+                        update();
+                      }
+                  );
+            }
+
             mountStatusOptionsUpdated();
 
             // ゴーレム強化アイテム

@@ -1779,17 +1779,18 @@ form#monster.individualization #section-common > .status .mobility {
     }
   }
 }
-form#monster.individualization #section-common > .status dl:is(.vit-resistance, .mnd-resistance) {
-  .offset-by-sword-fragment {
+form#monster.individualization #section-common > .status {
+  .offset-by-sword-fragment,
+  .offset-by-treasure-enhancement {
     margin-left: 0.25em;
-  }
 
-  .offset-by-sword-fragment::before {
-    content: "+";
-  }
+    &::before {
+      content: "+";
+    }
 
-  .offset-by-sword-fragment:empty {
-    display: none;
+    &:empty {
+      display: none;
+    }
   }
 }
 @media screen and (max-width:735px){
@@ -2224,6 +2225,154 @@ form#monster.individualization .sword-fragment-box {
 form#monster.individualization .sword-fragment-box[data-sword-fragment-num="0"] {
   .offset-distribution {
     display: none;
+  }
+}
+
+form#monster.individualization .treasure-drop-enhancement {
+  padding-bottom: 2.0em;
+
+  .part {
+    > .part-name {
+      margin-bottom: 0.5em;
+    }
+  }
+
+  dl.treasure-enhancement-abilities {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    margin-left: 0.5em;
+
+    > dt,
+    > dd {
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+
+      &:not(.total) {
+        padding-bottom: 0.2em;
+        border-bottom: 1px dotted gray;
+        margin-bottom: 0.2em;
+      }
+    }
+
+    > dt {
+      grid-column: 1 / 2;
+      justify-content: flex-end;
+
+      &:not(.total) {
+        padding-right: 0.5em;
+      }
+
+      &.total {
+        display: none;
+      }
+    }
+
+    > .extent {
+      grid-column: 2 / 3;
+      width: 8em;
+
+      &:has(input.count) {
+        display: grid;
+        grid-template-columns: 1fr max-content max-content;
+        grid-template-rows: repeat(2, max-content);
+
+        > select {
+          grid-row: 1 / 2;
+          grid-column: 1 / -1;
+        }
+
+        > .multiplication-sign,
+        > input.count {
+          grid-row: 2 / 3;
+        }
+
+        > .multiplication-sign {
+          grid-column: 2 / 3;
+          font-style: normal;
+          margin-right: 0.125em;
+        }
+
+        > input.count {
+          grid-column: 3 / 4;
+        }
+      }
+
+      select,
+      input {
+        margin: 0;
+        display: block;
+      }
+
+      select {
+        width: 100%;
+
+        [data-name="瞬間打撃点"] & {
+          margin-bottom: 0.125em;
+        }
+      }
+
+      input {
+        width: 4em;
+      }
+    }
+
+    > .point {
+      grid-column: 3 / 4;
+      justify-content: flex-end;
+      min-width: 6.8em;
+
+      &:not(:empty) {
+        &:not(.total) {
+          justify-content: space-between;
+
+          &::before {
+            content: "→";
+            margin-left: 0.25em;
+            margin-right: 0.25em;
+          }
+        }
+
+        &::after {
+          content: "ポイント";
+        }
+      }
+    }
+
+    > .total {
+      margin-bottom: 0;
+
+      &.point {
+        grid-column-start: 1;
+        font-weight: bold;
+
+        &:empty {
+          display: none;
+        }
+
+        &::before {
+          content: "小計:";
+          margin-right: 0.25em;
+          font-weight: normal;
+        }
+
+        &::after {
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+  > .total {
+    position: absolute;
+    left: 0.5em;
+    right: 0.5em;
+    bottom: 0;
+    display: block;
+    text-align: right;
+    border-top: 2px solid gray;
+    font-size: 110%;
+    font-weight: bold;
   }
 }
 
