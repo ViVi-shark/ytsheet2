@@ -680,7 +680,7 @@ sub resolveAdditionalSkills {
   my %pc = %{shift;};
 
   if ($pc{individualization}) {
-    require $set::data_mons if $pc{golem};
+    require $set::data_mons if $pc{golem} || $pc{treasurePointTotal} > 0;
 
     my @partNames;
 
@@ -888,6 +888,89 @@ sub resolveAdditionalSkills {
         }
 
         $skillsByParts{$partName} = $#partSkills >= 0 ? \@partSkills : undef;
+      }
+    }
+
+    if ($pc{treasurePointTotal} > 0) {
+      my @commonPartSkills = @{$skillsByParts{$partNames[0]};};
+
+      if ($pc{treasureEnhancement_increaseWeaknessGuard} > 0) {
+        my $value = data::getTreasureEnhancementValue('弱点値上昇', $pc{treasureEnhancement_increaseWeaknessGuard});
+
+        push(
+            @commonPartSkills,
+            join(
+                "\n",
+                (
+                    "◯弱点値上昇＝${value}",
+                    "弱点値が ${value} されています。記載されている弱点値には反映済みです。",
+                    "これはトレジャー強化能力です。",
+                )
+            )
+        );
+      }
+
+      if ($pc{treasureEnhancement_increaseInitiative} > 0) {
+        my $value = data::getTreasureEnhancementValue('先制値上昇', $pc{treasureEnhancement_increaseInitiative});
+
+        push(
+            @commonPartSkills,
+            join(
+                "\n",
+                (
+                    "◯先制値上昇＝${value}",
+                    "先制値が ${value} されています。記載されている先制値には反映済みです。",
+                    "これはトレジャー強化能力です。",
+                )
+            )
+        );
+      }
+
+      $skillsByParts{$partNames[0]} = \@commonPartSkills;
+
+      if ($#partNames > 0) {
+        foreach my $partSerial (1 .. $#partNames) {
+          my $partName = $partNames[$partSerial];
+          my @skillsOfPart = ref $skillsByParts{$partName} ? @{$skillsByParts{$partName}} : ();
+
+          foreach (@data::treasureEnhancements) {
+            my %enhancement = %{$_};
+            my $point = $pc{"treasureEnhancement_part${partSerial}_$enhancement{fieldName}"};
+            my $count = $pc{"treasureEnhancement_part${partSerial}_$enhancement{fieldName}_count"};
+
+            if ($point > 0) {
+              my %steps = %{$enhancement{steps}};
+              my $value = $steps{$point};
+              my $name = $enhancement{name};
+
+              my $headline = "◯${name}＝${value}";
+              $headline .= "／${count}回" if $count > 0;
+
+              my $description = $enhancement{description};
+              $description =~ s/\{value}/$value/gi;
+              $description =~ s/\{count}/$count/gi;
+              my $abs = $value;
+              $abs =~ s/^[-+](\d+)$/$1/;
+              $description =~ s/\{abs}/$abs/gi;
+              (my $left, my $right) = split('／', $value);
+              $description =~ s/\{left}/$left/gi;
+              $description =~ s/\{right}/$right/gi;
+
+              push(
+                  @skillsOfPart,
+                  join(
+                      "\n",
+                      (
+                          $headline,
+                          $description,
+                      )
+                  )
+              );
+            }
+          }
+
+          $skillsByParts{$partName} = \@skillsOfPart;
+        }
       }
     }
 

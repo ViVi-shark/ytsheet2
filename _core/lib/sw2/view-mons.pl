@@ -226,6 +226,10 @@ unless(
 ){
   $SHEET->param(displaySin => 1);
 }
+### 弱点値 --------------------------------------------------
+$SHEET->param('reputation+' => $pc{'reputation+'} + data::getTreasureEnhancementValue('弱点値上昇', $pc{treasureEnhancement_increaseWeaknessGuard})) if $pc{treasureEnhancement_increaseWeaknessGuard} > 0;
+### 先制値 --------------------------------------------------
+$SHEET->param(initiative => $pc{initiative} + data::getTreasureEnhancementValue('先制値上昇', $pc{treasureEnhancement_increaseInitiative})) if $pc{treasureEnhancement_increaseInitiative} > 0;
 ### ステータス --------------------------------------------------
 $SHEET->param(exclusiveMount => $pc{exclusiveMount});
 $SHEET->param(ridingHpReinforcement => $pc{ridingHpReinforcement});
@@ -623,6 +627,8 @@ $SHEET->param(ridingUnlockSpecialSkillsFully => 0) unless $pc{skills} =~ /特殊
 ### 戦利品 --------------------------------------------------
 my @loots;
 if ($pc{individualization}) {
+  push(@loots, {NUM => 'トレジャーポイント', ITEM => "$pc{treasurePointTotal}点"}) if $pc{treasurePointTotal} > 0;
+
   push(@loots, {NUM => '自動', ITEM => "〈剣のかけら〉×$pc{swordFragmentNum}"}) if $pc{swordFragmentNum} > 0;
 
   if ($pc{golem} && $#lootsByGolemReinforcement >= 0) {
