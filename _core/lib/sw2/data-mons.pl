@@ -49,9 +49,9 @@ our @treasureEnhancements = (
         },
     },
     {
-        'name'      => '瞬間打撃点',
-        'fieldName' => 'momentaryDamage',
-        'steps'     => {
+        'name'        => '瞬間打撃点',
+        'fieldName'   => 'momentaryDamage',
+        'steps'       => {
             1  => '+2',
             2  => '+4',
             3  => '+6',
@@ -60,11 +60,12 @@ our @treasureEnhancements = (
             8  => '+12',
             10 => '+14',
         },
+        'description' => "打撃点決定の２ｄを振り、出目を確認した後、{abs}点だけ、打撃点を上昇させられます。\n１日の間に{count}回まで適用できますが、10秒（１ラウンド）の間には1回までしか適用できません。",
     },
     {
-        'name'      => '瞬間防護点',
-        'fieldName' => 'momentaryDefense',
-        'steps'     => {
+        'name'        => '瞬間防護点',
+        'fieldName'   => 'momentaryDefense',
+        'steps'       => {
             1  => '+2',
             2  => '+4',
             3  => '+6',
@@ -73,11 +74,12 @@ our @treasureEnhancements = (
             8  => '+12',
             10 => '+14',
         },
+        'description' => "１日に１回だけ、物理ダメージを受けて防護点を適用するとき、{abs}点だけ、防護点を上昇させられます。合算ダメージが確定した後に、この効果を使うかどうかを選択します。",
     },
     {
-        'name'      => '瞬間達成値',
-        'fieldName' => 'momentaryAchievement',
-        'steps'     => {
+        'name'        => '瞬間達成値',
+        'fieldName'   => 'momentaryAchievement',
+        'steps'       => {
             1  => '+1',
             2  => '+2',
             4  => '+3',
@@ -85,41 +87,63 @@ our @treasureEnhancements = (
             8  => '+5',
             10 => '+6',
         },
+        'description' => "１日に１回だけ、行為判定の達成値を求めてから、その達成値を{abs}だけ上昇させられます。対抗判定などの場合、その結果を覆す目的で使用できます。",
     },
     {
-        'name'      => '追加攻撃',
-        'fieldName' => 'additionalAttack',
-        'steps'     => {
+        'name'        => '追加攻撃',
+        'fieldName'   => 'additionalAttack',
+        'steps'       => {
             1  => '⑥／1',
             2  => '⑤⑥／1',
             4  => '⑤⑥／2',
             7  => '④⑤⑥／2',
             10 => '④⑤⑥／3',
         },
+        'description' => "手番終了時に１ｄを振り、{left}の出目を得ると、近接攻撃を追加で１回行います。この追加は、攻撃回数や機会を増やす能力を持っていたとしても考慮されず、近接攻撃１回のみです。この効果は手番の終了ごとに１回のみチェックされます。また、{right}回だけ追加の攻撃が発生したら、翌日までこの効果はいっさい現れなくなります。",
     },
     {
-        'name'      => '呪いの波動',
-        'fieldName' => 'curseWave',
-        'steps'     => {
+        'name'        => '呪いの波動',
+        'fieldName'   => 'curseWave',
+        'steps'       => {
             1  => '１点',
             3  => '２点',
             5  => '３点',
             7  => '４点',
             10 => '５点',
         },
+        'description' => "この効果は１日に１回だけ使用可能で、使用の宣言後、連続した１分（６ラウンド）の間だけ効果が発生します。\n効果が発生中は、自身の手番終了時に自動的に１回、「射程：接触」「対象：１体」に「抵抗：必中」で、{value}の、呪い属性の確定ダメージを与えます。",
     },
     {
-        'name'      => '世界の汚染',
-        'fieldName' => 'worldPollution',
-        'steps'     => {
+        'name'        => '世界の汚染',
+        'fieldName'   => 'worldPollution',
+        'steps'       => {
             2  => '威力10',
             4  => '威力20',
             6  => '威力30',
             8  => '威力40',
             10 => '威力50',
         },
+        'description' => "１日に１回だけ、戦闘行為によって初めて自身のＨＰにダメージを受けたとき、自動的に「射程：自身」で「対象：全エリア（半径20ｍ）／すべて」に、「抵抗：必中」で、「{value}／Ｃ値⑩」（のみ）の、毒属性の魔法ダメージを与えます。このとき、任意のキャラクターを効果から除外することができます。",
     },
 );
+
+sub getTreasureEnhancementByName {
+    my $name = shift;
+
+    foreach (@treasureEnhancements) {
+        my %enhancement = %{$_};
+
+        return %enhancement if $enhancement{name} eq $name;
+    }
+}
+
+sub getTreasureEnhancementValue {
+    my $name = shift;
+    my $point = shift;
+    my %enhancement = getTreasureEnhancementByName($name);
+    my %steps = %{$enhancement{steps}};
+    return $steps{$point};
+}
 
 my @golemReinforcementItems = (
     {name => "猫目石の鋲", fieldName => "catsEye", prices => {"小" => 200, "中" => 800, "大" => 4000}, ability => "▶２回攻撃"},
