@@ -221,6 +221,8 @@ foreach (@list) {
     $image, $tags, $hide, $parts, $habitat, $price, $demonAction, $requiredConjurerLv
   ) = (split /<>/, $_)[0..21];
   
+  $lv =~ s/^(\d+)-(\d+)$/$1～$2/;
+  
   $price =~ s#^／#―／#;
   $price =~ s#／$#／―#;
   $price = commify $price;
