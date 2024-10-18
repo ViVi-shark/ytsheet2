@@ -535,7 +535,11 @@ sub palettePreset {
       $text .= "\n" if $::pc{'status'.$num.'Accuracy'} ne '' || $::pc{'status'.$num.'Damage'} ne '';
       $lastPart = $weapon;
     }
-    my $skills = $::pc{skills};
+    my %pc = %::pc;
+    $pc{skills} =~ s#\n#<br>#g;
+    %pc = %{::resolveAdditionalSkills(\%pc)};
+    $pc{skills} =~ s#&lt;br&gt;#\n#gi;
+    my $skills = $pc{skills};
     $skills =~ tr/０-９（）/0-9\(\)/;
     $skills =~ s/\|/｜/g;
     $skills =~ s/<br>/\n/gi;
