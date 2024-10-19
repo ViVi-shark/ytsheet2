@@ -482,16 +482,16 @@ sub palettePreset {
         $::pc{'status' . $num . 'Damage'} = addOffsetToDamage($::pc{'status' . $num . 'Damage'}, $::pc{'partEquipment' . $_ . '-weapon-damage'}) if $::pc{'status' . $num . 'Damage'} ne '';
         $::pc{'status' . $num . 'Evasion'} += $::pc{'partEquipment' . $_ . '-armor-evasion'} if $::pc{'status' . $num . 'Evasion'} ne '';
       }
-      else {
-        # 剣のかけらによる抵抗力へのボーナス修正
-        if ($::pc{swordFragmentNum} > 0) {
-          my $resistanceOffset = min(ceil(($::pc{swordFragmentNum}) / 5.0), 4);
+    }
+    else {
+      # 剣のかけらによる抵抗力へのボーナス修正
+      if ($::pc{swordFragmentNum} > 0) {
+        my $resistanceOffset = min(ceil(($::pc{swordFragmentNum}) / 5.0), 4);
 
-          $::pc{vitResist} += $resistanceOffset;
-          $::pc{vitResistFix} += $resistanceOffset;
-          $::pc{mndResist} += $resistanceOffset;
-          $::pc{mndResistFix} += $resistanceOffset;
-        }
+        $::pc{vitResist} += $resistanceOffset;
+        $::pc{vitResistFix} += $resistanceOffset;
+        $::pc{mndResist} += $resistanceOffset;
+        $::pc{mndResistFix} += $resistanceOffset;
       }
     }
 
