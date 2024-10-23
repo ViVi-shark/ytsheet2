@@ -205,6 +205,19 @@ sub palettePreset {
     $text .= "\n";
     $text .= appendPaletteInsert('common');
 
+    # 練技
+    if ($::pc{lvEnh} > 0) {
+      $text .= "### ■練技\n";
+
+      foreach (1 .. $::pc{lvEnh}) {
+        my $craftName = $::pc{"craftEnhance${_}"};
+        next unless $craftName;
+        $text .= "\@MP-3 【${craftName}】\n";
+      }
+
+      $text .= "###\n";
+    }
+
     # 宣言特技
     require $set::data_feats;
     my @declarationFeats = ();
