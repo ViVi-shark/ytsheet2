@@ -520,7 +520,7 @@ sub palettePreset {
     $text .= appendPaletteInsert('attack');
     # 抵抗回避
     $text .= "###\n" if $bot{TKY};
-    $text .= "### ■抵抗回避\n";
+    $text .= "### ■抵抗・回避・ダメージ\n";
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
     $text .= "//回避修正=0\n";
@@ -537,6 +537,11 @@ sub palettePreset {
       $text .= $::pc{paletteUseVar} ? "{回避${i}}" : $::pc{"defenseTotal${i}Eva"};
       $text .= "+{回避修正}+{行為判定修正}+{行動判定修正} 回避力".($::pc{"defenseTotal${i}Note"}?"／$::pc{'defenseTotal'.$i.'Note'}":'')."\n";
     }
+    $text .= "//ダメージ軽減=0\n";
+    $text .= "//物理ダメージ軽減=0\n";
+    $text .= "//魔法ダメージ軽減=0\n";
+    $text .= "\@HP-+({防護1}+{ダメージ軽減}+{物理ダメージ軽減}) ;物理ダメージ\n";
+    $text .= "\@HP-+({ダメージ軽減}+{魔法ダメージ軽減}) ;魔法ダメージ\n";
     $text .= appendPaletteInsert('defense');
     
     #
