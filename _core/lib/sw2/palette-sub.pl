@@ -209,11 +209,29 @@ sub palettePreset {
     if ($::pc{lvEnh} > 0) {
       $text .= "### ■練技\n";
 
+      my @namesOf30secs = ();
+      my @namesOf10secs = ();
+
       foreach (1 .. $::pc{lvEnh}) {
         my $craftName = $::pc{"craftEnhance${_}"};
         next unless $craftName;
-        $text .= "\@MP-3 【${craftName}】\n";
+
+        my $craft = data::getEnhancerCraft($craftName);
+        $craftName = "【${craftName}】";
+
+        $text .= "\@MP-3 ${craftName}\n";
+
+        if (ref $craft) {
+          my %craft = %{$craft};
+          my $duration = $craft{duration};
+
+          push(@namesOf30secs, $craftName) if $duration eq '30秒';
+          push(@namesOf10secs, $craftName) if $duration eq '10秒';
+        }
       }
+
+      $text .= '@MP-3*' . ($#namesOf30secs + 1) . ' ' . join('', @namesOf30secs) . "\n" if $#namesOf30secs > 0;
+      $text .= '@MP-3*' . ($#namesOf10secs + 1) . ' ' . join('', @namesOf10secs) . "\n" if $#namesOf10secs > 0;
 
       $text .= "###\n";
     }
