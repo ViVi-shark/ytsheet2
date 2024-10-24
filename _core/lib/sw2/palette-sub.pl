@@ -356,6 +356,7 @@ sub palettePreset {
       if($::pc{'weapon'.$_.'Name'} eq $::pc{'weapon'.($_-1).'Name'}){
         $::pc{'weapon'.$_.'Note'} ||= $::pc{'weapon'.($_-1).'Note'}
       }
+      $::pc{'weapon'.$_.'Name'} = formatItemName($::pc{'weapon'.$_.'Name'});
       $::pc{'weapon'.$_.'Crit'} = normalizeCrit $::pc{'weapon'.$_.'Crit'};
       my $partName = $::pc{'part'.$::pc{'weapon'.$_.'Part'}.'Name'};
       
