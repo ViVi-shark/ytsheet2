@@ -207,7 +207,7 @@ sub palettePreset {
 
     # 宣言特技
     require $set::data_feats;
-    $text .= "\n### ■宣言特技\n";
+    my @declarationFeats = ();
     foreach (('1+', 1, 3, 5, 7, 9, 11, 13, 15, 16, 17)) {
       my $level = $_;
       last if $level ne '1+' && $level > $::pc{level};
@@ -215,9 +215,15 @@ sub palettePreset {
       next unless $featName;
       my $category = data::getFeatCategoryByName($featName);
       next if $category !~ /宣/;
-      $text .= "[宣]《${featName}》\n";
+      push(@declarationFeats, $featName);
     }
-    $text .= "###\n";
+    if (@declarationFeats) {
+      $text .= "\n### ■宣言特技\n";
+      foreach (@declarationFeats) {
+        $text .= "[宣]《${_}》\n";
+      }
+      $text .= "###\n";
+    }
 
     # 魔法
     foreach my $name (@class_names){
