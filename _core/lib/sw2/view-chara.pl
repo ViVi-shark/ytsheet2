@@ -332,7 +332,10 @@ foreach (1..$pc{mysticArtsNum}){
   my $type = $pc{'mysticArts'.$_.'PtType'} || 'human';
   $mysticarts_honor{$type} += $pc{'mysticArts'.$_.'Pt'};
   next if !$pc{'mysticArts'.$_};
-  push(@mystic_arts, { "NAME" => '《'.$pc{'mysticArts'.$_}.'》' });
+  my $name = $pc{'mysticArts'.$_};
+  my $marks = '';
+  $marks .= $1 while $name =~ s#(<i [^>]+?><span class="raw">[^<]+?</span></i>)##;
+  push(@mystic_arts, { "NAME" => $marks.'《'.$name.'》' });
 }
 foreach (1..$pc{mysticMagicNum}){
   my $type = $pc{'mysticMagic'.$_.'PtType'} || 'human';
