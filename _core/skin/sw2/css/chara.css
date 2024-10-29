@@ -670,8 +670,13 @@ dl#level {
 #craft-alchemy li[id^="craft-alchemy"] {
   [data-note]:not([data-note=""]) {
     width: max-content;
-    display: inline-grid;
-    grid-template-columns: repeat(3, max-content);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .s-icon {
+      margin-left: 0.25em;
+    }
   }
 
   [data-note]:not([data-note=""])::before,
