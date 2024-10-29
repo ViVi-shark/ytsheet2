@@ -1101,6 +1101,11 @@ sub getEnhancerCraft {
   return getCraft('エンハンサー', $targetName);
 }
 
+sub getRiderCraft {
+  my $targetName = shift;
+  return getCraft('ライダー', $targetName);
+}
+
 sub getAlchemistCraft {
   my $targetName = shift;
   return getCraft('アルケミスト', $targetName);

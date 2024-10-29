@@ -293,6 +293,26 @@ sub palettePreset {
       $text .= "###\n";
     }
 
+    # 騎芸
+    if ($::pc{lvRid} > 0) {
+      my $ridingText = '';
+
+      foreach (1 .. $::pc{lvRid}) {
+        my $craftName = $::pc{"craftRiding${_}"};
+        next unless $craftName;
+
+        my $craft = data::getRiderCraft($craftName);
+        next unless ref $craft;
+
+        my %craft = %{$craft};
+        next if $craft{action} !~ /\[[補主]]/;
+
+        $ridingText .= "$craft{action}【${craftName}】\n";
+      }
+
+      $text .= "### ■騎芸\n${ridingText}###\n" if $ridingText;
+    }
+
     # 賦術
     if ($::pc{lvAlc} > 0) {
       $text .= "### ■賦術\n";
