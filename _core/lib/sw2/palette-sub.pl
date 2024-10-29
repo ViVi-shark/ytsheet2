@@ -344,6 +344,25 @@ sub palettePreset {
       $text .= "###\n";
     }
 
+    # 鼓咆・陣率
+    if ($::pc{lvWar} > 0) {
+      $text .= "### ■鼓咆・陣率\n";
+
+      foreach (1 .. $::pc{lvWar}) {
+        my $craftName = $::pc{"craftCommand${_}"};
+        next unless $craftName;
+
+        my $craft = data::getWarLeaderCraft($craftName);
+        next unless ref $craft;
+
+        my %craft = %{$craft};
+
+        $text .= "$craft{action}【${craftName}】\n";
+      }
+
+      $text .= "###\n";
+    }
+
     # 宣言特技
     require $set::data_feats;
     my @declarationFeats = ();

@@ -1111,4 +1111,9 @@ sub getAlchemistCraft {
   return getCraft('アルケミスト', $targetName);
 }
 
+sub getWarLeaderCraft {
+  my $targetName = shift;
+  return getCraft('ウォーリーダー', $targetName);
+}
+
 1;
