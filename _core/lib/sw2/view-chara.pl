@@ -415,7 +415,7 @@ foreach my $class (@data::class_names){
     
     my %item = ("ITEM" => $craft);
     $item{NOTE} = @craft_data[3] if @craft_data[3];
-    $item{MARK} = textToIcon($&) if $item{NOTE} =~ s/\[[常補宣準主]]//;
+    $item{MARK} .= textToIcon($&) while $item{NOTE} =~ s/\[[常補宣準主]]//;
     push(@crafts, \%item );
   }
   
