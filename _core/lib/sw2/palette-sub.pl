@@ -293,6 +293,36 @@ sub palettePreset {
       $text .= "###\n";
     }
 
+    # 賦術
+    if ($::pc{lvAlc} > 0) {
+      $text .= "### ■賦術\n";
+
+      foreach (1 .. $::pc{lvAlc}) {
+        my $craftName = $::pc{"craftAlchemy${_}"};
+        next unless $craftName;
+
+        my $craft = data::getAlchemistCraft($craftName);
+        next unless ref $craft;
+
+        my %craft = %{$craft};
+        my $action = $craft{action};
+
+        if ($action =~ s/\[補]//g) {
+          $text .= '[補]';
+          $text .= '[準]' if $action =~ s/\[準]//g;
+          $text .= "【${craftName}】\n";
+        }
+        elsif ($action =~ s/\[準]//g) {
+          $text .= "[準]【${craftName}】\n";
+        }
+        elsif ($action =~ s/\[主]//g) {
+          $text .= "[主]【${craftName}】\n";
+        }
+      }
+
+      $text .= "###\n";
+    }
+
     # 宣言特技
     require $set::data_feats;
     my @declarationFeats = ();

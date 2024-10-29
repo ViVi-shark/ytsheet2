@@ -1054,10 +1054,11 @@ our %class = (
 );
 
 
-sub getEnhancerCraft {
+sub getCraft {
+  my $className = shift;
   my $targetName = shift;
 
-  my $classesAddress = $class{'エンハンサー'};
+  my $classesAddress = $class{$className};
   my %classes = %{$classesAddress};
   my %craft = %{$classes{craft};};
   my @data = @{$craft{data}};
@@ -1074,17 +1075,35 @@ sub getEnhancerCraft {
         version       => $version,
     );
 
-    my %others = %{$others};
-    foreach (keys %others) {
-      my $key = $_;
-      my $value = $others{$key};
-      $craft{$key} = $value;
+    if (ref $others) {
+      my %others = %{$others};
+
+      foreach (keys %others) {
+        my $key = $_;
+        my $value = $others{$key};
+        $craft{$key} = $value;
+      }
+    }
+    else {
+      while ($others =~ s/\[[常補宣準主条選]]//) {
+        $craft{action} .= $&;
+      }
     }
 
     return \%craft;
   }
 
   return undef;
+}
+
+sub getEnhancerCraft {
+  my $targetName = shift;
+  return getCraft('エンハンサー', $targetName);
+}
+
+sub getAlchemistCraft {
+  my $targetName = shift;
+  return getCraft('アルケミスト', $targetName);
 }
 
 1;
