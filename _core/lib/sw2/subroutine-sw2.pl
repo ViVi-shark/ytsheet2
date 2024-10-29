@@ -242,7 +242,7 @@ sub textToIcon {
     $text =~ s{\[条\]|[▽]}{<i class="s-icon condition"><span class="raw">&#91;▽&#93;</span></i>}gi;
     $text =~ s{\[選\]|[▼]}{<i class="s-icon selection"><span class="raw">&#91;▼&#93;</span></i>}gi;
   } else {
-    $text =~ s{\[常\]|[○◯〇]}{<i class="s-icon passive"><span class="raw">&#91;◯&#93;</span></i>}gi;
+    $text =~ s{\[[常条選]\]|[○◯〇▽▼]}{<i class="s-icon passive"><span class="raw">&#91;◯&#93;</span></i>}gi;
     $text =~ s{\[準\]|[△]}{<i class="s-icon setup"><span class="raw">&#91;△&#93;</span></i>}gi;
     $text =~ s{\[主\]|[＞▶〆]}{<i class="s-icon major"><span class="raw">&#91;▶&#93;</span></i>}gi;
     $text =~ s{\[補\]|[☆≫»]|&gt;&gt;}{<i class="s-icon minor"><span class="raw">&#91;>>&#93;</span></i>}gi;
