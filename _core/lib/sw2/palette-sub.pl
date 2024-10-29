@@ -307,6 +307,7 @@ sub palettePreset {
         my %craft = %{$craft};
         next if $craft{action} !~ /\[[補主]]/;
 
+        $ridingText .= "2d+{ライダー}+{精神B} " if $craftName eq '威嚇';
         $ridingText .= "$craft{action}【${craftName}】\n";
       }
 
