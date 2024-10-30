@@ -413,9 +413,12 @@ foreach my $class (@data::class_names){
     
     $acquired{$craft} = 1;
     
+    my %options = ref($craft_data[3]) eq 'HASH' ? %{$craft_data[3]} : ();
+    
     my %item = ("ITEM" => $craft);
-    $item{NOTE} = @craft_data[3] if @craft_data[3];
+    $item{NOTE} = @craft_data[3] if @craft_data[3] && !(ref @craft_data[3]);
     $item{MARK} .= textToIcon($&) while $item{NOTE} =~ s/\[[常補宣準主]]//;
+    $item{MARK} .= textToIcon($&) while $options{action} =~ s/\[[常補宣準主]]//;
     push(@crafts, \%item );
   }
   

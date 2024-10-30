@@ -357,6 +357,7 @@ sub palettePreset {
 
         my %craft = %{$craft};
 
+        $text .= "\@陣気@{[ addNum $craft{陣気} ]} " if $craft{陣気};
         $text .= "$craft{action}【${craftName}】\n";
       }
 
