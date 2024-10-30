@@ -585,33 +585,37 @@ sub palettePreset {
           }
         }
         else {
-          $text .= "k$::pc{'weapon'.$_.'Rate'}\[";
-          $text .= "(" if $bot{BCD};
-          $text .= "$::pc{'weapon'.$_.'Crit'}+{C修正}$activeCrit";
-          $text .= ")" if $bot{BCD};
-          $text .= "\]+";
-          $text .= $::pc{paletteUseVar} ? "{追加D$_}" : $::pc{"weapon${_}DmgTotal"};
-          $text .= makeStatesExpression(\%::pc, ['筋力ボーナス', '与物理ダメージ']);
-          $text .= $activeDmg;
-          
-          $text .= "+{追加D修正}";
+          my $line = '';
+          $line .= "k$::pc{'weapon'.$_.'Rate'}\[";
+          $line .= "(" if $bot{BCD};
+          $line .= "$::pc{'weapon'.$_.'Crit'}+{C修正}$activeCrit";
+          $line .= ")" if $bot{BCD};
+          $line .= "\]+";
+          $line .= $::pc{paletteUseVar} ? "{追加D$_}" : $::pc{"weapon${_}DmgTotal"};
+          $line .= makeStatesExpression(\%::pc, ['筋力ボーナス', '与物理ダメージ']);
+          $line .= $activeDmg;
+
+          $line .= "+{追加D修正}";
           if($::pc{'paletteAttack'.$paNum.'Roll'}){
             $::pc{'paletteAttack'.$paNum.'Roll'} =~ s/^+//;
-            $text .= "$+{クリレイ}\#$::pc{'paletteAttack'.$paNum.'Roll'}";
+            $line .= "$+{クリレイ}\#$::pc{'paletteAttack'.$paNum.'Roll'}";
           }
           else {
-            $text .= "{出目修正}";
+            $line .= "{出目修正}";
           }
-          $text .= "";
+          $line .= "";
 
           if($::pc{'weapon'.$_.'Name'} =~ /首切/ || $::pc{'weapon'.$_.'Note'} =~ /首切/){
-            $text .= $bot{YTC} ? '首切' : $bot{BCD} ? 'r5' : '';
+            $line .= $bot{YTC} ? '首切' : $bot{BCD} ? 'r5' : '';
           }
-          $text .= " ダメージ";
-          $text .= extractWeaponMarks($::pc{'weapon'.$_.'Name'}.$::pc{'weapon'.$_.'Note'}) unless $bot{BCD};
-          $text .= "／$::pc{'weapon'.$_.'Name'}$::pc{'weapon'.$_.'Usage'}" if $bot{BCD};
-          $text .= "（${partName}）" if $partName && $bot{BCD};
-          $text .= "\n";
+          $line .= " ダメージ";
+          $line .= extractWeaponMarks($::pc{'weapon'.$_.'Name'}.$::pc{'weapon'.$_.'Note'}) unless $bot{BCD};
+          $line .= "／$::pc{'weapon'.$_.'Name'}$::pc{'weapon'.$_.'Usage'}" if $bot{BCD};
+          $line .= "（${partName}）" if $partName && $bot{BCD};
+
+          foreach (makeDamageCommandVariations($line, \%::pc, '物理')) {
+            $text .= "${_}\n";
+          }
         }
         $dmgTexts{$paNum} = $text;
       }
@@ -1191,6 +1195,38 @@ sub extractWeaponMarks {
     $marks .= $1;
   }
   return $marks;
+}
+sub makeDamageCommandVariations {
+  my $commandBase = shift;
+  my %pc = %{shift;};
+  my $mode = shift; # 物理 or 魔法
+
+  my $suffixBase = ($commandBase =~ s/\s+([\S]+)$//) ? $1 : '';
+  my $commandTail = ($commandBase =~ s/\{出目修正}$//) ? $& : '';
+
+  my @variations = ();
+
+  require($::core_dir . '/lib/sw2/data-mons.pl');
+  foreach my $taxa (undef, @data::taxa) {
+    my @taxa = ref $taxa ? @{$taxa} : ();
+    (my $taxaJa, my $__, my $__, my $taxaEn) = @taxa;
+
+    my $command = $commandBase;
+
+    $command .= addNum $pc{"paletteGivingDamageOffset${taxaEn}General"} if $pc{"paletteGivingDamageOffset${taxaEn}General"};
+    $command .= addNum $pc{"paletteGivingDamageOffset${taxaEn}Physical"} if $mode =~ /物理/ && $pc{"paletteGivingDamageOffset${taxaEn}Physical"};
+    $command .= addNum $pc{"paletteGivingDamageOffset${taxaEn}Magical"} if $mode =~ /魔法/ && $pc{"paletteGivingDamageOffset${taxaEn}Magical"};
+
+    my $suffix = $suffixBase;
+    if (defined($taxaJa)) {
+      $suffix .= "／" if $suffix ne '';
+      $suffix .= "対${taxaJa}";
+    }
+
+    push(@variations, $command . $commandTail . ($suffix ne '' ? " ${suffix}" : '')) if !defined($taxa) || $command ne $commandBase;
+  }
+
+  return @variations;
 }
 ### プリセット（シンプル） ###########################################################################
 sub palettePresetSimple {

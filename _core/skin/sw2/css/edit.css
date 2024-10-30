@@ -1382,17 +1382,13 @@ article > form > hr {
     }
   }
 }
-#palette-damage {
+#palette-giving-damage,
+#palette-taken-damage {
   > section {
     > dl {
       display: grid;
-      grid-template-columns: repeat(5, 7em 4em) 1fr;
-      padding: 0.75em 0;
-
-      > dt,
-      > dd {
-        margin-bottom: 0.75em;
-      }
+      grid-gap: 0.75em;
+      padding: 0.75em;
 
       > dt {
         font-weight: normal;
@@ -1428,6 +1424,49 @@ article > form > hr {
         display: inline-flex;
         list-style-type: none;
       }
+    }
+  }
+}
+#palette-giving-damage {
+  > section {
+    > dl {
+      grid-template-columns: repeat(4, 6em 6em) 1fr;
+    }
+  }
+
+  .taxa {
+    > dl {
+      :is([data-taxa="魔法生物"], [data-taxa="魔動機"], [data-taxa="幻獣"], [data-taxa="妖精"]) {
+        grid-row: 2 / 3;
+      }
+
+      :is([data-taxa="魔神"], [data-taxa="人族"], [data-taxa="神族"]) {
+        grid-row: 3 / 4;
+      }
+
+      > dt {
+        background-color: rgba(128, 128, 128, 0.35);
+        padding-right: 0.5em;
+      }
+
+      > dd {
+        > dl {
+          > dt {
+            font-weight: normal;
+          }
+
+          > dd:not(:last-child) {
+            margin-bottom: 0.5em;
+          }
+        }
+      }
+    }
+  }
+}
+#palette-taken-damage {
+  > section {
+    > dl {
+      grid-template-columns: repeat(5, 6em 4em) 1fr;
     }
   }
 
