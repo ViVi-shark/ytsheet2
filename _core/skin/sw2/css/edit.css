@@ -1382,6 +1382,40 @@ article > form > hr {
     }
   }
 }
+#palette-damage {
+  .attributes {
+    > dl {
+      display: grid;
+      grid-template-columns: repeat(5, 7em 4em) 1fr;
+      padding: 0.75em 0;
+
+      > dt,
+      > dd {
+        margin-bottom: 0.75em;
+      }
+
+      > dt {
+        font-weight: normal;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      :is([data-attribute="衝撃"], [data-attribute="断空"], [data-attribute="純エネルギー"]) {
+        grid-row: 2 / 3;
+      }
+
+      :is([data-attribute="毒"], [data-attribute="病気"], [data-attribute="呪い"], [data-attribute="精神効果"]) {
+        grid-row: 3 / 4;
+        margin-bottom: 0;
+      }
+
+      input {
+        margin: 0;
+      }
+    }
+  }
+}
 @media screen and (max-width:735px){
   #chatpalette ~ * > details {
     max-width: 100%;

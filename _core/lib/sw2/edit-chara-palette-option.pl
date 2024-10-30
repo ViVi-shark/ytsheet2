@@ -182,6 +182,23 @@ HTML
           <div class="add-del-button"><a onclick="addPaletteMagic()">▼</a><a onclick="delPaletteMagic()">▲</a></div>
           @{[ ::input "paletteMagicNum","hidden" ]}
         </details>
+        <details id="palette-damage">
+          <summary class="header2">被ダメージの追加オプション</summary>
+          <section class="attributes">
+            <h4>属性ごとの増減</h4>
+            <dl>
+HTML
+    require($::core_dir . '/lib/sw2/data-attribute.pl');
+    foreach my $attributeName (@data::attributeNames) {
+        $html .= <<"HTML";
+              <dt data-attribute="${attributeName}">${attributeName}
+              <dd data-attribute="${attributeName}">@{[ ::input "paletteDamageOffset$data::attributeFieldNames{$attributeName}",'number','setChatPalette' ]}
+HTML
+    }
+    $html .= <<"HTML";
+            </dl>
+          </section>
+        </details>
       </div>
 HTML
 }

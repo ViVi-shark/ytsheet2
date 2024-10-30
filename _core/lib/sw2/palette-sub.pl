@@ -672,8 +672,31 @@ sub palettePreset {
     $text .= "//ダメージ軽減=0\n";
     $text .= "//物理ダメージ軽減=0\n";
     $text .= "//魔法ダメージ軽減=0\n";
-    $text .= "\@HP-+({防護1}" . (makeStatesExpression(\%::pc, '防護点')) . "+{ダメージ軽減}+{物理ダメージ軽減}) ;物理ダメージ\n";
-    $text .= "\@HP-+({ダメージ軽減}+{魔法ダメージ軽減}) ;魔法ダメージ\n";
+    my $physicalDamageText = '';
+    my $magicalDamageText = '';
+    require($::core_dir . '/lib/sw2/data-attribute.pl');
+    foreach my $attributeName (undef, @data::attributeNames) {
+      my $attributeFieldName = $attributeName ? $data::attributeFieldNames{$attributeName} : undef;
+      my $attributeOffset = $attributeFieldName ? $::pc{"paletteDamageOffset${attributeFieldName}"} : 0;
+      next if $attributeName && $attributeOffset == 0;
+      my $labelSuffix = $attributeName ? "／${attributeName}属性" : '';
+      my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, '防護点') ]}+{ダメージ軽減}+{物理ダメージ軽減}";
+      my $magicalDefense = '{ダメージ軽減}+{魔法ダメージ軽減}';
+      if ($attributeOffset < 0) {
+        $physicalDefense .= addNum(abs($attributeOffset));
+        $magicalDefense .= addNum(abs($attributeOffset));
+      }
+      $physicalDamageText .= "\@HP-+(${physicalDefense})";
+      $magicalDamageText .= "\@HP-+(${magicalDefense})";
+      if ($attributeOffset > 0) {
+        $physicalDamageText .= addNum($attributeOffset);
+        $magicalDamageText .= addNum($attributeOffset);
+      }
+      $physicalDamageText .= " ;物理ダメージ${labelSuffix}\n";
+      $magicalDamageText .= " ;魔法ダメージ${labelSuffix}\n";
+    }
+    $text .= $physicalDamageText;
+    $text .= $magicalDamageText;
     $text .= appendPaletteInsert('defense');
     
     #
