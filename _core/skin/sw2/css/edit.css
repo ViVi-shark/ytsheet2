@@ -1418,6 +1418,17 @@ article > form > hr {
         margin-bottom: 0;
       }
     }
+
+    ul.var-reservation {
+      display: block;
+      list-style-type: none;
+      padding: 0 0.5em;
+
+      > li {
+        display: inline-flex;
+        list-style-type: none;
+      }
+    }
   }
 
   .taxa {
