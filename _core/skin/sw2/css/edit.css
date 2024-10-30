@@ -1383,7 +1383,7 @@ article > form > hr {
   }
 }
 #palette-damage {
-  .attributes {
+  > section {
     > dl {
       display: grid;
       grid-template-columns: repeat(5, 7em 4em) 1fr;
@@ -1401,6 +1401,14 @@ article > form > hr {
         align-items: center;
       }
 
+      input {
+        margin: 0;
+      }
+    }
+  }
+
+  .attributes {
+    > dl {
       :is([data-attribute="衝撃"], [data-attribute="断空"], [data-attribute="純エネルギー"]) {
         grid-row: 2 / 3;
       }
@@ -1409,9 +1417,18 @@ article > form > hr {
         grid-row: 3 / 4;
         margin-bottom: 0;
       }
+    }
+  }
 
-      input {
-        margin: 0;
+  .taxa {
+    > dl {
+      :is([data-taxa="魔法生物"], [data-taxa="魔動機"], [data-taxa="幻獣"], [data-taxa="妖精"], [data-taxa="魔神"]) {
+        grid-row: 2 / 3;
+      }
+
+      :is([data-taxa="人族"], [data-taxa="神族"]) {
+        grid-row: 3 / 4;
+        margin-bottom: 0;
       }
     }
   }

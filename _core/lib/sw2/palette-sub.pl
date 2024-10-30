@@ -675,25 +675,52 @@ sub palettePreset {
     my $physicalDamageText = '';
     my $magicalDamageText = '';
     require($::core_dir . '/lib/sw2/data-attribute.pl');
+    require($::core_dir . '/lib/sw2/data-mons.pl');
     foreach my $attributeName (undef, @data::attributeNames) {
       my $attributeFieldName = $attributeName ? $data::attributeFieldNames{$attributeName} : undef;
       my $attributeOffset = $attributeFieldName ? $::pc{"paletteDamageOffset${attributeFieldName}"} : 0;
       next if $attributeName && $attributeOffset == 0;
-      my $labelSuffix = $attributeName ? "／${attributeName}属性" : '';
-      my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, '防護点') ]}+{ダメージ軽減}+{物理ダメージ軽減}";
-      my $magicalDefense = '{ダメージ軽減}+{魔法ダメージ軽減}';
-      if ($attributeOffset < 0) {
-        $physicalDefense .= addNum(abs($attributeOffset));
-        $magicalDefense .= addNum(abs($attributeOffset));
+
+      foreach my $taxa (undef, @data::taxa) {
+        my @taxa = ref $taxa ? @{$taxa} : ();
+        my $taxaName = $taxa[0];
+        my $taxaFieldName = $taxa[3];
+        my $taxaOffset = $taxaFieldName ? $::pc{"paletteDamageOffset${taxaFieldName}"} : 0;
+        next if $taxaName && $taxaOffset == 0;
+
+        my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, '防護点') ]}+{ダメージ軽減}+{物理ダメージ軽減}";
+        my $magicalDefense = '{ダメージ軽減}+{魔法ダメージ軽減}';
+
+        my $labelSuffix = '';
+        $labelSuffix .= "／${attributeName}属性" if $attributeName;
+        $labelSuffix .= "／分類：${taxaName}" if $taxaName;
+
+        if ($attributeOffset < 0) {
+          $physicalDefense .= addNum(abs($attributeOffset));
+          $magicalDefense .= addNum(abs($attributeOffset));
+        }
+
+        if ($taxaOffset < 0) {
+          $physicalDefense .= addNum(abs($taxaOffset));
+          $magicalDefense .= addNum(abs($taxaOffset));
+        }
+
+        $physicalDamageText .= "\@HP-+(${physicalDefense})";
+        $magicalDamageText .= "\@HP-+(${magicalDefense})";
+
+        if ($attributeOffset > 0) {
+          $physicalDamageText .= addNum($attributeOffset);
+          $magicalDamageText .= addNum($attributeOffset);
+        }
+
+        if ($taxaOffset > 0) {
+          $physicalDamageText .= addNum($taxaOffset);
+          $magicalDamageText .= addNum($taxaOffset);
+        }
+
+        $physicalDamageText .= " ;物理ダメージ${labelSuffix}\n";
+        $magicalDamageText .= " ;魔法ダメージ${labelSuffix}\n";
       }
-      $physicalDamageText .= "\@HP-+(${physicalDefense})";
-      $magicalDamageText .= "\@HP-+(${magicalDefense})";
-      if ($attributeOffset > 0) {
-        $physicalDamageText .= addNum($attributeOffset);
-        $magicalDamageText .= addNum($attributeOffset);
-      }
-      $physicalDamageText .= " ;物理ダメージ${labelSuffix}\n";
-      $magicalDamageText .= " ;魔法ダメージ${labelSuffix}\n";
     }
     $text .= $physicalDamageText;
     $text .= $magicalDamageText;
