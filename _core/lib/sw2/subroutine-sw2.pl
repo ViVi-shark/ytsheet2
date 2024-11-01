@@ -613,7 +613,7 @@ sub resolveAdditionalSkills {
           my @partSkills = @{$skillsByParts{$lastPartName} || []};
 
           my $row;
-          if ($line =~ /^(?:[○◯〇△＞▶〆☆≫»□☐☑🗨▽▼]|>>)/) {
+          if ($line =~ /^(?:[○◯〇△＞▶〆☆≫»□☐☑🗨▽▼]|(?:&gt;){2})/) {
             (my $firstHalf, my $lastHalf) = $key eq 'skills' ? ($line, undef) : split(/\s*\|&gt;\s*/, $line);
             $row = $lastHalf || $firstHalf;
 
