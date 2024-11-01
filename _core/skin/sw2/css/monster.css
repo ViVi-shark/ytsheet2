@@ -149,18 +149,6 @@ article {
     font-size: 70%;
     line-height: 1;
   }
-
-  .mount & {
-    &:not(:has(.monster-name)) {
-      &::before {
-        content: "【";
-      }
-
-      &::after {
-        content: "】";
-      }
-    }
-  }
 }
 :is(#area-name, .area-name) .taxa {
   position: absolute;
