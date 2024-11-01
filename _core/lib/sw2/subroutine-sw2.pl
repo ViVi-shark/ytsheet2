@@ -928,49 +928,47 @@ sub resolveAdditionalSkills {
 
       $skillsByParts{$partNames[0]} = \@commonPartSkills;
 
-      if ($#partNames > 0) {
-        foreach my $partSerial (1 .. $#partNames) {
-          my $partName = $partNames[$partSerial];
-          my @skillsOfPart = ref $skillsByParts{$partName} ? @{$skillsByParts{$partName}} : ();
+      foreach my $partSerial (1 .. ($#partNames > 0 ? $#partNames : 1)) {
+        my $partName = $partNames[$#partNames > 0 ? $partSerial : 0];
+        my @skillsOfPart = ref $skillsByParts{$partName} ? @{$skillsByParts{$partName}} : ();
 
-          foreach (@data::treasureEnhancements) {
-            my %enhancement = %{$_};
-            my $point = $pc{"treasureEnhancement_part${partSerial}_$enhancement{fieldName}"};
-            my $count = $pc{"treasureEnhancement_part${partSerial}_$enhancement{fieldName}_count"};
+        foreach (@data::treasureEnhancements) {
+          my %enhancement = %{$_};
+          my $point = $pc{"treasureEnhancement_part${partSerial}_$enhancement{fieldName}"};
+          my $count = $pc{"treasureEnhancement_part${partSerial}_$enhancement{fieldName}_count"};
 
-            if ($point > 0) {
-              my %steps = %{$enhancement{steps}};
-              my $value = $steps{$point};
-              my $name = $enhancement{name};
+          if ($point > 0) {
+            my %steps = %{$enhancement{steps}};
+            my $value = $steps{$point};
+            my $name = $enhancement{name};
 
-              my $headline = "◯${name}＝${value}";
-              $headline .= "／${count}回" if $count > 0;
+            my $headline = "◯${name}＝${value}";
+            $headline .= "／${count}回" if $count > 0;
 
-              my $description = $enhancement{description};
-              $description =~ s/\{value}/$value/gi;
-              $description =~ s/\{count}/$count/gi;
-              my $abs = $value;
-              $abs =~ s/^[-+](\d+)$/$1/;
-              $description =~ s/\{abs}/$abs/gi;
-              (my $left, my $right) = split('／', $value);
-              $description =~ s/\{left}/$left/gi;
-              $description =~ s/\{right}/$right/gi;
+            my $description = $enhancement{description};
+            $description =~ s/\{value}/$value/gi;
+            $description =~ s/\{count}/$count/gi;
+            my $abs = $value;
+            $abs =~ s/^[-+](\d+)$/$1/;
+            $description =~ s/\{abs}/$abs/gi;
+            (my $left, my $right) = split('／', $value);
+            $description =~ s/\{left}/$left/gi;
+            $description =~ s/\{right}/$right/gi;
 
-              push(
-                  @skillsOfPart,
-                  join(
-                      "\n",
-                      (
-                          $headline,
-                          $description,
-                      )
-                  )
-              );
-            }
+            push(
+                @skillsOfPart,
+                join(
+                    "\n",
+                    (
+                        $headline,
+                        $description,
+                    )
+                )
+            );
           }
-
-          $skillsByParts{$partName} = \@skillsOfPart;
         }
+
+        $skillsByParts{$partName} = \@skillsOfPart;
       }
     }
 
