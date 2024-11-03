@@ -31,6 +31,11 @@ function formCheck(){
     form.schoolName.focus();
     return false;
   }
+  else if(form.category.value === 'skill' && form.skillName.value === ''){
+    alert('名称を入力してください。');
+    form.skillName.focus();
+    return false;
+  }
   if(form.protect.value === 'password' && form.pass.value === ''){
     alert('パスワードが入力されていません。');
     form.pass.focus();
@@ -51,6 +56,9 @@ function setName(){
   }
   else if(category == 'school'){
     name = '【'+ruby(form.schoolName.value)+'】';
+  }
+  else if(category == 'skill'){
+    name = '【'+ruby(form.skillName.value)+'】';
   }
   document.querySelector('#header-menu > h2 > span').innerHTML = name || '(名称未入力)';
 
@@ -79,8 +87,14 @@ function checkCategory(){
     case 'school':
       sheetKind = '流派';
       break;
+    case 'skill':
+      sheetKind = '特殊能力';
   }
   document.querySelector('#header-menu .menu-items > .sheet-main .sheet-kind').textContent = sheetKind ?? '';
+
+  if (category === 'skill') {
+    checkRankMode();
+  }
 }
 
 // 魔法系統 ----------------------------------------
@@ -232,6 +246,12 @@ function delSchoolMagic(){
 }
 // 並べ替え
 setSortable('schoolMagic','#school-magic-list','.input-data');
+
+// 特殊能力 ----------------------------------------
+function checkRankMode() {
+  const hasRank = parseInt(form['skillRankMode'].value ?? '0') !== 0;
+  document.querySelector('#data-skill > .details').dataset.mode = hasRank ? 'ranks' : 'no-rank';
+}
 
 /**
  * @param {HTMLInputElement|null} rangeField
