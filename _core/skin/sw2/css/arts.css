@@ -717,7 +717,7 @@ a.failed::before {
 
     > dd.effect {
       grid-column: 2 / -1;
-      justify-content: flex-start;
+      display: block;
     }
 
     .no-rank & {

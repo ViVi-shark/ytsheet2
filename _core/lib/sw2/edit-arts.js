@@ -249,8 +249,22 @@ setSortable('schoolMagic','#school-magic-list','.input-data');
 
 // 特殊能力 ----------------------------------------
 function checkRankMode() {
-  const hasRank = parseInt(form['skillRankMode'].value ?? '0') !== 0;
-  document.querySelector('#data-skill > .details').dataset.mode = hasRank ? 'ranks' : 'no-rank';
+  const details = document.querySelector('#data-skill > .details');
+  let mode;
+  switch (form['skillRankMode'].value ?? '') {
+    case '0':
+      mode = 'no-rank';
+      break;
+    case '1':
+      mode = 'ranks';
+      break;
+  }
+
+  if (mode != null) {
+    details.dataset.mode = mode;
+  } else {
+    delete details.dataset.mode;
+  }
 }
 
 /**

@@ -460,7 +460,7 @@ print <<"HTML";
           </dl>
         </div>
         <section class="details box">
-          <h2><span class="for-ranks">ランクごとの</span>詳細</h2>
+          <h2 class="in-toc" data-content-title="詳細"><span class="for-ranks">ランクごとの</span>詳細</h2>
           <dl class="ranks">
 HTML
 foreach my $rank ('B', 'A', 'S', 'SS') {

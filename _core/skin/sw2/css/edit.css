@@ -3782,6 +3782,10 @@ form#arts #data-skill {
   }
 
   .details {
+    &:not([data-mode]) {
+      display: none;
+    }
+
     > h2 {
       margin-top: 0;
     }
