@@ -90,6 +90,10 @@ foreach (
   'schoolItemNote',
   'schoolArtsNote',
   'schoolMagicNote',
+  'skillRankB_effect',
+  'skillRankA_effect',
+  'skillRankS_effect',
+  'skillRankSS_effect',
 ){
   $pc{$_} =~ s/&lt;br&gt;/\n/g;
 }
