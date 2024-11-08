@@ -41,7 +41,7 @@
                 'click',
                 (node => {
                     return () => {
-                        const targetY = node.getBoundingClientRect().top + window.scrollY - document.getElementById('header-menu').clientHeight - 30;
+                        const targetY = node.getBoundingClientRect().top + window.scrollY - (document.getElementById('header-menu')?.clientHeight ?? 0) - 30;
                         const distanceY = Math.abs(targetY - window.scrollY);
                         window.scrollTo({
                             top: targetY,
