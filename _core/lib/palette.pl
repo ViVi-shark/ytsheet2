@@ -141,7 +141,7 @@ sub outputChatPaletteTemplate {
 
   $json{unitStatus} = \@unitStatus;
 
-  print "Content-type: text/javascript; charset=UTF-8\n\n";
+  print "Content-type: application/json; charset=UTF-8\n\n";
   print JSON::PP->new->canonical(1)->encode( \%json );
 }
 
