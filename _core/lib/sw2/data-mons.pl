@@ -133,7 +133,7 @@ sub getTreasureEnhancementByName {
     foreach (@treasureEnhancements) {
         my %enhancement = %{$_};
 
-        return %enhancement if $enhancement{name} eq $name;
+        return %enhancement if $enhancement{name} eq $name || $enhancement{fieldName} eq $name;
     }
 }
 

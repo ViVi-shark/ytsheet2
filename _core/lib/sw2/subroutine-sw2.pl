@@ -15,10 +15,33 @@ sub createUnitStatus {
   return [] if $pc{type} eq 'm' && $::in{demon_action}; # 召喚された魔神はステータスをもたない
   my @unitStatus;
   my $memo;
+
+  sub getTreasureEnhancementCount {
+    my %pc = %{shift;};
+    my $partIndex = shift;
+    my $fieldName = shift;
+
+    my $point = $pc{"treasureEnhancement_part${partIndex}_${fieldName}"} // 0;
+    return 0 if $point == 0;
+
+    if ($pc{"treasureEnhancement_part${partIndex}_${fieldName}_count"}) {
+      return $pc{"treasureEnhancement_part${partIndex}_${fieldName}_count"};
+    }
+
+    if ($fieldName eq 'additionalAttack') {
+      my $value = data::getTreasureEnhancementValue($fieldName, $point);
+      (my $__, my $count) = split('／', $value);
+      return $count;
+    }
+
+    return 1;
+  }
+
   if ($pc{type} eq 'm'){
     my @n2a = ('','A' .. 'Z');
     if($pc{statusNum} > 1){ # 2部位以上
       my @hp; my @mp; my @def;
+      my @treasureEnhancements = ();
       my %multiple;
       foreach my $i (1 .. $pc{statusNum}){
         ($pc{"part${i}"} = $pc{"status${i}Style"}) =~ s/^.+[(（)](.+?)[)）]$/$1/;
@@ -84,6 +107,16 @@ sub createUnitStatus {
         push(@hp , {$partname.':HP' => "$hp/$hp"});
         push(@mp , {$partname.':MP' => "$mp/$mp"}) unless isEmptyValue($mp);
         push(@def, $partname.$def);
+
+        foreach (@data::treasureEnhancements) {
+          my %enhancement = %{$_};
+          my $fieldName = $enhancement{fieldName};
+          my $count = getTreasureEnhancementCount(\%pc, $n, $fieldName);
+          next if $count == 0;
+
+          my $enhancementName = $enhancement{name};
+          push(@treasureEnhancements, { "${partname}:${enhancementName}" => "${count}/${count}" });
+        }
       }
       @unitStatus = ();
       push(@unitStatus, @hp);
@@ -93,6 +126,7 @@ sub createUnitStatus {
       } else {
         $memo = '防護:'.join('／',@def);
       }
+      push(@unitStatus, @treasureEnhancements) if @treasureEnhancements;
     }
     else { # 1部位
       my $i = 1;
