@@ -35,7 +35,7 @@
       </form>
       <script src="<TMPL_VAR coreDir>/skin/_common/js/list.js" defer></script>
       <TMPL_LOOP Lists>
-      <section class="list monster">
+      <section class="list monster in-toc" data-content-title="<TMPL_VAR NAME_FOR_TOC>">
         <h2><TMPL_VAR NAME> <small>(<TMPL_VAR NUM>)</small></h2>
         <TMPL_VAR NAV>
         <TMPL_IF simpleList>

@@ -356,6 +356,7 @@ foreach (@taxa,['騎獣', 'XX' , ''],['ゴーレム', 'XX' , '']){
   push(@characterlists, {
     "URL" => 'taxa='.$urltaxa,
     "NAME" => "$name <small>$text</small>",
+    "NAME_FOR_TOC" => $name,
     "NUM" => $count{$name},
     "MOUNT" => ($name eq '騎獣' ? 1 : 0),
     "GOLEM" => ($name eq 'ゴーレム' ? 1 : 0),
