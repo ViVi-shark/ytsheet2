@@ -90,6 +90,7 @@ Content-type: text/html\n
   <link rel="stylesheet" media="all" href="${main::core_dir}/skin/sw2/css/edit.css?${main::ver}">
   <script src="${main::core_dir}/skin/_common/js/lib/Sortable.min.js"></script>
   <script src="${main::core_dir}/lib/edit.js?${main::ver}" defer></script>
+  <script src="${main::core_dir}/lib/toc.js?${main::ver}" defer></script>
   <script src="${main::core_dir}/lib/sw2/edit-mons.js?${main::ver}" defer></script>
 </head>
 <body>

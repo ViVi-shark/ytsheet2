@@ -165,6 +165,7 @@ Content-type: text/html\n
   <script src="https://cdn.jsdelivr.net/npm/\@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/\@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css">
   <script src="${main::core_dir}/lib/edit.js?${main::ver}" defer></script>
+  <script src="${main::core_dir}/lib/toc.js?${main::ver}" defer></script>
   <script src="${main::core_dir}/lib/ar2e/edit-chara.js?${main::ver}" defer></script>
   <style>
     #image,

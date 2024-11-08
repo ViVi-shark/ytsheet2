@@ -108,6 +108,7 @@ Content-type: text/html\n
   <script src="${main::core_dir}/skin/_common/js/lib/Sortable.min.js"></script>
   <script src="${main::core_dir}/skin/_common/js/lib/compressor.min.js"></script>
   <script src="${main::core_dir}/lib/edit.js?${main::ver}" defer></script>
+  <script src="${main::core_dir}/lib/toc.js?${main::ver}" defer></script>
   <script src="${main::core_dir}/lib/gc/edit-country.js?${main::ver}" defer></script>
   <style>
     #image,
