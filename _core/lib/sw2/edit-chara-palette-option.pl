@@ -22,17 +22,27 @@ sub chatPaletteFormOptional {
         <table class="edit-table side-margin">
             <tbody class="highlight-hovered-row">
 HTML
-    foreach ('TMPL',1 .. $pc{commonClassNum}){
-        $html .= '<template id="palette-common-class-template">' if $_ eq 'TMPL';
-        $html .= '<tr id="palette-common-class-row'.$_.'"><td class="name">'.($pc{"commonClass$_"} =~ s/[(（].+?[）)]$//r).'</td>';
+    foreach my $i ('TMPL',1 .. $pc{commonClassNum}){
+        $html .= '<template id="palette-common-class-template">' if $i eq 'TMPL';
+        $html .= '<tr id="palette-common-class-row'.$i.'"><td class="name">'.($pc{"commonClass$i"} =~ s/[(（].+?[）)]$//r).'</td>';
         $html .= '<td class="left">';
-        $html .= ::checkbox("paletteCommonClass${_}Dex", '器用度B', 'setChatPalette');
-        $html .= ::checkbox("paletteCommonClass${_}Agi", '敏捷度B', 'setChatPalette');
-        $html .= ::checkbox("paletteCommonClass${_}Str", '筋力B'  , 'setChatPalette');
-        $html .= ::checkbox("paletteCommonClass${_}Vit", '生命力B', 'setChatPalette');
-        $html .= ::checkbox("paletteCommonClass${_}Int", '知力B'  , 'setChatPalette');
-        $html .= ::checkbox("paletteCommonClass${_}Mnd", '精神力B', 'setChatPalette');
-        $html .= '</template>' if $_ eq 'TMPL';
+        $html .= ::checkbox("paletteCommonClass${i}Dex", '器用度B', 'switchCheckingNameList(this); setChatPalette');
+        $html .= ::checkbox("paletteCommonClass${i}Agi", '敏捷度B', 'switchCheckingNameList(this); setChatPalette');
+        $html .= ::checkbox("paletteCommonClass${i}Str", '筋力B'  , 'switchCheckingNameList(this); setChatPalette');
+        $html .= ::checkbox("paletteCommonClass${i}Vit", '生命力B', 'switchCheckingNameList(this); setChatPalette');
+        $html .= ::checkbox("paletteCommonClass${i}Int", '知力B'  , 'switchCheckingNameList(this); setChatPalette');
+        $html .= ::checkbox("paletteCommonClass${i}Mnd", '精神力B', 'switchCheckingNameList(this); setChatPalette');
+        $html .= '<dl class="checking-names">';
+        foreach (['器用度', 'Dex'], ['敏捷度', 'Agi'], ['筋力', 'Str'], ['生命力', 'Vit'], ['知力', 'Int'], ['精神力', 'Mnd']) {
+            (my $ja, my $en) = @{$_};
+            $html .= <<"HTML";
+                <dt data-status="${en}">${ja}Bを参照する判定
+                <dd data-status="${en}">
+                    @{[ ::input "paletteCommonClass${i}${en}CheckingNames",'text','setChatPalette','placeholder="スペース or カンマ or 読点で区切って判定名を列記"' ]}
+HTML
+        }
+        $html .= '</dl>';
+        $html .= '</template>' if $i eq 'TMPL';
     }
     $html .= <<"HTML";
           </table>

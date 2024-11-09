@@ -220,7 +220,13 @@ sub palettePreset {
       $name =~ s/[(（].+?[）)]$//;
       foreach (['器用', 'Dex'], ['敏捷', 'Agi'], ['筋力', 'Str'], ['生命', 'Vit'], ['知力', 'Int'], ['精神', 'Mnd']) {
         (my $statusJa, my $statusEn) = @{$_};
-        $text .= "2d+{$name}+{${statusJa}B}+{行為判定修正}+{行動判定修正} ${name}＋${statusJa}\n" if $::pc{"paletteCommonClass${i}${statusEn}"};
+        my @checkingNames = ();
+        foreach my $checkingName (split(/[\s　、，,]+/, $::pc{"paletteCommonClass${i}${statusEn}CheckingNames"} // '')) {
+          $checkingName =~ s/判定//;
+          push(@checkingNames, $checkingName);
+        }
+        my $checkingNames = @checkingNames ? '（' . join('、', @checkingNames) . '）' : '';
+        $text .= "2d+{$name}+{${statusJa}B}+{行為判定修正}+{行動判定修正} ${name}＋${statusJa}${checkingNames}\n" if $::pc{"paletteCommonClass${i}${statusEn}"};
       }
     }
     $text .= "\n";

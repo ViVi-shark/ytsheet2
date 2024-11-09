@@ -1296,6 +1296,30 @@ article > form > hr {
     & td {
       min-width: 5em;
       padding: .2em;
+
+      .checking-names {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        margin-top: 0.75em;
+
+        > dt {
+          grid-column: 1 / 2;
+          font-weight: normal;
+          display: flex;
+          flex-flow: row;
+          justify-content: flex-end;
+          align-items: center;
+          min-width: 12em;
+
+          &.hidden {
+            display: none;
+          }
+        }
+
+        > dd {
+          grid-column: 2 / 3;
+        }
+      }
     }
   }
 }

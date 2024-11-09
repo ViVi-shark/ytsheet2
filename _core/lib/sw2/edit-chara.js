@@ -2497,6 +2497,21 @@ setSortable('history','#history-table','tbody');
 setSortable('battleItem','#battle-items-list');
 
 // チャットパレット ----------------------------------------
+// 一般技能
+/**
+ * @param {HTMLInputElement} input
+ */
+function switchCheckingNameList(input) {
+  const checked = input.checked;
+  const statusName = input.getAttribute('name').match(/([A-Z][a-z]{2})$/)[1];
+
+  input.closest('td').querySelectorAll(`.checking-names > [data-status=${statusName}]`).forEach(
+      x => x.classList.toggle('hidden', !checked)
+  );
+}
+document.querySelectorAll('#palette-common-classes input[type="checkbox"][name^="paletteCommonClass"]').forEach(
+    x => switchCheckingNameList(x)
+);
 // バフ・デバフ
 function addPaletteState(){
   document.querySelector("#palette-state > table").append(createRow('palette-state','paletteStateNum'));
