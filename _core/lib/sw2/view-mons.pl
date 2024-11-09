@@ -85,6 +85,9 @@ if($pc{forbidden} && !$pc{yourAuthor}){
   $pc{protect} = $protect;
   $pc{forbidden} = $forbidden;
   $pc{forbiddenMode} = 1;
+} else {
+  $pc{sin} = 0 if !defined($pc{sin});
+  $pc{sin} += $pc{sinOffset} if $pc{sin} ne '' && $pc{sinOffset};
 }
 
 ### その他 --------------------------------------------------
@@ -128,6 +131,8 @@ if($::in{url}){
   $SHEET->param(convertMode => 1);
   $SHEET->param(convertUrl => $::in{url});
 }
+### 個別化 --------------------------------------------------
+$SHEET->param(individualization => $pc{individualization});
 ### タグ --------------------------------------------------
 my @tags;
 foreach(split(/ /, $pc{tags})){
@@ -172,7 +177,14 @@ my $appLv = $pc{lvMin}.($pc{lvMax} != $pc{lvMin} ? "～$pc{lvMax}":'');
 {
   $SHEET->param(appLv => $appLv);
 }
+### 言語 --------------------------------------------------
+if ($pc{individualization} && $pc{additionalLanguage}) {
+  $pc{language} .= '、' if $pc{language};
+  $pc{language} .= $pc{additionalLanguage};
+  $SHEET->param(language => $pc{language});
+}
 ### 穢れ --------------------------------------------------
+$SHEET->param(sin => $pc{sin});
 unless(
   ($pc{taxa} eq 'アンデッド' && ($pc{sin} == 5 || $pc{sin} eq '')) ||
   ($pc{taxa} ne '蛮族'       && ($pc{sin} == 0 || $pc{sin} eq ''))
@@ -180,16 +192,39 @@ unless(
   $SHEET->param(displaySin => 1);
 }
 ### ステータス --------------------------------------------------
+$SHEET->param(exclusiveMount => $pc{exclusiveMount});
+$SHEET->param(ridingHpReinforcement => $pc{ridingHpReinforcement});
+$SHEET->param(ridingHpReinforcementSuper => $pc{ridingHpReinforcementSuper});
 if($pc{vitResist} ne ''){ $SHEET->param(vitResist => $pc{vitResist}.(!$pc{statusTextInput}?' ('.$pc{vitResistFix}.')':'')) }
 if($pc{mndResist} ne ''){ $SHEET->param(mndResist => $pc{mndResist}.(!$pc{statusTextInput}?' ('.$pc{mndResistFix}.')':'')) }
 
 my @status_tbody;
 my @status_row;
 foreach (1 .. $pc{statusNum}){
+  $pc{'status'.$_.'Accuracy'} += $pc{'partEquipment'.$_.'-weapon-accuracy'} if $pc{'status'.$_.'Accuracy'} ne '' && $pc{'partEquipment'.$_.'-weapon-accuracy'};
+  $pc{'status'.$_.'Damage'} = addOffsetToDamage($pc{'status'.$_.'Damage'}, $pc{'partEquipment'.$_.'-weapon-damage'}) if $pc{'status'.$_.'Damage'} ne '' && $pc{'partEquipment'.$_.'-weapon-damage'};
+  $pc{'status'.$_.'Evasion'} += $pc{'partEquipment'.$_.'-armor-evasion'} if $pc{'status'.$_.'Evasion'} ne '' && $pc{'partEquipment'.$_.'-armor-evasion'};
+  $pc{'status'.$_.'Defense'} += $pc{'partEquipment'.$_.'-armor-defense'} if $pc{'status'.$_.'Defense'} ne '' && $pc{'partEquipment'.$_.'-armor-defense'};
+  $pc{'status'.$_.'Hp'} += $pc{'partEquipment'.$_.'-armor-hp'} if $pc{'status'.$_.'Hp'} ne '' && $pc{'partEquipment'.$_.'-armor-hp'};
+  $pc{'status'.$_.'Mp'} += $pc{'partEquipment'.$_.'-armor-mp'} if $pc{'status'.$_.'Mp'} ne '' && $pc{'partEquipment'.$_.'-armor-mp'};
+
   if ($pc{'status'.$_.'Accuracy'} ne ''){ $pc{'status'.$_.'Accuracy'} = $pc{'status'.$_.'Accuracy'}.(!$pc{statusTextInput} && !$pc{mount}?' ('.$pc{'status'.$_.'AccuracyFix'}.')':'') }
   if ($pc{'status'.$_.'Evasion'}  ne ''){ $pc{'status'.$_.'Evasion'}  = $pc{'status'.$_.'Evasion'} .(!$pc{statusTextInput} && !$pc{mount}?' ('.$pc{'status'.$_.'EvasionFix'}.')' :'') }
 
   $pc{'status'.$_.'Damage'} = '―' if $pc{'status'.$_.'Damage'} eq '2d+' && ($pc{'status'.$_.'Accuracy'} eq '' || $pc{'status'.$_.'Accuracy'} eq '―');
+
+# $pc{'status'.$_.'Damage'}   = $pc{'status'.$_.'Damage'}   eq '' ? '―' : $pc{'status'.$_.'Damage'} ;
+# $pc{'status'.$_.'Defense'}  = $pc{'status'.$_.'Defense'}  eq '' ? '―' : $pc{'status'.$_.'Defense'};
+# $pc{'status'.$_.'Hp'}       = $pc{'status'.$_.'Hp'}       eq '' ? '―' : $pc{'status'.$_.'Hp'}     ;
+# $pc{'status'.$_.'Mp'}       = $pc{'status'.$_.'Mp'}       eq '' ? '―' : $pc{'status'.$_.'Mp'}     ;
+# $pc{'status'.$_.'Vit'}      = $pc{'status'.$_.'Vit'}      eq '' ? '―' : $pc{'status'.$_.'Vit'}    ;
+# $pc{'status'.$_.'Mnd'}      = $pc{'status'.$_.'Mnd'}      eq '' ? '―' : $pc{'status'.$_.'Mnd'}    ;
+
+  if ($pc{'status' . $_ . 'Hp'} ne '―') {
+    $pc{'status' . $_ . 'Hp'} += 10 if $pc{'ridingHpReinforcement'};
+    $pc{'status' . $_ . 'Hp'} += 5 if $pc{'ridingHpReinforcement'};
+    $pc{'status' . $_ . 'Hp'} += 5 if $pc{'ridingHpReinforcementSuper'};
+  }
 
   push(@status_row, {
     LV       => $pc{lvMin},
@@ -211,6 +246,29 @@ foreach my $lv (2 .. ($pc{lvMax}-$pc{lvMin}+1)){
     my $num = "$_-$lv";
 
     $pc{'status'.$num.'Damage'} = '―' if $pc{'status'.$num.'Damage'} eq '2d+' && ($pc{'status'.$num.'Accuracy'} eq '' || $pc{'status'.$num.'Accuracy'} eq '―');
+
+
+    $pc{'status'.$num.'Accuracy'} += $pc{'partEquipment'.$_.'-weapon-accuracy'} if $pc{'status'.$num.'Accuracy'} ne '' && $pc{'partEquipment'.$_.'-weapon-accuracy'};
+    $pc{'status'.$num.'Damage'} = addOffsetToDamage($pc{'status'.$num.'Damage'}, $pc{'partEquipment'.$_.'-weapon-damage'}) if $pc{'status'.$num.'Damage'} ne '' && $pc{'partEquipment'.$_.'-weapon-damage'};
+    $pc{'status'.$num.'Evasion'} += $pc{'partEquipment'.$_.'-armor-evasion'} if $pc{'status'.$num.'Evasion'} ne '' && $pc{'partEquipment'.$_.'-armor-evasion'};
+    $pc{'status'.$num.'Defense'} += $pc{'partEquipment'.$_.'-armor-defense'} if $pc{'status'.$num.'Defense'} ne '' && $pc{'partEquipment'.$_.'-armor-defense'};
+    $pc{'status'.$num.'Hp'} += $pc{'partEquipment'.$_.'-armor-hp'} if $pc{'status'.$num.'Hp'} ne '' && $pc{'partEquipment'.$_.'-armor-hp'};
+    $pc{'status'.$num.'Mp'} += $pc{'partEquipment'.$_.'-armor-mp'} if $pc{'status'.$num.'Mp'} ne '' && $pc{'partEquipment'.$_.'-armor-mp'};
+
+#   $pc{'status'.$num.'Accuracy'} = $pc{'status'.$num.'Accuracy'} eq '' ? '―' : $pc{'status'.$num.'Accuracy'};
+#   $pc{'status'.$num.'Evasion'}  = $pc{'status'.$num.'Evasion'}  eq '' ? '―' : $pc{'status'.$num.'Evasion'} ;
+#   $pc{'status'.$num.'Damage'}   = $pc{'status'.$num.'Damage'}   eq '' ? '―' : $pc{'status'.$num.'Damage'}  ;
+#   $pc{'status'.$num.'Defense'}  = $pc{'status'.$num.'Defense'}  eq '' ? '―' : $pc{'status'.$num.'Defense'} ;
+#   $pc{'status'.$num.'Hp'}       = $pc{'status'.$num.'Hp'}       eq '' ? '―' : $pc{'status'.$num.'Hp'}      ;
+#   $pc{'status'.$num.'Mp'}       = $pc{'status'.$num.'Mp'}       eq '' ? '―' : $pc{'status'.$num.'Mp'}      ;
+#   $pc{'status'.$num.'Vit'}      = $pc{'status'.$num.'Vit'}      eq '' ? '―' : $pc{'status'.$num.'Vit'}     ;
+#   $pc{'status'.$num.'Mnd'}      = $pc{'status'.$num.'Mnd'}      eq '' ? '―' : $pc{'status'.$num.'Mnd'}     ;
+
+    if ($pc{'status' . $num . 'Hp'} ne '―') {
+      $pc{'status' . $num . 'Hp'} += 10 if $pc{'ridingHpReinforcement'};
+      $pc{'status' . $num . 'Hp'} += 5 if $pc{'ridingHpReinforcement'};
+      $pc{'status' . $num . 'Hp'} += 5 if $pc{'ridingHpReinforcementSuper'};
+    }
 
     push(@status_row, {
       LV       => $lv+$pc{lvMin}-1,
@@ -320,6 +378,50 @@ if ($pc{golem}) {
   }
 
   $SHEET->param(golemReinforcementItems => \@expectedItems);
+}
+
+### 騎獣用武装 --------------------------------------------------
+if ($pc{mount} && $pc{individualization}) {
+  my @mountEquipments = ();
+
+  foreach (1 .. $pc{statusNum}) {
+    my $partName = $pc{'status' . $_ . 'Style'};
+    $partName =~ s/^.+[(（]\s*(.+?)\s*[）)]\s*$/$1/;
+
+    my $weaponName = $pc{'partEquipment' . $_ . '-weapon-name'} || '';
+    my $weaponAccuracy = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-weapon-accuracy'} || 0);
+    my $weaponDamage = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-weapon-damage'} || 0);
+    my $hasWeapon = $weaponName || $weaponAccuracy || $weaponDamage ? 1 : 0;
+
+    my $armorName = $pc{'partEquipment' . $_ . '-armor-name'} || '';
+    my $armorEvasion = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-armor-evasion'} || 0);
+    my $armorDefense = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-armor-defense'} || 0);
+    my $armorHp = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-armor-hp'} || 0);
+    my $armorMp = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-armor-mp'} || 0);
+    my $hasArmor = $armorName || $armorEvasion || $armorDefense || $armorHp || $armorMp ? 1 : 0;
+
+    push(@mountEquipments, {
+        hasEquipment   => $hasWeapon || $hasArmor,
+        partName       => $partName,
+        hasWeapon      => $hasWeapon,
+        weaponName     => $weaponName,
+        weaponAccuracy => $weaponAccuracy,
+        weaponDamage   => $weaponDamage,
+        hasArmor       => $hasArmor,
+        armorName      => $armorName,
+        armorEvasion   => $armorEvasion,
+        armorDefense   => $armorDefense,
+        armorHp        => $armorHp,
+        armorMp        => $armorMp,
+    });
+  }
+
+  $SHEET->param(mountEquipments => \@mountEquipments);
+}
+sub formatMountEquipmentOffset {
+  my $value = shift;
+  return $value if !$value;
+  return ($value > 0 ? '+' : '') . $value;
 }
 
 ### 戦利品 --------------------------------------------------

@@ -209,6 +209,38 @@ div.status dl {
     margin-left: .2em;
   }
 }
+
+.hp-options {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(3, max-content);
+
+  & li {
+    display: inline-flex;
+    height: 100%;
+    margin-right: 0.75em;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  & li:not(.active) {
+    display: none;
+  }
+
+  & li::before {
+    content: "\e5ca";
+    font-family: "Material Symbols Outlined", sans-serif;
+    font-variation-settings: 'FILL' 1;
+  }
+}
+.hp-options:not(:has(.active)) {
+  display: none;
+}
+body:not(.individualization) .hp-options {
+  display: none;
+}
+
 table.status {
   width: 100%;
   border-width: 1px;
@@ -313,6 +345,77 @@ table.status {
 }
 
 
+/* // 騎獣用武装
+---------------------------------------------------------------------------------------------------- */
+section.mount-equipments {
+  & .parts {
+    width: 100%;
+    display: grid;
+    grid-template-rows: repeat(2, max-content);
+    grid-template-columns: max-content 1fr;
+
+    & dt.part {
+      grid-column: 1 / 2;
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--monster-head-bg-color);
+      padding: 0.25em 1em;
+      margin-right: 0.45em;
+    }
+
+    & dd.part {
+      grid-column: 2 / 3;
+      font-size: 85%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      & .equipments {
+        margin: 0;
+        width: 100%;
+      }
+    }
+
+    & :is(dt, dd).part:not(:first-of-type) {
+      margin-top: 0.65em;
+    }
+  }
+
+  & .equipments {
+    display: grid;
+    grid-template-rows: repeat(2, max-content);
+    grid-template-columns: max-content 1fr;
+
+    & dt.weapon,
+    & dt.armor {
+      grid-column: 1 / 2;
+    }
+
+    & dt:is(.weapon, .armor)::after {
+      display: none;
+    }
+
+    & dd.weapon,
+    & dd.armor {
+      grid-column: 2 / 3;
+
+      & span:not(:first-of-type)::before {
+        content: "、";
+      }
+    }
+
+    & .name::before {
+      content: "〈";
+    }
+
+    & .name::after {
+      content: "〉";
+    }
+  }
+}
+
 /* // Skills
 ---------------------------------------------------------------------------------------------------- */
 .skills {
@@ -346,8 +449,67 @@ table.status {
     color: var(--s-icon-color);
   }
 }
+.individualization article > .skills {
+  & .riding-checks {
+    margin-top: 0.5rem;
+    margin-left: 0.3em;
+
+    & li {
+      display: inline-flex;
+      flex-flow: row;
+      align-items: center;
+      margin-right: 0.75em;
+    }
+
+    & li:not(.active) {
+      display: none;
+    }
+
+    & li::before {
+      content: "\e5ca";
+      font-family: "Material Symbols Outlined", sans-serif;
+      font-variation-settings: 'FILL' 1;
+    }
+  }
+
+  & .riding-checks:not(:has(.active)) {
+    display: none;
+  }
+}
+body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks {
+  display: none;
+}
 .skills section {
   position: relative;
+}
+.mount.individualization .skills {
+  & section.non-available {
+    opacity: 0.5;
+  }
+
+  & section:first-of-type > h3 {
+    margin-top: 0.5rem;
+  }
+
+  & section h5 .condition {
+    display: inline-flex;
+    flex-flow: row;
+    align-items: center;
+
+    & i.icon::before {
+      font-family: "Material Symbols Outlined", sans-serif;
+      font-variation-settings: 'FILL' 1;
+      font-style: normal;
+    }
+
+    & i.available::before {
+      content: "\e5ca";
+    }
+
+    & i:is(.non-available, .limited-available)::before {
+      content: "\e5cd";
+    }
+  }
 }
 :is(.skills, .golem-reinforcement-items) button.to-copy {
   display: none;
@@ -523,7 +685,8 @@ table.status {
 
 /* // Author
 ---------------------------------------------------------------------------------------------------- */
-#author {
+#author,
+#individualization-author {
   width: max-content;
   min-width: 50%;
   margin: 2em 0 0 auto;

@@ -10,10 +10,11 @@
   <link rel="mask-icon" href="<TMPL_VAR coreDir>/skin/sw2/icons/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#2b5797">
   <meta name="theme-color" content="#ffffff">
+  <script src="<TMPL_VAR coreDir>/skin/<TMPL_VAR gameDir>/js/skill_condition.js?<TMPL_VAR ver>" defer></script>
   <script src="<TMPL_VAR coreDir>/skin/<TMPL_VAR gameDir>/js/export_skill.js?<TMPL_VAR ver>" defer></script>
   <script src="<TMPL_VAR coreDir>/skin/<TMPL_VAR gameDir>/js/export_loot.js?<TMPL_VAR ver>" defer></script>
 </head>
-<body id="monster" class="<TMPL_IF mount>mount</TMPL_IF> <TMPL_IF golem>golem</TMPL_IF>">
+<body id="monster" class="<TMPL_IF mount>mount</TMPL_IF> <TMPL_IF golem>golem</TMPL_IF> <TMPL_IF individualization>individualization</TMPL_IF>">
   <header>
     <h1><a href="./?type=m"><TMPL_VAR title></a></h1>
     <nav>
@@ -156,6 +157,13 @@
           </div>
         </TMPL_IF>
       </div>
+      <TMPL_IF individualization>
+        <ul class="hp-options">
+          <li <TMPL_IF exclusiveMount>class="active"</TMPL_IF>>専有
+          <li <TMPL_IF ridingHpReinforcement>class="active"</TMPL_IF>>【ＨＰ強化】
+          <li <TMPL_IF ridingHpReinforcementSuper>class="active"</TMPL_IF>>【ＨＰ超強化】
+        </ul>
+      </TMPL_IF>
       <table class="status">
         <thead>
           <tr>
@@ -192,8 +200,57 @@
         <dl><dt>コア部位<dd><TMPL_VAR coreParts></dl>
       </div>
       </TMPL_IF>
+      <TMPL_IF mountEquipments>
+        <section class="box mount-equipments">
+          <h2>騎獣用武装</h2>
+          <dl class="parts">
+            <TMPL_LOOP mountEquipments>
+              <TMPL_IF hasEquipment>
+                <dt class="part"><TMPL_VAR partName></dt>
+                <dd class="part">
+                  <dl class="equipments">
+                    <TMPL_IF hasWeapon>
+                      <dt class="weapon">武器</dt>
+                      <dd class="weapon">
+                        <dl>
+                          <dt class="name"><TMPL_VAR weaponName></dt>
+                          <dd>
+                            <TMPL_IF weaponAccuracy><span class="accuracy">命中力判定<TMPL_VAR weaponAccuracy></span></TMPL_IF>
+                            <TMPL_IF weaponDamage><span class="damage">打撃点<TMPL_VAR weaponDamage></span></TMPL_IF>
+                          </dd>
+                        </dl>
+                      </dd>
+                    </TMPL_IF>
+                    <TMPL_IF hasArmor>
+                      <dt class="armor">防具</dt>
+                      <dd class="armor">
+                        <dl>
+                          <dt class="name"><TMPL_VAR armorName></dt>
+                          <dd>
+                            <TMPL_IF armorEvasion><span class="evasion">回避力判定<TMPL_VAR armorEvasion></span></TMPL_IF>
+                            <TMPL_IF armorDefense><span class="defense">防護点<TMPL_VAR armorDefense></span></TMPL_IF>
+                            <TMPL_IF armorHp><span class="hp">最大ＨＰ<TMPL_VAR armorHp></span></TMPL_IF>
+                            <TMPL_IF armorMp><span class="mp">最大ＭＰ<TMPL_VAR armorMp></span></TMPL_IF>
+                          </dd>
+                        </dl>
+                      </dd>
+                    </TMPL_IF>
+                  </dl>
+                </dd>
+              </TMPL_IF>
+            </TMPL_LOOP>
+          </dl>
+        </section>
+      </TMPL_IF>
       <section class="box skills">
         <h2><TMPL_IF head_skills><TMPL_VAR head_skills><TMPL_ELSE>特殊能力</TMPL_IF></h2>
+        <TMPL_IF individualization>
+          <ul class="riding-checks">
+            <li <TMPL_IF ridingMagicIndication>class="active"</TMPL_IF>>【魔法指示】
+            <li <TMPL_IF ridingUnlockSpecialSkills>class="active"</TMPL_IF>>【特殊能力解放】
+            <li <TMPL_IF ridingUnlockSpecialSkillsFully>class="active"</TMPL_IF>>【特殊能力完全解放】
+          </ul>
+        </TMPL_IF>
         <TMPL_IF skills><TMPL_VAR skills><TMPL_ELSE><p>なし</p></TMPL_IF>
       </section>
       <TMPL_IF golem>
@@ -231,6 +288,13 @@
       <div id="author">
         製作者：<TMPL_VAR author>
       </div>
+      <TMPL_IF individualization>
+        <TMPL_IF individualizationAuthor>
+          <div id="individualization-author">
+            個別データ作者：<TMPL_VAR individualizationAuthor>
+          </div>
+        </TMPL_IF>
+      </TMPL_IF>
       <section class="box chat-palette float-box">
         <h2>チャットパレット</h2>
         <div class="chat-palette-menu">

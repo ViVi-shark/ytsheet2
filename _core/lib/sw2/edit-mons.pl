@@ -178,6 +178,10 @@ HTML
           </select>
         <dd>※「一覧に非表示」でもタグ検索結果・マイリストには表示されます
       </dl>
+      <div class="box individualization-area">
+        @{[ checkbox 'individualization','個別化','individualizationModeChanged' ]}
+        @{[ input 'sourceMonsterUrl', 'text', '', 'placeholder="元データＵＲＬ"' ]}
+      </div>
       <div class="box in-toc" id="group" data-content-title="分類・タグ">
         <dl>
           <dt>分類</dt>
@@ -199,8 +203,9 @@ my $monsterChecked = !($pc{mount} || $pc{golem}) ? 'checked' : '';
 print <<"HTML";
               </select>
               <input type="text" name="taxaFree">
+              <span data-related-field="taxa"></span>
             </div>
-          <dd>
+          <dd class="kind">
             <input type="hidden" name="mount" value="$pc{mount}" />
             <input type="hidden" name="golem" value="$pc{golem}" />
             <fieldset>
@@ -208,6 +213,8 @@ print <<"HTML";
                 <label><input type="radio" name="kind" value="mount" $mountChecked />騎獣</label>
                 <label><input type="radio" name="kind" value="golem" $golemChecked />ゴーレム</label>
             </fieldset>
+            <span class="is-mount individualization-only"></span>
+            <span class="is-golem individualization-only"></span>
           <dt class="tag">タグ
           <dd>@{[ input 'tags' ]}
         </dl>
@@ -217,7 +224,7 @@ print <<"HTML";
         <div>
           <dl id="character-name">
             <dt>名称
-            <dd>@{[ input('monsterName','text',"setName") ]}
+            <dd>@{[ input('monsterName','text',"setName") ]}<span data-related-field="monsterName"></span>
           </dl>
           <dl id="aka">
             <dt>名前
@@ -226,20 +233,22 @@ print <<"HTML";
         </div>
         <dl id="player-name">
           <dt>製作者
-          <dd>@{[input('author')]}
+          <dd>@{[input('author')]}<span data-related-field="author"></span>
+          <dt class="individualization-only">個別化データ作者
+          <dd class="individualization-only">@{[input('individualizationAuthor')]}
         </dl>
       </div>
 
       <div class="box status in-toc" data-content-title="基本データ">
         <dl class="mount-only price">
           <dt>価格
-          <dd>購入@{[ input 'price' ]}G
-          <dd>レンタル@{[ input 'priceRental' ]}G
-          <dd>部位再生@{[ input 'priceRegenerate' ]}G
+          <dd>購入@{[ input 'price' ]}<span data-related-field="price"></span>G
+          <dd>レンタル@{[ input 'priceRental' ]}<span data-related-field="priceRental"></span>G
+          <dd>部位再生@{[ input 'priceRegenerate' ]}<span data-related-field="priceRegenerate"></span>G
         </dl>
         <dl class="mount-only">
           <dt>適正レベル
-          <dd>@{[ input 'lvMin','number','checkMountLevel','min="0"' ]} ～ @{[ input 'lvMax','number','checkMountLevel','min="0"' ]}
+          <dd>@{[ input 'lvMin','number','checkMountLevel','min="0"' ]}<span data-related-field="lvMin"></span> ～ @{[ input 'lvMax','number','checkMountLevel','min="0"' ]}<span data-related-field="lvMax"></span>
         </dl>
         <dl class="golem-only">
           <dt>作製可能コンジャラーレベル
@@ -251,60 +260,62 @@ print <<"HTML";
           <dd class="normal-price">通常素材価格@{[ input 'materialPriceNormal' ]}G
           <dd class="higher-price">上級素材価格@{[ input 'materialPriceHigher' ]}G
         </dl>
-        <dl>
+        <dl class="level">
           <dt><span class="mount-only">騎獣</span>レベル
-          <dd>@{[ input 'lv','number','checkLevel','min="0"' ]}
+          <dd>@{[ input 'lv','number','checkLevel','min="0"' ]}<span data-related-field="lv"></span>
           <dd class="mount-only small">※入力すると、閲覧画面では現在の騎獣レベルのステータスのみ表示されます
         </dl>
         <dl>
           <dt>知能
-          <dd>@{[ input 'intellect','','','list="data-intellect"' ]}
+          <dd>@{[ input 'intellect','','','list="data-intellect"' ]}<span data-related-field="intellect"></span>
         </dl>
         <dl>
           <dt>知覚
-          <dd>@{[ input 'perception','','','list="data-perception"' ]}
+          <dd>@{[ input 'perception','','','list="data-perception"' ]}<span data-related-field="perception"></span>
         </dl>
         <dl class="monster-only">
           <dt>反応
-          <dd>@{[ input 'disposition','','','list="data-disposition"' ]}
+          <dd>@{[ input 'disposition','','','list="data-disposition"' ]}<span data-related-field="disposition"></span>
         </dl>
-        <dl class="omit-if-golem">
+        <dl class="sin omit-if-golem">
           <dt>穢れ
-          <dd>@{[ input 'sin','number','','min="0"' ]}
+          <dd>@{[ input 'sin','number','','min="0"' ]}<span data-related-field="sin"></span>
+          <dd class="offset individualization-only">+@{[ input 'sinOffset','number','','min="0"' ]}
         </dl>
-        <dl>
+        <dl class="language">
           <dt>言語
-          <dd>@{[ input 'language' ]}
+          <dd>@{[ input 'language' ]}<span data-related-field="language"></span>
+          <dd class="additional individualization-only"><span class="label">追加：</span>@{[ input 'additionalLanguage' ]}
         </dl>
         <dl class="monster-only">
           <dt>生息地
-          <dd>@{[ input 'habitat' ]}
+          <dd>@{[ input 'habitat' ]}<span data-related-field="habitat"></span>
         </dl>
         <dl class="monster-only">
           <dt>知名度／弱点値
-          <dd>@{[ input 'reputation' ]}／@{[ input 'reputation+','','','list="list-of-reputation-plus"' ]}
+          <dd>@{[ input 'reputation' ]}<span data-related-field="reputation"></span>／@{[ input 'reputation+','','','list="list-of-reputation-plus"' ]}<span data-related-field="reputation+"></span>
           <datalist id="list-of-reputation-plus">
             <option>―</option>
           </datalist>
         </dl>
         <dl>
           <dt>弱点
-          <dd>@{[ input 'weakness','','','list="data-weakness"' ]}
+          <dd>@{[ input 'weakness','','','list="data-weakness"' ]}<span data-related-field="weakness"></span>
         </dl>
         <dl class="monster-only">
           <dt>先制値
-          <dd>@{[ input 'initiative' ]}
+          <dd>@{[ input 'initiative' ]}<span data-related-field="initiative"></span>
         </dl>
         <dl>
-          <dt>移動速度<dd>@{[ input 'mobility' ]}
+          <dt>移動速度<dd>@{[ input 'mobility' ]}<span data-related-field="mobility"></span>
         </dl>
         <dl class="monster-only">
           <dt>生命抵抗力
-          <dd>@{[ input 'vitResist',($status_text_input ? 'text':'number'),'calcVit' ]} <span class=" calc-only">(@{[ input 'vitResistFix','number','calcVitF' ]})</span>
+          <dd>@{[ input 'vitResist',($status_text_input ? 'text':'number'),'calcVit' ]}<span data-related-field="vitResist"></span> <span class=" calc-only">(@{[ input 'vitResistFix','number','calcVitF' ]}<span data-related-field="vitResistFix"></span>)</span>
         </dl>
         <dl class="monster-only">
           <dt>精神抵抗力
-          <dd>@{[ input 'mndResist',($status_text_input ? 'text':'number'),'calcMnd' ]} <span class=" calc-only">(@{[ input 'mndResistFix','number','calcMndF' ]})</span>
+          <dd>@{[ input 'mndResist',($status_text_input ? 'text':'number'),'calcMnd' ]}<span data-related-field="mndResist"></span> <span class=" calc-only">(@{[ input 'mndResistFix','number','calcMndF' ]}<span data-related-field="mndResistFix"></span>)</span>
         </dl>
       </div>
       <fieldset class="monster-only">@{[ input "statusTextInput",'checkbox','statusTextInputToggle']}命中・回避・抵抗に数値以外を入力</fieldset>
@@ -378,15 +389,89 @@ print <<"HTML";
       </table>
       <div class="add-del-button"><a onclick="addStatus()">▼</a><a onclick="delStatus()">▲</a></div>
       @{[input('statusNum','hidden')]}
+      <table class="individualization-only" id="source-status-table">
+        <thead>
+          <tr>
+            <th class="level mount-only">Lv
+            <th class="style">攻撃方法（部位）
+            <th class="accuracy">命中力
+            <th class="damage">打撃点
+            <th class="evasion">回避力
+            <th class="defense">防護点
+            <th class="hp">ＨＰ
+            <th class="mp">ＭＰ
+            <th class="vit mount-only">生命抵抗
+            <th class="mnd mount-only">精神抵抗
+        <template id="template-of-part">
+          <tr>
+            <th class="level mount-only">
+            <td class="style">
+            <td class="accuracy" data-property-name="accuracy"><span class="base"><span class="value"></span><span class="offset equipment-offset"></span></span><span class="fixed monster-only"><span class="value"></span><span class="offset equipment-offset"></span></span>
+            <td class="damage" data-property-name="damage"><span class="value"></span><span class="offset equipment-offset"></span>
+            <td class="evasion" data-property-name="evasion"><span class="base"><span class="value"></span><span class="offset equipment-offset"></span></span><span class="fixed monster-only"><span class="value"></span><span class="offset equipment-offset"></span></span>
+            <td class="defense" data-property-name="defense"><span class="value"></span><span class="offset equipment-offset"></span>
+            <td class="hp" data-property-name="hp"><span class="value"></span><span class="offset hp-option-offset"></span><span class="offset equipment-offset"></span>
+            <td class="mp" data-property-name="mp"><span class="value"></span><span class="offset equipment-offset"></span>
+            <td class="vit mount-only">
+            <td class="mnd mount-only">
+        </template>
+      </table>
+        <fieldset class="mount-only individualization-only mount-hp-options">
+          @{[ checkbox 'exclusiveMount','専有','mountHpOptionsUpdated','data-hp="10"' ]}
+          @{[ checkbox 'ridingHpReinforcement','【ＨＰ強化】','mountHpOptionsUpdated','data-hp="5"' ]}
+          @{[ checkbox 'ridingHpReinforcementSuper','【ＨＰ超強化】','mountHpOptionsUpdated','data-hp="5"' ]}
+        </fieldset>
       </div>
-      <div class="box parts in-toc" data-content-title="部位数・コア部位">
+      <fieldset class="box parts in-toc" data-content-title="部位数・コア部位">
         @{[ checkbox 'partsManualInput', '部位数と内訳を手動入力する', 'updatePartsAutomatically' ]}
-        <dl><dt>部位数<dd>@{[ input 'partsNum','number','updatePartList','min="1"' ]} (@{[ input 'parts','','updatePartList' ]}) </dl>
-        <dl><dt>コア部位<dd>@{[ input 'coreParts','','','list="list-of-core-part"' ]}</dl>
+        <dl><dt>部位数<dd>@{[ input 'partsNum','number','updatePartList','min="1"' ]}<span data-related-field="partsNum"></span> (@{[ input 'parts','','updatePartList' ]}<span data-related-field="parts"></span>) </dl>
+        <dl><dt>コア部位<dd>@{[ input 'coreParts','','','list="list-of-core-part"' ]}<span data-related-field="coreParts"></span></dl>
         <datalist id="list-of-core-part"></datalist>
-      </div>
-      <div class="box">
+      </fieldset>
+      <fieldset class="box mount-only individualization-only mount-equipments">
+        <h2>騎獣用武装</h2>
+        <dl class="parts"></dl>
+        <template id="template-of-mount-equipment-part">
+          <dt class="part">
+          <dd class="part">
+              <dl class="equipments">
+                  <dt class="weapon">武器
+                  <dd class="weapon" data-name-group="weapon">
+                      <dl class="weapon-settings">
+                          <dt class="name">名称
+                          <dd class="name"><input type="text" data-property-name="name" />
+                          <dt class="accuracy">命中力判定
+                          <dd class="accuracy"><input type="number" data-property-name="accuracy" />
+                          <dt class="damage">打撃点
+                          <dd class="damage"><input type="number" data-property-name="damage" />
+                      </dl>
+                  </dd>
+                  <dt class="armor">防具
+                  <dd class="armor" data-name-group="armor">
+                      <dl class="armor-settings">
+                          <dt class="name">名称
+                          <dd class="name"><input type="text" data-property-name="name" />
+                          <dt class="evasion">回避力判定
+                          <dd class="evasion"><input type="number" data-property-name="evasion" />
+                          <dt class="defense">防護点
+                          <dd class="defense"><input type="number" data-property-name="defense" />
+                          <dt class="hp">最大ＨＰ
+                          <dd class="hp"><input type="number" data-property-name="hp" />
+                          <dt class="mp">最大ＭＰ
+                          <dd class="mp"><input type="number" data-property-name="mp" />
+                      </dl>
+                  </dd>
+              </dl>
+          </dd>
+        </template>
+      </fieldset>
+      <div class="box skills">
         <h2 class="in-toc">特殊能力</h2>
+        <fieldset class="riding-checks individualization-only">
+          @{[ checkbox 'ridingMagicIndication','【魔法指示】' ]}
+          @{[ checkbox 'ridingUnlockSpecialSkills','【特殊能力解放】' ]}
+          @{[ checkbox 'ridingUnlockSpecialSkillsFully','【特殊能力完全解放】' ]}
+        </fieldset>
         <textarea name="skills">$pc{skills}</textarea>
         <div class="annotate">
           <b>行頭に</b>特殊能力の分類マークなどを記述すると、そこから次の「改行」または「全角スペース」までを自動的に見出し化します。<br>
@@ -418,6 +503,7 @@ my $reinforcementItemGrade_XL_state = $pc{reinforcementItemGrade} eq '極大' ? 
 print <<"HTML";
           <code>[]</code>で漢字一文字を囲う記法は、行頭でなくても各マークに変換されます。
         </div>
+        <div data-related-field="skills"></div>
       </div>
       <div class="box reinforcement-items golem-only">
         <h2>ゴーレム強化アイテム</h2>
@@ -481,7 +567,7 @@ print <<"HTML";
         </dl>
         <datalist id="golem-reinforcement-item-part-restriction-list"></datalist>
       </div>
-      <div class="box loots monster-only">
+      <fieldset class="box loots monster-only">
         <h2 class="in-toc">戦利品</h2>
         <div id="loots-list">
           <ul id="loots-num">
@@ -497,10 +583,16 @@ print <<"HTML";
       </div>
       <div class="add-del-button"><a onclick="addLoots()">▼</a><a onclick="delLoots()">▲</a></div>
       @{[input('lootsNum','hidden')]}
-      </div>
-      <div class="box">
+      <dl class="" id="source-loot-table"></dl>
+      <template id="template-of-source-loot-table-row">
+          <dt class="range">
+          <dd class="content">
+      </template>
+      </fieldset>
+      <div class="box description">
         <h2 class="in-toc">解説</h2>
         <textarea name="description">$pc{description}</textarea>
+        <div data-related-field="description"></div>
       </div>
       </section>
       
@@ -512,6 +604,16 @@ print <<"HTML";
       @{[ input 'id','hidden' ]}
     </form>
     @{[ deleteForm($mode) ]}
+HTML
+if ($mode eq 'edit') {
+    print "<fieldset id=\"loaded-part-equipment\" style=\"display: none;\">\n";
+    for my $key (keys %pc) {
+        next if $key !~ /^partEquipment\d/;
+        print "<input type=\"hidden\" name=\"$key\" value=\"$pc{$key}\" />\n";
+    }
+    print "</fieldset>\n";
+}
+print <<"HTML";
     </article>
 HTML
 # ヘルプ
