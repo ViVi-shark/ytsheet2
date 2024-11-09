@@ -111,11 +111,14 @@ our @checkingList = (
 
 sub findChecking {
     my %condition = %{shift;};
+    $condition{checkingName} .= '判定' if $condition{checkingName} && $condition{checkingName} !~ /判定$/;
 
     my @result = ();
 
     foreach (@checkingList) {
         my %checking = %{$_};
+
+        next if $condition{checkingName} && $checking{name} ne $condition{checkingName};
 
         my @classNames = @{$checking{classNames}};
         next if $condition{className} && !grep {$_ eq $condition{className}} @classNames;
@@ -139,6 +142,13 @@ sub findChecking {
     }
 
     return \@result;
+}
+
+sub getCheckingFieldName {
+    my $checkingName = shift;
+    my @found = @{findChecking({ checkingName => $checkingName })};
+    my %found = ref $found[0] ? %{$found[0]} : ();
+    return $found{fieldName};
 }
 
 1;
