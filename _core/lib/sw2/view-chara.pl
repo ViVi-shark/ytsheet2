@@ -491,6 +491,20 @@ foreach my $class (@data::class_names){
 }
 $SHEET->param(Packages => \@packages);
 
+### 各種判定へのボーナス／ペナルティ --------------------------------------------------
+require($::core_dir . '/lib/sw2/data-chara-checking.pl');
+my @checkingModifiers = ();
+foreach (@data::checkingList) {
+  my %checking = %{$_};
+  my $checkingName = $checking{name};
+  my $fieldName = "checking_$checking{fieldName}_mod";
+  my $modifier = $pc{$fieldName};
+  next unless $modifier;
+
+  push(@checkingModifiers, { CheckingName => $checkingName, Modifier => addNum $modifier });
+}
+$SHEET->param(CheckingModifiers => \@checkingModifiers) if @checkingModifiers;
+
 ### 妖精契約 --------------------------------------------------
 my $fairy_contact;
 my $fairy_sim_url;

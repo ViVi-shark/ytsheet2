@@ -583,6 +583,37 @@
   }
 }
 
+#checking {
+  grid-column: 1 / -1;
+
+  > dl.checking-list {
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr max-content 1fr max-content 1fr max-content;
+    padding: 0 0.5em;
+
+    > dt,
+    > dd {
+      margin-bottom: 0.35em;
+    }
+
+    > dt {
+      text-align: right;
+      font-weight: normal;
+    }
+
+    > dd.checking-modification {
+      &::before {
+        content: "+";
+      }
+
+      input {
+        width: 4em;
+        margin: 0;
+      }
+    }
+  }
+}
+
 #magic-power {
   grid-column: span 3;
   max-width: max-content;

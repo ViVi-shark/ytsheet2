@@ -173,9 +173,20 @@ sub palettePreset {
     $text .= "//行為判定修正=0\n";
     $text .= "//行動判定修正=0\n";
     # 基本判定
+    require($::core_dir . '/lib/sw2/data-chara-checking.pl');
     $text .= "### ■非戦闘系\n";
-    foreach my $statusName ('器用', '敏捷', '筋力', '生命', '知力') {
-      $text .= "2d+{冒険者}+{${statusName}B}+{行為判定修正}+{行動判定修正} 冒険者＋${statusName}\n";
+    foreach my $statusName ('器用度', '敏捷度', '筋力', '生命力', '知力') {
+      my $statusNameShort = substr($statusName, 0, 2);
+      $text .= "2d+{冒険者}+{${statusNameShort}B}+{行為判定修正}+{行動判定修正} 冒険者＋${statusNameShort}\n";
+
+      foreach (@{data::findChecking({ className => '冒険者', status => $statusName })}) {
+        my %checking = %{$_};
+        my $checkingName = $checking{name};
+        my $fieldName = "checking_$checking{fieldName}_mod";
+        next unless $::pc{$fieldName};
+        my $mod = addNum $::pc{$fieldName};
+        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}+{行動判定修正} ${checkingName}（冒険者）\n";
+      }
     }
     foreach my $class (@class_names){
       my $c_id = $data::class{$class}{id};
@@ -187,6 +198,17 @@ sub palettePreset {
         if($data{$p_id}{monsterLore} && $::pc{monsterLoreAdd}){ $text .= "2d+{$name}+$::pc{monsterLoreAdd}+{行為判定修正}+{行動判定修正} 魔物知識\n"; }
         my $initiativeModifiers = makeStatesExpression(\%::pc, '先制判定');
         if($data{$p_id}{initiative } && ($::pc{initiativeAdd} || $initiativeModifiers)){ $text .= "2d+{$name}+$::pc{initiativeAdd }${initiativeModifiers}+{行為判定修正}+{行動判定修正} 先制\n"; }
+      }
+      foreach my $status ('器用度', '敏捷度', '筋力', '生命力', '知力', '精神力') {
+        my $statusVarName = substr($status, 0, 2) . 'B';
+        foreach (@{data::findChecking({ className => $class, status => $status })}) {
+          my %checking = %{$_};
+          my $checkingName = $checking{name};
+          my $fieldName = "checking_$checking{fieldName}_mod";
+          next unless $::pc{$fieldName};
+          my $mod = addNum $::pc{$fieldName};
+          $text .= "2d+{${class}}+{${statusVarName}}${mod} ${checkingName}（${class}）\n";
+        }
       }
     }
     $text .= "\n";

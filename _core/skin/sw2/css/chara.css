@@ -799,6 +799,25 @@ dl#level {
   @media screen and (min-width:1400px){
     margin-top: 0;
   }
+  @media screen and (min-width:736px){
+    main#character & {
+      grid-template-rows: max-content max-content 1fr auto;
+
+      #area-package {
+        grid-row: 1 / 2;
+        height: max-content;
+      }
+
+      #checking {
+        grid-row: 2 / 3;
+      }
+
+      #area-other-actions,
+      #language {
+        grid-row: 1 / 4;
+      }
+    }
+  }
   @media screen and (max-width:735px){
     display: grid;
     gap: var(--box-v-gap);
@@ -875,6 +894,25 @@ dl#level {
   & b {
     font-weight: normal;
     font-size: 1.15em;
+  }
+}
+
+/* 各種判定へのボーナス／ペナルティ */
+#checking {
+  > .checking-list.view {
+    padding: 0 0.5em;
+
+    > li {
+      display: inline-block;
+      white-space: nowrap;
+      word-break: keep-all;
+
+      &:not(:last-child) {
+        &::after {
+          content: "、";
+        }
+      }
+    }
   }
 }
 

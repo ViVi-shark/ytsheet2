@@ -300,6 +300,16 @@
             <TMPL_UNLESS Packages><p><TMPL_IF forbiddenMode><TMPL_ELSE>なし</TMPL_IF></p></TMPL_UNLESS>
           </section>
         </div>
+        <TMPL_IF CheckingModifiers>
+          <section class="box" id="checking">
+            <h2>各種判定への修正</h2>
+            <ul class="checking-list view">
+              <TMPL_LOOP CheckingModifiers>
+                <li><TMPL_VAR CheckingName><TMPL_VAR Modifier></li>
+              </TMPL_LOOP>
+            </ul>
+          </section>
+        </TMPL_IF>
         <div id="area-other-actions">
           <dl class="box" id="monster-lore">
             <dt>魔物知識

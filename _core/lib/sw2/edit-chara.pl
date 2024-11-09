@@ -781,6 +781,44 @@ print <<"HTML";
           <ul id="language-notice" class="annotate notice"></ul>
           @{[input('languageNum','hidden')]}
         </div>
+HTML
+
+print <<"HTML";
+        <div class="box" id="checking">
+          <h2 class="in-toc">各種判定へのボーナス／ペナルティ</h2>
+          <dl class="checking-list">
+HTML
+require($::core_dir . '/lib/sw2/data-chara-checking.pl');
+foreach (@data::checkingList) {
+  my %checking = %{$_};
+  my $checkingName = $checking{name};
+  my $fieldName = "checking_$checking{fieldName}_mod";
+  my @baseValues = @{$checking{baseValues}};
+  my @classIds = ();
+
+  foreach (@baseValues) {
+    my %baseValue = %{$_};
+    my $classId = $baseValue{classId};
+    push(@classIds, $classId);
+  }
+
+  my $classIds = join(',', @classIds);
+
+  print <<"HTML";
+            <dt class="checking-name" data-classes="${classIds}">${checkingName}
+            <dd class="checking-modification" data-classes="${classIds}">
+              @{[ input $fieldName,'number','setChatPalette' ]}
+HTML
+}
+print <<"HTML";
+          </dl>
+          <ul class="annotate">
+            <li>「魔物知識判定」「先制判定」「命中力判定」「回避力判定」「魔法行使判定」「生命抵抗力判定」「精神抵抗力判定」「聞き込み判定」はこの機能の対象外です
+          </ul>
+        </div>
+HTML
+
+print <<"HTML";
         <div class="box" id="magic-power">
           <h2 class="in-toc" data-content-title="魔法・呪歌・賦術などの基準値">魔法／呪歌／賦術など</h2>
           <table class="edit-table line-tbody">
