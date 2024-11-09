@@ -218,12 +218,10 @@ sub palettePreset {
       next if !$::pc{"commonClass$i"};
       my $name = removeTags unescapeTags $::pc{'commonClass'.$i};
       $name =~ s/[(（].+?[）)]$//;
-      $text .= "2d+{$name}+{器用B}+{行為判定修正}+{行動判定修正} ${name}＋器用\n" if $::pc{"paletteCommonClass${i}Dex"};
-      $text .= "2d+{$name}+{敏捷B}+{行為判定修正}+{行動判定修正} ${name}＋敏捷\n" if $::pc{"paletteCommonClass${i}Agi"};
-      $text .= "2d+{$name}+{筋力B}+{行為判定修正}+{行動判定修正} ${name}＋筋力\n" if $::pc{"paletteCommonClass${i}Str"};
-      $text .= "2d+{$name}+{生命B}+{行為判定修正}+{行動判定修正} ${name}＋生命\n" if $::pc{"paletteCommonClass${i}Vit"};
-      $text .= "2d+{$name}+{知力B}+{行為判定修正}+{行動判定修正} ${name}＋知力\n" if $::pc{"paletteCommonClass${i}Int"};
-      $text .= "2d+{$name}+{精神B}+{行為判定修正}+{行動判定修正} ${name}＋精神\n" if $::pc{"paletteCommonClass${i}Mnd"};
+      foreach (['器用', 'Dex'], ['敏捷', 'Agi'], ['筋力', 'Str'], ['生命', 'Vit'], ['知力', 'Int'], ['精神', 'Mnd']) {
+        (my $statusJa, my $statusEn) = @{$_};
+        $text .= "2d+{$name}+{${statusJa}B}+{行為判定修正}+{行動判定修正} ${name}＋${statusJa}\n" if $::pc{"paletteCommonClass${i}${statusEn}"};
+      }
     }
     $text .= "\n";
     $text .= appendPaletteInsert('common');
