@@ -701,6 +701,35 @@ sub palettePreset {
       }
     }
 
+    foreach (1 .. $::pc{statusNum}) {
+      next if $_ == $::pc{statusNum};
+      if ($::pc{'status'.$_.'Style'} =~ /^(.+?)[（(](.+?)[)）]$/) {
+        my $weaponNameA = $1;
+        my $partNameA = $2;
+
+        for my $i (($_ + 1) .. $::pc{statusNum}) {
+          if ($::pc{'status'.$i.'Style'} =~ /^(.+?)[（(](.+?)[)）]$/) {
+            my $weaponNameB = $1;
+            my $partNameB = $2;
+
+            if ($partNameB eq $partNameA) {
+              my @alphabets = ('A' .. 'Z');
+              my $alphabet = $alphabets[$i - $_];
+
+              $::pc{'status'.$_.'Style'} = "${weaponNameA}（${partNameA}A）";
+              $::pc{'status'.$i.'Style'} = "${weaponNameB}（${partNameB}${alphabet}）";
+            }
+            else {
+              last;
+            }
+          }
+          else {
+            last;
+          }
+        }
+      }
+    }
+
     $text .= "//行為判定修正=0\n";
     $text .= "//行動判定修正=0\n";
     $text .= "//生命抵抗修正=0\n";
@@ -722,7 +751,7 @@ sub palettePreset {
 
     $text .= "//命中修正=0\n";
     $text .= "//打撃修正=0\n";
-    my $lastWeapon;
+    $text .= "\n" if $::pc{statusNum} > 1;
     foreach (1 .. $::pc{statusNum}){
       my $num = $::pc{mount} && $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
       (my $part   = $::pc{'status'.$_.'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
@@ -737,9 +766,16 @@ sub palettePreset {
       $weapon = '' if $::pc{partsNum} == 1;
       $weapon = "／$weapon" if $weapon ne '';
 
-      next if $weapon eq $lastPart && $::pc{'status'.$num.'Accuracy'} == $::pc{'status'.($num - 1).'Accuracy'} && $::pc{'status'.$num.'Damage'} == $::pc{'status'.($num -1).'Damage'};
-      $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status'.$num.'Accuracy'} ne '';
-      $text .= "{ダメージ$_}+{打撃修正} ダメージ".$weapon."\n" if $::pc{'status'.$num.'Damage'} ne '';
+      if ($::pc{statusNum} > 1 && $part ne '' && $::pc{'status'.$num.'Accuracy'} ne '' && $::pc{'status'.$num.'Damage'} ne '') {
+        $text .= "//${part}_命中修正=0\n";
+        $text .= "//${part}_打撃修正=0\n";
+        $text .= "2d+{命中$_}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n";
+        $text .= "{ダメージ$_}+{${part}_打撃修正}+{打撃修正} ダメージ".$weapon."\n";
+      }
+      else {
+        $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
+        $text .= "{ダメージ$_}+{打撃修正} ダメージ" . $weapon . "\n" if $::pc{'status' . $num . 'Damage'} ne '';
+      }
       $text .= "\n" if $::pc{'status'.$num.'Accuracy'} ne '' || $::pc{'status'.$num.'Damage'} ne '';
       $lastPart = $weapon;
     }
