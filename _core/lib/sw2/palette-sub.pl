@@ -185,7 +185,8 @@ sub palettePreset {
         my $name = $class.$data{$p_id}{name};
         $text .= "2d+{$name}+{行為判定修正}+{行動判定修正} $name\n";
         if($data{$p_id}{monsterLore} && $::pc{monsterLoreAdd}){ $text .= "2d+{$name}+$::pc{monsterLoreAdd}+{行為判定修正}+{行動判定修正} 魔物知識\n"; }
-        if($data{$p_id}{initiative } && $::pc{initiativeAdd }){ $text .= "2d+{$name}+$::pc{initiativeAdd }+{行為判定修正}+{行動判定修正} 先制\n"; }
+        my $initiativeModifiers = makeStatesExpression(\%::pc, '先制判定');
+        if($data{$p_id}{initiative } && ($::pc{initiativeAdd} || $initiativeModifiers)){ $text .= "2d+{$name}+$::pc{initiativeAdd }${initiativeModifiers}+{行為判定修正}+{行動判定修正} 先制\n"; }
       }
     }
     $text .= "\n";
@@ -204,6 +205,16 @@ sub palettePreset {
     }
     $text .= "\n";
     $text .= appendPaletteInsert('common');
+
+    # バフ・デバフ
+    $text .= "### バフ・デバフ\n";
+    foreach (@{getAvailableStates(\%::pc)}) {
+      my %state = %{$_};
+      my $stateName = $state{name};
+      my $defaultValue = $state{defaultValue};
+      $text .= "//${stateName}=${defaultValue}\n";
+    }
+    $text .= "###\n";
 
     # 練技
     if ($::pc{lvEnh} > 0) {
@@ -308,12 +319,12 @@ sub palettePreset {
           next if $id eq 'Fai' && $pow == 80 && $::pc{lvFai} < 15;
           if($id eq 'Bar'){ $pow += $::pc{finaleEnhance} || 0; }
 
-          $text .= "k${pow}[{魔法C}$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id})."+{魔法D修正}$activeDmg ダメージ\n";
+          $text .= "k${pow}[{魔法C}$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与魔法ダメージ')."+{魔法D修正}$activeDmg ダメージ\n";
           if ($id eq 'Sor' && $pow == 30 && $::pc{lvSor} >= 12) {
-            $text .= "k${pow}[10$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id})."+{物理魔法D修正}$activeDmg 物理ダメージ\n";
+            $text .= "k${pow}[10$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与物理ダメージ')."+{物理魔法D修正}$activeDmg 物理ダメージ\n";
           }
           if ($id eq 'Fai' && $::pc{fairyContractEarth} && ($pow == 10 || $pow == 50)) {
-            $text .= "k${pow}[12$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id})."+{物理魔法D修正}$activeDmg 物理ダメージ\n";
+            $text .= "k${pow}[12$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与物理ダメージ')."+{物理魔法D修正}$activeDmg 物理ダメージ\n";
           }
           my $halfCrit = $activeName =~ /クリティカルキャスト/ ? "{魔法C}$activeCrit" : "13";
           if ($bot{YTC}) { $half .= "k${pow}[$halfCrit]+$magicPower" . "//" . addNum($::pc{'magicDamageAdd'.$id}) . "+{魔法D修正}$activeDmg 半減\n"; }
@@ -321,7 +332,7 @@ sub palettePreset {
         }
         $text .= $half;
         if($id eq 'Dru'){
-          my $druidBase = "$magicPower+{物理魔法D修正} 物理ダメージ";
+          my $druidBase = "$magicPower" . makeStatesExpression(\%::pc, '与物理ダメージ') . "+{物理魔法D修正} 物理ダメージ";
           if($bot{YTC}){
             $text .= "kウルフバイト+$druidBase\n"       if($::pc{lvDru} >=  1);
             $text .= "kソーンバッシュ+$druidBase\n"     if($::pc{lvDru} >=  3);
@@ -439,6 +450,7 @@ sub palettePreset {
             $text .= "\]+";
             $text .= $::pc{paletteUseVar} ? "{追加D$_}" : $::pc{"weapon${_}DmgTotal"};
             $text .= "+{ガン追加D修正}";
+            $text .= makeStatesExpression(\%::pc, '与魔法ダメージ');
             $text .= "$::pc{'paletteAttack'.$paNum.'Dmg'}";
             $text .= " ダメージ";
             $text .= "\n";
@@ -462,6 +474,7 @@ sub palettePreset {
           $text .= ")" if $bot{BCD};
           $text .= "\]+";
           $text .= $::pc{paletteUseVar} ? "{追加D$_}" : $::pc{"weapon${_}DmgTotal"};
+          $text .= makeStatesExpression(\%::pc, ['筋力ボーナス', '与物理ダメージ']);
           $text .= $activeDmg;
           
           $text .= "+{追加D修正}";
@@ -493,6 +506,7 @@ sub palettePreset {
 
         $text .= "2d+";
         $text .= $::pc{paletteUseVar} ? "{命中$_}" : $::pc{"weapon${_}AccTotal"};
+        $text .= makeStatesExpression(\%::pc, '命中力');
         $text .= "+{命中修正}+{行為判定修正}+{行動判定修正}";
         if($::pc{'paletteAttack'.$paNum.'Acc'}){
           $text .= optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Acc'}";
@@ -524,8 +538,8 @@ sub palettePreset {
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
     $text .= "//回避修正=0\n";
-    $text .= "2d+{生命抵抗}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
-    $text .= "2d+{精神抵抗}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
+    $text .= "2d+{生命抵抗}@{[ makeStatesExpression(\%::pc, '生命抵抗力') ]}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
+    $text .= "2d+{精神抵抗}@{[ makeStatesExpression(\%::pc, '精神抵抗力') ]}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
     foreach my $i (1..$::pc{defenseNum}){
       my $hasChecked = 0;
       foreach my $j (1..$::pc{armourNum}){
@@ -535,12 +549,13 @@ sub palettePreset {
 
       $text .= "2d+";
       $text .= $::pc{paletteUseVar} ? "{回避${i}}" : $::pc{"defenseTotal${i}Eva"};
+      $text .= makeStatesExpression(\%::pc, '回避力');
       $text .= "+{回避修正}+{行為判定修正}+{行動判定修正} 回避力".($::pc{"defenseTotal${i}Note"}?"／$::pc{'defenseTotal'.$i.'Note'}":'')."\n";
     }
     $text .= "//ダメージ軽減=0\n";
     $text .= "//物理ダメージ軽減=0\n";
     $text .= "//魔法ダメージ軽減=0\n";
-    $text .= "\@HP-+({防護1}+{ダメージ軽減}+{物理ダメージ軽減}) ;物理ダメージ\n";
+    $text .= "\@HP-+({防護1}" . (makeStatesExpression(\%::pc, '防護点')) . "+{ダメージ軽減}+{物理ダメージ軽減}) ;物理ダメージ\n";
     $text .= "\@HP-+({ダメージ軽減}+{魔法ダメージ軽減}) ;魔法ダメージ\n";
     $text .= appendPaletteInsert('defense');
     
@@ -1337,6 +1352,97 @@ sub convertFairyAttribute {
       (\n|$)
       /▶妖精魔法($1)／$2$3/x;
   return $skills;
+}
+
+sub getAvailableStates {
+  my %pc = %{shift;};
+
+  my @states = ();
+
+  require($::core_dir . '/lib/sw2/data-chara-palette.pl');
+
+  if ($pc{paletteStateNum} > 0) {
+    foreach (1 .. $pc{paletteStateNum}) {
+      my $i = $_;
+      my $stateName = $pc{"paletteState${i}Name"};
+      my $stateDefaultValue = $pc{"paletteState${i}DefaultValue"} // 0;
+      next if $stateName =~ /^\s*$/;
+
+      my @fieldNames = ();
+      foreach (@{data::getPaletteStateFieldNames()}) {
+        my $fieldName = $_;
+        next unless $pc{"paletteState${i}Target_${fieldName}"};
+        push(@fieldNames, $fieldName);
+      }
+
+      next unless @fieldNames;
+
+      push(
+          @states,
+          {
+              name         => $stateName,
+              defaultValue => $stateDefaultValue,
+              fieldNames   => \@fieldNames,
+          }
+      );
+    }
+  }
+
+  return \@states;
+}
+
+sub findRelatedStates {
+  my %pc = %{shift;};
+  my $target = shift;
+  my @targetNames = ref $target ? @{$target} : ($target);
+
+  my @targetFieldNames = ();
+  require($::core_dir . '/lib/sw2/data-chara-palette.pl');
+  foreach (0 .. $#targetNames) {
+    my $targetName = $targetNames[$_];
+    my $fieldName = $targetName =~ /^[A-Za-z0-9_]+$/ ? $targetName : data::getPaletteStateFieldNameByTargetName($targetName);
+    push(@targetFieldNames, $fieldName);
+  }
+
+  my @states = ();
+
+  sub matchAnyItem {
+    my @list1 = @{shift;};
+    my @list2 = @{shift;};
+
+    foreach (@list1) {
+      my $item1 = $_;
+      return 1 if grep {$_ eq $item1} @list2;
+    }
+
+    return 0;
+  }
+
+  foreach (@{getAvailableStates(\%pc)}) {
+    my %state = %{$_};
+    my @relatedFieldNames = @{$state{fieldNames}};
+    next unless matchAnyItem(\@relatedFieldNames, \@targetFieldNames);
+
+    push(@states, \%state);
+  }
+
+  return \@states;
+}
+
+sub makeStatesExpression {
+  my %pc = %{shift;};
+  my $target = shift;
+
+  my @states = @{findRelatedStates(\%pc, $target)};
+  return '' unless @states;
+
+  my $expression = '';
+  foreach (@states) {
+    my %state = %{$_};
+    $expression .= "+{$state{name}}";
+  }
+
+  return $expression;
 }
 
 1;

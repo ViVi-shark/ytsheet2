@@ -2497,6 +2497,16 @@ setSortable('history','#history-table','tbody');
 setSortable('battleItem','#battle-items-list');
 
 // チャットパレット ----------------------------------------
+// バフ・デバフ
+function addPaletteState(){
+  document.querySelector("#palette-state > table").append(createRow('palette-state','paletteStateNum'));
+}
+function delPaletteState(){
+  if(delRow('paletteStateNum', '#palette-state > table tbody:last-of-type')){
+    setChatPalette();
+  }
+}
+setSortable('paletteState','#palette-state > table','tbody');
 // 武器攻撃
 function addPaletteAttack(){
   document.querySelector("#palette-attack > table tbody").append(createRow('palette-attack','paletteAttackNum'));

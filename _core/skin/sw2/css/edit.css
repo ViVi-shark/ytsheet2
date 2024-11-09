@@ -1286,6 +1286,17 @@ article > form > hr {
     }
   }
 }
+#palette-state {
+  > table {
+    .name {
+      width: 20em;
+    }
+
+    .default-value {
+      width: 6.5em;
+    }
+  }
+}
 #palette-attack {
   > table {
     thead th {

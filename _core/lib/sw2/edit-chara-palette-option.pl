@@ -10,6 +10,7 @@ sub chatPaletteFormOptional {
     require($::core_dir . '/lib/edit.pl');
 
     $::pc{chatPaletteInsertNum} = ($pc{chatPaletteInsertNum} ||= 2);
+    $::pc{paletteStateNum} = ($pc{paletteStateNum} ||= 3);
     $::pc{paletteAttackNum} = ($pc{paletteAttackNum} ||= 3);
     $::pc{paletteMagicNum} = ($pc{paletteMagicNum} ||= 3);
     my $html = <<"HTML";
@@ -52,6 +53,48 @@ HTML
           </ul>
           <div class="add-del-button"><a onclick="addChatPaletteInsert()">▼</a><a onclick="delChatPaletteInsert()">▲</a></div>
           @{[ ::input "chatPaletteInsertNum","hidden" ]}
+        </details>
+        <details id="palette-state" @{[ $pc{"paletteState1Name"} ? 'open' : '' ]}>
+          <summary class="header2">バフ・デバフの定義</summary>
+          <table class="edit-table side-margin">
+            <thead>
+              <tr>
+                <th class="name">名称
+                <th class="default-value">デフォルト値
+                <th class="target">適用対象
+HTML
+    require($::core_dir . '/lib/sw2/data-chara-palette.pl');
+    foreach ('TMPL', 1 .. $pc{paletteStateNum}) {
+        my $i = $_;
+        $html .= '<template id="palette-state-template">' if $i eq 'TMPL';
+        my $id = $i ne 'TMPL' ? "palette-state-row${i}" : '';
+        $html .= <<"HTML";
+            <tbody>
+              <tr id="${id}">
+                <td class="name">
+                  @{[ ::input "paletteState${i}Name" ]}
+                <td class="default-value">
+                  @{[ ::input "paletteState${i}DefaultValue",'number','','placeholder="0"' ]}
+                <td class="target">
+HTML
+        foreach (@data::stateTargets) {
+            my %target = %{$_};
+            my $targetName = $target{name};
+            my $targetFieldName = $target{fieldName};
+
+            $html .= ::checkbox("paletteState${i}Target_${targetFieldName}", $targetName);
+        }
+        $html .= <<"HTML";
+                </td>
+              </tr>
+            </tbody>
+HTML
+        $html .= '</template>' if $_ eq 'TMPL';
+    }
+    $html .= <<"HTML";
+          </table>
+          <div class="add-del-button"><a onclick="addPaletteState()">▼</a><a onclick="delPaletteState()">▲</a></div>
+          @{[ ::input 'paletteStateNum','hidden' ]}
         </details>
         <details id="palette-attack" @{[ $pc{"paletteAttack1Name"} ? 'open' : '' ]}>
           <summary class="header2">武器攻撃の追加オプション</summary>
