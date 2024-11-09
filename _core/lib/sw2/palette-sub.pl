@@ -174,10 +174,9 @@ sub palettePreset {
     $text .= "//行動判定修正=0\n";
     # 基本判定
     $text .= "### ■非戦闘系\n";
-    $text .= "2d+{冒険者}+{器用B}+{行為判定修正}+{行動判定修正} 冒険者＋器用\n";
-    $text .= "2d+{冒険者}+{敏捷B}+{行為判定修正}+{行動判定修正} 冒険者＋敏捷\n";
-    $text .= "2d+{冒険者}+{筋力B}+{行為判定修正}+{行動判定修正} 冒険者＋筋力\n";
-    $text .= "2d+{冒険者}+{知力B}+{行為判定修正}+{行動判定修正} 冒険者＋知力\n";
+    foreach my $statusName ('器用', '敏捷', '筋力', '知力') {
+      $text .= "2d+{冒険者}+{${statusName}B}+{行為判定修正}+{行動判定修正} 冒険者＋${statusName}\n";
+    }
     foreach my $class (@class_names){
       my $c_id = $data::class{$class}{id};
       next if !$data::class{$class}{package} || !$::pc{'lv'.$c_id};
