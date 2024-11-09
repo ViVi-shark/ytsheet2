@@ -214,16 +214,16 @@ sub palettePreset {
     $text .= "\n";
     $text .= appendPaletteInsert('general');
 
-    foreach (1 .. $::pc{commonClassNum}){
-      next if !$::pc{"commonClass$_"};
-      my $name = removeTags unescapeTags $::pc{'commonClass'.$_};
+    foreach my $i (1 .. $::pc{commonClassNum}){
+      next if !$::pc{"commonClass$i"};
+      my $name = removeTags unescapeTags $::pc{'commonClass'.$i};
       $name =~ s/[(（].+?[）)]$//;
-      $text .= "2d+{$name}+{器用B}+{行為判定修正}+{行動判定修正} ${name}＋器用\n" if $::pc{"paletteCommonClass${_}Dex"};
-      $text .= "2d+{$name}+{敏捷B}+{行為判定修正}+{行動判定修正} ${name}＋敏捷\n" if $::pc{"paletteCommonClass${_}Agi"};
-      $text .= "2d+{$name}+{筋力B}+{行為判定修正}+{行動判定修正} ${name}＋筋力\n" if $::pc{"paletteCommonClass${_}Str"};
-      $text .= "2d+{$name}+{生命B}+{行為判定修正}+{行動判定修正} ${name}＋生命\n" if $::pc{"paletteCommonClass${_}Vit"};
-      $text .= "2d+{$name}+{知力B}+{行為判定修正}+{行動判定修正} ${name}＋知力\n" if $::pc{"paletteCommonClass${_}Int"};
-      $text .= "2d+{$name}+{精神B}+{行為判定修正}+{行動判定修正} ${name}＋精神\n" if $::pc{"paletteCommonClass${_}Mnd"};
+      $text .= "2d+{$name}+{器用B}+{行為判定修正}+{行動判定修正} ${name}＋器用\n" if $::pc{"paletteCommonClass${i}Dex"};
+      $text .= "2d+{$name}+{敏捷B}+{行為判定修正}+{行動判定修正} ${name}＋敏捷\n" if $::pc{"paletteCommonClass${i}Agi"};
+      $text .= "2d+{$name}+{筋力B}+{行為判定修正}+{行動判定修正} ${name}＋筋力\n" if $::pc{"paletteCommonClass${i}Str"};
+      $text .= "2d+{$name}+{生命B}+{行為判定修正}+{行動判定修正} ${name}＋生命\n" if $::pc{"paletteCommonClass${i}Vit"};
+      $text .= "2d+{$name}+{知力B}+{行為判定修正}+{行動判定修正} ${name}＋知力\n" if $::pc{"paletteCommonClass${i}Int"};
+      $text .= "2d+{$name}+{精神B}+{行為判定修正}+{行動判定修正} ${name}＋精神\n" if $::pc{"paletteCommonClass${i}Mnd"};
     }
     $text .= "\n";
     $text .= appendPaletteInsert('common');
