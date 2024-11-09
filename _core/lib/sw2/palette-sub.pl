@@ -742,9 +742,17 @@ sub palettePreset {
       my $num = $::pc{mount} && $::pc{lv} > $::pc{lvMin} ? $_ . '-' . ($::pc{lv} - $::pc{lvMin} + 1) : $_;
       (my $part   = $::pc{'status'.$_.'Style'}) =~ s/^.+?[（(](.+?)[)）]$/$1/;
       $part = '' if $::pc{partsNum} == 1;
+      my $partName = $part;
       $part = "／$part" if $part ne '';
       next if $part eq $lastPart && $::pc{'status'.$_.'Evasion'} == $::pc{'status'.($num - 1).'Evasion'};
-      $text .= "2d+{回避$_}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $::pc{'status'.$num.'Evasion'} ne '';
+      if ($::pc{statusNum} > 1 && $::pc{'status'.$num.'Evasion'} ne '') {
+        $text .= "\n";
+        $text .= "//${partName}_回避修正=0\n";
+        $text .= "2d+{回避$_}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n";
+      }
+      else {
+        $text .= "2d+{回避$_}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '';
+      }
       $lastPart = $part;
     }
     $text .= "\n";
