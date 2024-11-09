@@ -225,14 +225,15 @@ sub palettePreset {
         my %checkingModifiers = ();
         foreach my $checkingName (split(/[\s　、，,]+/, $::pc{"paletteCommonClass${i}${statusEn}CheckingNames"} // '')) {
           $checkingName =~ s/判定//;
+          my $localMod = ($checkingName =~ s/\[([-+]\d+)]//) ? $1 : '';
 
           my $checkingFieldName = data::getCheckingFieldName($checkingName);
-          my $mod = $checkingFieldName ? $::pc{"checking_${checkingFieldName}_mod"} : 0;
-          unless (defined($checkingFieldName) && $mod) {
+          my $generalMod = $checkingFieldName ? $::pc{"checking_${checkingFieldName}_mod"} : '';
+          unless ((defined($checkingFieldName) && $generalMod) || $localMod) {
             push(@checkingNames, $checkingName);
           }
           else {
-            $checkingModifiers{$checkingName} = $mod;
+            $checkingModifiers{$checkingName} = "@{[addNum $generalMod]}${localMod}";
             push(@modifiedCheckingNames, $checkingName);
           }
         }
@@ -243,7 +244,7 @@ sub palettePreset {
         if (@modifiedCheckingNames) {
           foreach my $checkingName (@modifiedCheckingNames) {
             my $mod = $checkingModifiers{$checkingName};
-            $text .= "2d+{${name}}+{${statusJa}B}+${mod}+{行為判定修正}+{行動判定修正} ${checkingName}（${name}）\n";
+            $text .= "2d+{${name}}+{${statusJa}B}${mod}+{行為判定修正}+{行動判定修正} ${checkingName}（${name}）\n";
           }
         }
       }
