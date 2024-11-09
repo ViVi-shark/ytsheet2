@@ -174,7 +174,7 @@ sub palettePreset {
     $text .= "//行動判定修正=0\n";
     # 基本判定
     $text .= "### ■非戦闘系\n";
-    foreach my $statusName ('器用', '敏捷', '筋力', '知力') {
+    foreach my $statusName ('器用', '敏捷', '筋力', '生命', '知力') {
       $text .= "2d+{冒険者}+{${statusName}B}+{行為判定修正}+{行動判定修正} 冒険者＋${statusName}\n";
     }
     foreach my $class (@class_names){
