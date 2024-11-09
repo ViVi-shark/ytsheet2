@@ -12,6 +12,11 @@
     padding: 0.7rem;
     font-size: 1.15rem;
 
+    &:has(ul.content-list:empty),
+    &:has(ul.content-list > li:first-child:last-child) {
+        display: none;
+    }
+
     & ul.content-list {
         margin: 0;
         padding: 0;
