@@ -917,6 +917,12 @@ sub palettePreset {
     my $achievementDiceEnabled = $::in{sw2AchievementMode} ne 'fixed';
     my $achievementFixedEnabled = $::in{sw2AchievementMode} ne 'dice';
 
+    $text .= "//行為判定修正=0\n";
+    $text .= "//行動判定修正=0\n";
+    $text .- "\n";
+    $text .= "生死判定 2d+{生命抵抗}+{行為判定修正}\n" if $achievementDiceEnabled;
+    $text .= "生死判定 {生命抵抗}（<f>$::pc{vitResistFix}+{行為判定修正}</f>）\n" if $achievementFixedEnabled;
+
     if ($::pc{individualization}) {
       if ($::pc{mount}) {
         my $corePartName = $::pc{coreParts};
@@ -993,8 +999,6 @@ sub palettePreset {
       }
     }
 
-    $text .= "//行為判定修正=0\n";
-    $text .= "//行動判定修正=0\n";
     $text .= "### 抵抗，魔法ダメージ\n";
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
