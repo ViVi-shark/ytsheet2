@@ -35,6 +35,9 @@
                                 parts.push(nodeToText(child));
                             }
                             break;
+                        case 'A':
+                            parts.push(nodeToText(child.querySelector('.text') ?? child));
+                            break;
                         default:
                             console.warn(`Unexpected node type: ${child.nodeName}`);
                             parts.push(child.textContent);
