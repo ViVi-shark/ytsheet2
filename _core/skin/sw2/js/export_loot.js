@@ -30,7 +30,7 @@
                 case 'DT': {
                     const rangeText = normalizeNumber(node.textContent.trim());
 
-                    if (rangeText.includes("自動")) {
+                    if (rangeText.includes("自動") || rangeText === 'トレジャーポイント') {
                         lastRange = null;
                     } else if (rangeText.match(/^\d+$/)) {
                         const n = parseInt(rangeText);
