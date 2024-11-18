@@ -35,6 +35,9 @@
                                 parts.push(nodeToText(child));
                             }
                             break;
+                        case 'RUBY':
+                            parts.push(child.textContent);
+                            break;
                         case 'A':
                             parts.push(nodeToText(child.querySelector('.text') ?? child));
                             break;
