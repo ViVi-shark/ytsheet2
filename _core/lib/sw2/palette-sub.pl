@@ -848,9 +848,11 @@ sub palettePreset {
       (?<note>[\s\S]*?)
       (?=^(?:$skill_mark)|^●|\z)
       /
-      $text .= convertMark($+{mark})."$+{name}".($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n"
-            .($+{base} ne '' ?"2d+{$+{name}}+{行為判定修正}+{行動判定修正} ".convertMark($+{mark})."$+{name}$+{other}\n":'')
-            .skillNote($+{head},$+{name},$+{note})."\n";
+      foreach my $skillName (split('、', $+{name})) {
+      $text .= convertMark($+{mark}).$skillName.($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n"
+            .($+{base} ne '' ?"2d+{${skillName}}+{行為判定修正}+{行動判定修正} ".convertMark($+{mark})."${skillName}$+{other}\n":'')
+            .skillNote($+{head},$skillName,$+{note})."\n";
+      }
       /megix;
 
     if ($skills =~ /(?:^|\n)(?:(?:[☆≫»]|&gt;&gt;)△?|△)練技[^\n]*\n[\s　]*((?:【.+?】、?)+)/) { #
