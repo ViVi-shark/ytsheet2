@@ -846,7 +846,7 @@ sub palettePreset {
       )
       \s
       (?<note>[\s\S]*?)
-      (?=^$skill_mark|^●|\z)
+      (?=^(?:$skill_mark)|^●|\z)
       /
       $text .= convertMark($+{mark})."$+{name}".($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n"
             .($+{base} ne '' ?"2d+{$+{name}}+{行為判定修正}+{行動判定修正} ".convertMark($+{mark})."$+{name}$+{other}\n":'')
