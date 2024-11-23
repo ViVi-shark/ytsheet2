@@ -764,13 +764,13 @@ sub palettePreset {
         $text .= "\n";
         $text .= "//${partName}_回避修正=0\n";
         $text .= "2d+{回避$_}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n";
-        $text .= "回避${part} {回避$_}（" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${partName}_回避修正}+{回避修正}）\n";
+        $text .= "回避${part} {回避$_}（" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正}）\n";
         my $def = $::pc{'status'.$num.'Defense'} // 0;
         $text .= "\@${partName}:HP-+($def) ;物理ダメージ\n";
       }
       else {
         $text .= "2d+{回避$_}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '';
-        $text .= "回避${part} {回避$_}（" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}）\n" if $::pc{'status' . $num . 'Evasion'} ne '';
+        $text .= "回避${part} {回避$_}（" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}+{行為判定修正}+{行動判定修正}）\n" if $::pc{'status' . $num . 'Evasion'} ne '';
         my $def = $::pc{'status'.$_.'Defense'} // 0;
         $text .= "\@HP-+($def) ;物理ダメージ\n";
       }
