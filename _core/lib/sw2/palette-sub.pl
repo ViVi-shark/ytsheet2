@@ -844,8 +844,10 @@ sub palettePreset {
         )
         )?
       )
+      (?:
       \s
       (?<note>[\s\S]*?)
+      )?
       (?=^(?:$skill_mark)|^●|\z)
       /
       foreach my $skillName (split('、', $+{name})) {
