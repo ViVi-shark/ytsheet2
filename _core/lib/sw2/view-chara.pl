@@ -416,15 +416,12 @@ foreach my $class (@data::class_names){
     
     $acquired{$craft} = 1;
     
-    my %options = ref($craft_data[3]) eq 'HASH' ? %{$craft_data[3]} : ();
-    my $note = @craft_data[3] && !(ref @craft_data[3]) ? @craft_data[3] : undef;
-    
     if($::SW2_0){
-      push(@crafts, { NAME => $craft, NOTE => $note } );
+      push(@crafts, { NAME => $craft, } );
     }
     else {
       my ($name, $mark) = checkArtsName "$craftType{$craft}$craft";
-      push(@crafts, { NAME => $name, MARK => $mark, NOTE => $note } );
+      push(@crafts, { NAME => $name, MARK => $mark } );
     }
   }
   
