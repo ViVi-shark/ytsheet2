@@ -453,6 +453,7 @@ sub chatPaletteForm {
     buff => 1,
     @_,
   );
+  $opt{sw2AchievementMode} = ['dice=>ダイスを振る', 'fixed=>固定値', '=>両方'];
   $palette .= "$_\n" foreach(paletteProperties('',$::in{type}));
   
   $::pc{unitStatusNum} ||= 3;
@@ -467,7 +468,7 @@ sub chatPaletteForm {
   
   my $chatPalette = decodePalette $::pc{chatPalette};
   
-  return <<"HTML";
+  my $html = <<"HTML";
     <section id="section-palette" style="display:none;">
       <div class="box" id="unit-setting">
         <h2>ユニット(コマ)の設定</h2>
@@ -546,6 +547,15 @@ sub chatPaletteForm {
               <dd class="left">
                 @{[ radios 'paletteTool','setChatPalette',@{$opt{tool}} ]}<br>
                 <small>※プリセットの内容がツールに合わせたものに切り替わります。<br>　なお、コマ出力の際にはここでの変更に関わらず、自動的に出力先のツールに合わせたものになります。</small>
+HTML
+  if ($set::game eq 'sw2') {
+    $html .= <<"HTML";
+              <dt>[SW2] 達成値の算出</dt>
+              <dd class="left">
+                @{[ radios 'sw2AchievementMode','setChatPalette',@{$opt{sw2AchievementMode}} ]}
+HTML
+  }
+  $html .= <<"HTML";
             </dl>
           </div>
         </div>
@@ -563,6 +573,7 @@ sub chatPaletteForm {
       </div>
     </section>
 HTML
+  return $html;
   sub chatPaletteFormOptional {}
 }
 

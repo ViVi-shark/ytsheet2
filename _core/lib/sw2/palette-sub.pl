@@ -654,6 +654,9 @@ sub palettePreset {
   }
   ## 魔物
   elsif($type eq 'm') {
+    my $achievementDiceEnabled = $::in{sw2AchievementMode} ne 'fixed';
+    my $achievementFixedEnabled = $::in{sw2AchievementMode} ne 'dice';
+
     if ($::pc{individualization}) {
       if ($::pc{mount}) {
         my $corePartName = $::pc{coreParts};
@@ -735,10 +738,10 @@ sub palettePreset {
     $text .= "### 抵抗，魔法ダメージ\n";
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
-    $text .= "2d+{生命抵抗}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
-    $text .= "$::pc{vitResist}（<f>$::pc{vitResistFix}+{生命抵抗修正}+{行為判定修正}</f>） 生命抵抗力\n";
-    $text .= "2d+{精神抵抗}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
-    $text .= "$::pc{mndResist}（<f>$::pc{mndResistFix}+{精神抵抗修正}+{行為判定修正}</f>） 精神抵抗力\n";
+    $text .= "2d+{生命抵抗}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n" if $achievementDiceEnabled;
+    $text .= "$::pc{vitResist}（<f>$::pc{vitResistFix}+{生命抵抗修正}+{行為判定修正}</f>） 生命抵抗力\n" if $achievementFixedEnabled;
+    $text .= "2d+{精神抵抗}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n" if $achievementDiceEnabled;
+    $text .= "$::pc{mndResist}（<f>$::pc{mndResistFix}+{精神抵抗修正}+{行為判定修正}</f>） 精神抵抗力\n" if $achievementFixedEnabled;
     $text .= "\n";
     if ($::pc{statusNum} > 1) {
       foreach (1 .. $::pc{statusNum}) {
@@ -763,14 +766,14 @@ sub palettePreset {
       if ($::pc{statusNum} > 1 && $::pc{'status'.$num.'Evasion'} ne '') {
         $text .= "\n";
         $text .= "//${partName}_回避修正=0\n";
-        $text .= "2d+{回避$_}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n";
-        $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n";
+        $text .= "2d+{回避$_}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $achievementDiceEnabled;
+        $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $achievementFixedEnabled;
         my $def = $::pc{'status'.$num.'Defense'} // 0;
         $text .= "\@${partName}:HP-+($def) ;物理ダメージ\n";
       }
       else {
-        $text .= "2d+{回避$_}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '';
-        $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Evasion'} ne '';
+        $text .= "2d+{回避$_}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '' && $achievementDiceEnabled;
+        $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Evasion'} ne '' && $achievementFixedEnabled;
         my $def = $::pc{'status'.$_.'Defense'} // 0;
         $text .= "\@HP-+($def) ;物理ダメージ\n";
       }
@@ -799,13 +802,13 @@ sub palettePreset {
       if ($::pc{statusNum} > 1 && $part ne '' && $::pc{'status'.$num.'Accuracy'} ne '' && $::pc{'status'.$num.'Damage'} ne '') {
         $text .= "//${part}_命中修正=0\n";
         $text .= "//${part}_打撃修正=0\n";
-        $text .= "2d+{命中$_}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n";
-        $text .= "命中力${weapon} {命中${_}}（<f>" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n";
+        $text .= "2d+{命中$_}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $achievementDiceEnabled;
+        $text .= "命中力${weapon} {命中${_}}（<f>" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $achievementFixedEnabled;
         $text .= "{ダメージ$_}+{${part}_打撃修正}+{打撃修正} ダメージ".$weapon."\n";
       }
       else {
-        $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
-        $text .= "命中力${weapon} {命中$_}（<f>" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
+        $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementDiceEnabled;
+        $text .= "命中力${weapon} {命中$_}（<f>" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementFixedEnabled;
         $text .= "{ダメージ$_}+{打撃修正} ダメージ" . $weapon . "\n" if $::pc{'status' . $num . 'Damage'} ne '';
       }
       $text .= "###\n" if $::pc{statusNum} > 1;
@@ -850,7 +853,7 @@ sub palettePreset {
       (?:魔力)
       (?<power>[0-9]+)
       (?:[(（][0-9]+[）)])?
-      /$text .= "2d+{$+{name}}+{行為判定修正}+{行動判定修正} $+{name}\n" . "$+{power}（<f>" . ($+{power} + 7) . "+{行為判定修正}+{行動判定修正}<\/f>） $+{name}\n\n";/megix;
+      /$text .= ($achievementDiceEnabled ? "2d+{$+{name}}+{行為判定修正}+{行動判定修正} $+{name}\n" : '') . ($achievementFixedEnabled ? "$+{power}（<f>" . ($+{power} + 7) . "+{行為判定修正}+{行動判定修正}<\/f>） $+{name}\n" : '') . "\n";/megix;
     
     $skills =~ s/^
       (?<head>
@@ -877,8 +880,8 @@ sub palettePreset {
       (?=^(?:$skill_mark)|^●|\z)
       /
       foreach my $skillName (split('、', $+{name})) {
-      $text .= convertMark($+{mark}).$skillName.($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n"
-            .($+{base} ne '' ?"2d+{${skillName}}+{行為判定修正}+{行動判定修正} ".convertMark($+{mark})."${skillName}$+{other}\n":'')
+      $text .= ($achievementFixedEnabled || $+{base} eq '' ? (convertMark($+{mark}).$skillName.($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n") : '')
+            .($+{base} ne '' && $achievementDiceEnabled ?"2d+{${skillName}}+{行為判定修正}+{行動判定修正} ".convertMark($+{mark})."${skillName}$+{other}\n":'')
             .skillNote($+{head},$skillName,$+{note})."\n";
       }
       /megix;
