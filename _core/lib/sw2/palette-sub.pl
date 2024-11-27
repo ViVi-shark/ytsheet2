@@ -773,7 +773,7 @@ sub palettePreset {
         $text .= "{ダメージ$_}+{${part}_打撃修正}+{打撃修正} ダメージ".$weapon."\n";
       }
       else {
-        $text .= "2d+{命中$_}+{命中修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
+        $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
         $text .= "{ダメージ$_}+{打撃修正} ダメージ" . $weapon . "\n" if $::pc{'status' . $num . 'Damage'} ne '';
       }
       $text .= "\n" if $::pc{'status'.$num.'Accuracy'} ne '' || $::pc{'status'.$num.'Damage'} ne '';
