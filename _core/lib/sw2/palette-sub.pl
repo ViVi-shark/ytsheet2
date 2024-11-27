@@ -611,7 +611,7 @@ sub palettePreset {
       [\/／]
       (?:魔力)
       ([0-9]+)
-      [(（][0-9]+[）)]
+      (?:[(（][0-9]+[）)])?
       /$text .= "2d+{$+{name}}+{行為判定修正}+{行動判定修正} $+{name}\n\n";/megix;
     
     $skills =~ s/^
@@ -977,7 +977,7 @@ sub paletteProperties {
     $skills =~ s/\|/｜/g;
     $skills =~ s/<br>/\n/g;
     $skills = convertFairyAttribute($skills) if $::pc{taxa} eq '妖精';
-    $skills =~ s/^(?:$skillMarkRE)+(.+?)(?:限定)?(?:[0-9]+(?:レベル|LV)|\(.+\))*[\/／](?:魔力)([0-9]+)[(（][0-9]+[）)]/push @propaties, "\/\/$1=$2";/megi;
+    $skills =~ s/^(?:$skillMarkRE)+(.+?)(?:限定)?(?:[0-9]+(?:レベル|LV)|\(.+\))*[\/／](?:魔力)([0-9]+)(?:[(（][0-9]+[）)])?/push @propaties, "\/\/$1=$2";/megi;
 
     $skills =~ s/^
       (?<head>
