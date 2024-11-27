@@ -736,9 +736,9 @@ sub palettePreset {
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
     $text .= "2d+{生命抵抗}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
-    $text .= "$::pc{vitResist}（$::pc{vitResistFix}+{生命抵抗修正}+{行為判定修正}） 生命抵抗力\n";
+    $text .= "$::pc{vitResist}（<f>$::pc{vitResistFix}+{生命抵抗修正}+{行為判定修正}</f>） 生命抵抗力\n";
     $text .= "2d+{精神抵抗}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
-    $text .= "$::pc{mndResist}（$::pc{mndResistFix}+{精神抵抗修正}+{行為判定修正}） 精神抵抗力\n";
+    $text .= "$::pc{mndResist}（<f>$::pc{mndResistFix}+{精神抵抗修正}+{行為判定修正}</f>） 精神抵抗力\n";
     $text .= "\n";
     if ($::pc{statusNum} > 1) {
       foreach (1 .. $::pc{statusNum}) {
@@ -764,13 +764,13 @@ sub palettePreset {
         $text .= "\n";
         $text .= "//${partName}_回避修正=0\n";
         $text .= "2d+{回避$_}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n";
-        $text .= "回避${part} {回避$_}（" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正}）\n";
+        $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n";
         my $def = $::pc{'status'.$num.'Defense'} // 0;
         $text .= "\@${partName}:HP-+($def) ;物理ダメージ\n";
       }
       else {
         $text .= "2d+{回避$_}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '';
-        $text .= "回避${part} {回避$_}（" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}+{行為判定修正}+{行動判定修正}）\n" if $::pc{'status' . $num . 'Evasion'} ne '';
+        $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Evasion'} ne '';
         my $def = $::pc{'status'.$_.'Defense'} // 0;
         $text .= "\@HP-+($def) ;物理ダメージ\n";
       }
@@ -800,12 +800,12 @@ sub palettePreset {
         $text .= "//${part}_命中修正=0\n";
         $text .= "//${part}_打撃修正=0\n";
         $text .= "2d+{命中$_}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n";
-        $text .= "命中力${weapon} {命中${_}}（" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正}）\n";
+        $text .= "命中力${weapon} {命中${_}}（<f>" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n";
         $text .= "{ダメージ$_}+{${part}_打撃修正}+{打撃修正} ダメージ".$weapon."\n";
       }
       else {
         $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
-        $text .= "命中力${weapon} {命中$_}（" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{命中修正}+{行為判定修正}+{行動判定修正}）\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
+        $text .= "命中力${weapon} {命中$_}（<f>" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Accuracy'} ne '';
         $text .= "{ダメージ$_}+{打撃修正} ダメージ" . $weapon . "\n" if $::pc{'status' . $num . 'Damage'} ne '';
       }
       $text .= "###\n" if $::pc{statusNum} > 1;
@@ -850,7 +850,7 @@ sub palettePreset {
       (?:魔力)
       (?<power>[0-9]+)
       (?:[(（][0-9]+[）)])?
-      /$text .= "2d+{$+{name}}+{行為判定修正}+{行動判定修正} $+{name}\n" . "$+{power}（" . ($+{power} + 7) . "+{行為判定修正}+{行動判定修正}） $+{name}\n\n";/megix;
+      /$text .= "2d+{$+{name}}+{行為判定修正}+{行動判定修正} $+{name}\n" . "$+{power}（<f>" . ($+{power} + 7) . "+{行為判定修正}+{行動判定修正}<\/f>） $+{name}\n\n";/megix;
     
     $skills =~ s/^
       (?<head>
