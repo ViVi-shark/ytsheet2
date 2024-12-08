@@ -648,7 +648,7 @@ $SHEET->param(AttackClasses => \@atacck);
 sub replaceModificationNotation {
   my $sourceText = shift // '';
 
-  $sourceText =~ s#[\@＠](回避力?|防(?:護点?)?)[+＋](\d+)#<span class="modification">$1+$2</span>#g;
+  $sourceText =~ s#[\@＠](回避力?|防(?:護点?)?)[+＋](\d+)#<i class="term-em">$1+$2</i>#g;
 
   return $sourceText;
 }
