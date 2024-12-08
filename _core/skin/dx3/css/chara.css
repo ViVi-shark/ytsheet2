@@ -445,6 +445,9 @@ body {
 
 /* // Lois / Memory
 ---------------------------------------------------------------------------------------------------- */
+#lois:not(:has(table tbody tr td:is(.relation, .name, .emo, .color, .note, .state):not(:empty))) {
+  display: none;
+}
 #lois,
 #memory,
 #insanity {
