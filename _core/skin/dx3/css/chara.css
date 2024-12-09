@@ -383,6 +383,12 @@ table.data-table tbody span.source .source-page::before {
     font-size: 87%;
   }
 }
+#lifepath.encroach-fixed table tbody.awaken .encroach, #lifepath.encroach-fixed table tbody.impulse .encroach, #lifepath.encroach-fixed table tbody.encroach-offset, #lifepath.encroach-fixed table tbody.neutral-encroach .suffix {
+  display: none;
+}
+#lifepath.encroach-fixed table tbody.neutral-encroach {
+  background-color: var(--box-even-rows-bg-color);
+}
 
 
 /* // Status / Skills
@@ -1267,6 +1273,9 @@ table.data-table tbody span.source .source-page::before {
   &[type="checkbox"] + label:hover {
     opacity: 0.8;
   }
+}
+#enc-bonus.encroach-fixed p .encroach-prefix {
+  display: none;
 }
 #enc-bonus table {
   border-top: 1px;
