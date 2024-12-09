@@ -255,7 +255,8 @@
       </section>
       <TMPL_IF golem>
         <section class="golem-reinforcement-items">
-          <h2>強化アイテム／最大数＝<TMPL_VAR reinforcementItemMaxCount></h2>
+          <h2><TMPL_IF individualization>使用されている</TMPL_IF>強化アイテム<TMPL_IF golemReinforceItemByParts>／最大数＝<TMPL_VAR reinforcementItemMaxCount></TMPL_IF></h2>
+          <TMPL_UNLESS individualization>
           <TMPL_LOOP golemReinforcementItems>
             <section class="part-group">
               <h3>※<TMPL_VAR PartName></h3>
@@ -269,6 +270,25 @@
               </TMPL_LOOP>
             </section>
           </TMPL_LOOP>
+          </TMPL_UNLESS>
+          <TMPL_IF individualization>
+            <TMPL_IF golemReinforceItemByParts>
+              <TMPL_LOOP golemReinforceItemByParts>
+                <section class="part">
+                  <h3><TMPL_VAR partName></h3>
+                  <TMPL_IF items>
+                    <TMPL_LOOP items>
+                      <h4 class="<TMPL_IF prerequisiteItem>has-prerequisite-item</TMPL_IF>">〈<TMPL_VAR name>〉<TMPL_IF ability>（<TMPL_VAR ability>）</TMPL_IF></h4>
+                    </TMPL_LOOP>
+                  <TMPL_ELSE>
+                    <p>なし</p>
+                  </TMPL_IF>
+                </section>
+              </TMPL_LOOP>
+            <TMPL_ELSE>
+              <p class="notice-for-nothing">なし</p>
+            </TMPL_IF>
+          </TMPL_IF>
         </section>
       </TMPL_IF>
       <TMPL_IF Loots>
