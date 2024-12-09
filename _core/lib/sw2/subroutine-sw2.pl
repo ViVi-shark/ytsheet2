@@ -207,6 +207,29 @@ sub checkArtsName {
   return $text, $mark;
 }
 
+# アイテムの山括弧を追加する
+sub formatItemName {
+  my $raw = shift;
+  return '' unless $raw;
+  return $raw if $raw =~ /[＜〈].+[〉＞]/; # すでに山括弧らしきものがあればそのままにする.
+
+  my $text = $raw;
+
+  my $prefixes = '';
+  my $suffixes = '';
+
+  $prefixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)魔(?:]|&#93;)"[^>]+?>)//;
+  $prefixes .= $1 if $text =~ s/(\[魔])//;
+  $suffixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)刃(?:]|&#93;)"[^>]+?>)//;
+  $suffixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)打(?:]|&#93;)"[^>]+?>)//;
+  $suffixes .= $1 if $text =~ s/(\[刃])//;
+  $suffixes .= $1 if $text =~ s/(\[打])//;
+
+  return $raw if $text =~ /^(?:[(（].+[）)]|[〃？])$/; # アイテム名ではなさそうな文字列ならそのままにする.
+
+  return "$prefixes〈$text〉$suffixes";
+}
+
 ### 妖精魔法ランク --------------------------------------------------
 sub fairyRank {
   my $lv = shift;

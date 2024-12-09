@@ -725,7 +725,7 @@ else {
       $pc{'weapon'.$_.'Dmg'} = 0;
     }
     push(@weapons, {
-      NAME     => $pc{'weapon'.$_.'Name'},
+      NAME     => formatItemName($pc{'weapon'.$_.'Name'}),
       PART     => $pc{'part'.$pc{'weapon'.$_.'Part'}.'Name'},
       ROWSPAN  => $rowspan,
       NAMEOFF  => $pc{'weapon'.$_.'NameOff'},
@@ -875,7 +875,7 @@ else {
 
     push(@armours, {
       TYPE => $pc{'armour'.$_.'Type'},
-      NAME => $pc{'armour'.$_.'Name'},
+      NAME => formatItemName($pc{'armour'.$_.'Name'}),
       REQD => $pc{'armour'.$_.'Reqd'},
       EVA  => $pc{'armour'.$_.'Eva'} ? addNum($pc{'armour'.$_.'Eva'}) : ($pc{'armour'.$_.'Category'} =~ /[鎧盾]/ ? '―' : ''),
       DEF  => $pc{'armour'.$_.'Def'} // ($pc{'armour'.$_.'Category'} =~ /[鎧盾]/ ? '0' : ''),
@@ -953,7 +953,7 @@ else {
     }
     push(@accessories, {
       TYPE => @$_[0],
-      NAME => $pc{'accessory'.@$_[1].'Name'},
+      NAME => formatItemName($pc{'accessory'.@$_[1].'Name'}),
       OWN  => $pc{'accessory'.@$_[1].'Own'},
       NOTE => replaceModificationNotation($pc{'accessory'.@$_[1].'Note'}),
     } );
