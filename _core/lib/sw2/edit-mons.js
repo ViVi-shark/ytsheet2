@@ -320,6 +320,16 @@ function updatePartsAutomatically() {
   partsNamesInput.dispatchEvent(new Event('input'));
 }
 function updatePartList() {
+  const partNumText = document.querySelector('input[name="partsNum"]').value.trim();
+  const partNum = partNumText === '' ? 0 : parseInt(partNumText);
+
+  const corePartsInput = document.querySelector('input[name="coreParts"]');
+  if (!isNaN(partNum) && partNum > 1) {
+    corePartsInput.removeAttribute('disabled');
+  } else {
+    corePartsInput.setAttribute('disabled', '');
+  }
+
   const partsText = document.querySelector('input[name="parts"]').value.trim();
 
   const items =
