@@ -92,13 +92,30 @@ main nav ul li {
   & .name {
     position: relative;
   
-    & small.fellow {
+    & small:is(.fellow, .demon-action) {
       position: absolute;
       right: 0;
       bottom: .1rem;
       font-size: 80%;
       line-height: 1;
       font-weight: normal;
+      height: 1em;
+
+      &.demon-action {
+        transform: translateY(-2px);
+
+        .icon::before {
+          font-family: "Material Symbols Outlined", sans-serif;
+          font-variation-settings: 'FILL' 1;
+          font-style: normal;
+          content: "\e5ca";
+          display: inline-flex;
+          height: calc(100% - 1px);
+          align-items: center;
+          position: relative;
+          top: 1px;
+        }
+      }
     }
   }
   & th.gender span.small {

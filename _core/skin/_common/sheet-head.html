@@ -14,8 +14,8 @@
     <TMPL_IF convertUrl>
       <link rel="ytchat-body-exporting-point" type="application/json" href="./?url=<TMPL_VAR convertUrl>&mode=json">
     <TMPL_ELSE>
-      <link rel="ytchat-body-exporting-point" type="application/json" href="./?id=<TMPL_VAR id>&mode=json">
-      <link rel="ytchat-palette-exporting-point" type="text/plain" href="./?id=<TMPL_VAR id>&mode=palette">
+      <link rel="ytchat-body-exporting-point" type="application/json" href="<TMPL_IF jsonUrl><TMPL_VAR jsonUrl><TMPL_ELSE>./?id=<TMPL_VAR id>&mode=json</TMPL_IF>">
+      <link rel="ytchat-palette-exporting-point" type="text/plain" href="<TMPL_IF paletteUrl><TMPL_VAR paletteUrl><TMPL_ELSE>./?id=<TMPL_VAR id>&mode=palette</TMPL_IF>">
     </TMPL_IF>
   </TMPL_UNLESS>
   <link rel="stylesheet" data-dl href="<TMPL_VAR coreDir>/skin/_common/css/base.css?<TMPL_VAR ver>">
