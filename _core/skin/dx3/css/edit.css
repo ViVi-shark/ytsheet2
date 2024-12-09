@@ -778,6 +778,20 @@ body:not(.mode-crc) .crc-only {
   vertical-align: middle;
   width: 1.5em;
 }
+#armor-table tbody:first-child {
+  border-top-width: 1px;
+}
+#armor-table tbody tr:last-child {
+  border-bottom-width: 1px;
+}
+#armor-table tbody tr {
+  border-width: 0;
+}
+#armor-table tbody tr.source td {
+  padding-top: 0;
+}
+#armor-table tbody:nth-child(odd) { background-color: var(--box-even-rows-bg-color); }
+#armor-table tbody tr { background-color: transparent; }
 #vehicle-table tbody:first-child {
   border-top-width: 1px;
 }
@@ -811,15 +825,15 @@ body:not(.mode-crc) .crc-only {
   #items table  {
     table-layout: fixed;
     > thead th {
-      &:nth-child(1) { width:  11em !important; } /* 名称 */
-      &:nth-child(2) { width:   4em !important; } /* 常備化 */
-      &:nth-child(3) { width:   4em !important; } /* 経験点 */
-      &:nth-child(4) { width:   8em !important; } /* 種別 */
-      &:nth-child(5) { width:   8em !important; } /* 技能 */
-      &:nth-child(6) { width: 4.5em !important; } /* 命中  ／ドッジ */
-      &:nth-child(7) { width:   6em !important; } /* 攻撃力／行動 */
-      &:nth-child(8) { width: 4.5em !important; } /* ガード／装甲値 */
-      &:nth-child(9) { width: 4.5em !important; } /* 射程 */
+      &:nth-child(2) { width:  11em !important; } /* 名称 */
+      &:nth-child(3) { width:   4em !important; } /* 常備化 */
+      &:nth-child(4) { width:   4em !important; } /* 経験点 */
+      &:nth-child(5) { width:   8em !important; } /* 種別 */
+      &:nth-child(6) { width:   8em !important; } /* 技能 */
+      &:nth-child(7) { width: 4.5em !important; } /* 命中  ／ドッジ */
+      &:nth-child(8) { width:   6em !important; } /* 攻撃力／行動 */
+      &:nth-child(9) { width: 4.5em !important; } /* ガード／装甲値 */
+      &:nth-child(10){ width: 4.5em !important; } /* 射程 */
       &:last-child   { width:  16em !important; } /* 解説 */
     }
     > tbody td { width: auto !important; }
