@@ -198,6 +198,9 @@ table.data-table tbody span.source .source-page::before {
     min-height: 1.8em;
   }
 }
+#character.non-overed #renegade {
+  display: none;
+}
 #breed {
   display: grid;
   grid-template-columns: 1fr;
@@ -398,6 +401,12 @@ table.data-table tbody span.source .source-page::before {
 }
 #lifepath.encroach-fixed table tbody.neutral-encroach {
   background-color: var(--box-even-rows-bg-color);
+}
+#character.non-overed #lifepath table .awaken,
+#character.non-overed #lifepath table .impulse,
+#character.non-overed #lifepath table .encroach-offset,
+#character.non-overed #lifepath table .neutral-encroach {
+  display: none;
 }
 
 
@@ -1288,6 +1297,9 @@ table.data-table tbody span.source .source-page::before {
   background-image: none;
   background-color: var(--bg-color);
   border-radius: 5px;
+}
+#character.non-overed #enc-bonus {
+  display: none;
 }
 #enc-bonus details:not([open]) summary::after {
   content: '（クリックで展開）';
