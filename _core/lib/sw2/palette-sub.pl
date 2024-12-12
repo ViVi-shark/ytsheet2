@@ -233,6 +233,8 @@ sub palettePreset {
 
       my @namesOf30secs = ();
       my @namesOf10secs = ();
+      my %costCountOf30secs = ();
+      my %costCountOf10secs = ();
 
       foreach (1 .. $::pc{lvEnh}) {
         my $craftName = $::pc{"craftEnhance${_}"};
@@ -241,19 +243,42 @@ sub palettePreset {
         my $craft = data::getEnhancerCraft($craftName);
         $craftName = "【${craftName}】";
 
-        $text .= "\@MP-3 ${craftName}\n";
+        my $cost = 3; # 消費ＭＰの既定値は 3
 
         if (ref $craft) {
           my %craft = %{$craft};
           my $duration = $craft{duration};
+          $cost = $craft{cost} if defined($craft{cost}); # 明示的な消費ＭＰの指定があれば反映する（超越者向けの練技用）
 
-          push(@namesOf30secs, $craftName) if $duration eq '30秒';
-          push(@namesOf10secs, $craftName) if $duration eq '10秒';
+          if ($duration eq '30秒') {
+            push(@namesOf30secs, $craftName);
+            $costCountOf30secs{$cost} += 1;
+          }
+
+          if ($duration eq '10秒') {
+            push(@namesOf10secs, $craftName);
+            $costCountOf10secs{$cost} += 1;
+          }
         }
+
+        $text .= "\@MP-${cost} ${craftName}\n";
       }
 
-      $text .= '@MP-3*' . ($#namesOf30secs + 1) . ' ' . join('', @namesOf30secs) . "\n" if $#namesOf30secs > 0;
-      $text .= '@MP-3*' . ($#namesOf10secs + 1) . ' ' . join('', @namesOf10secs) . "\n" if $#namesOf10secs > 0;
+      if ($#namesOf30secs > 1) {
+        $text .= '@MP';
+        foreach my $cost (3, 10) {
+          $text .= "-${cost}*$costCountOf30secs{$cost}" if $costCountOf30secs{$cost};
+        }
+        $text .= ' ' . join('', @namesOf30secs) . "\n";
+      }
+
+      if ($#namesOf10secs > 1) {
+        $text .= '@MP';
+        foreach my $cost (3, 10) {
+          $text .= "-${cost}*$costCountOf10secs{$cost}" if $costCountOf10secs{$cost};
+        }
+        $text .= ' ' . join('', @namesOf10secs) . "\n";
+      }
 
       $text .= "###\n";
     }
