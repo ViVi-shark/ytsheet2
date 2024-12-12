@@ -218,14 +218,27 @@ sub formatItemName {
   my $prefixes = '';
   my $suffixes = '';
 
-  $prefixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)魔(?:]|&#93;)"[^>]+?>)//;
-  $prefixes .= $1 if $text =~ s/(\[魔])//;
-  $suffixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)刃(?:]|&#93;)"[^>]+?>)//;
-  $suffixes .= $1 if $text =~ s/(\<img alt="(?:\[|&#91;)打(?:]|&#93;)"[^>]+?>)//;
-  $suffixes .= $1 if $text =~ s/(\[刃])//;
-  $suffixes .= $1 if $text =~ s/(\[打])//;
+  $prefixes .= $& if $text =~ s/\<img alt="(?:\[|&#91;)魔(?:]|&#93;)"[^>]+?>//i;
+  $prefixes .= $& if $text =~ s/\[魔]//;
 
-  return $raw if $text =~ /^(?:[(（].+[）)]|[〃？])$/; # アイテム名ではなさそうな文字列ならそのままにする.
+  if ($text =~ s#<i class="i-icon" data-kind="[アテ流]"><span class="raw">\[[アテ流]]</span></i>##i) {
+    $prefixes .= $&;
+  } elsif ($text =~ s#\[[アテ流]]##) {
+    $prefixes .= $&;
+  }
+
+  if ($text =~ s#<i class="i-icon" data-kind="[特]"><span class="raw">\[[特]]</span></i>##i) {
+    $prefixes .= $&;
+  } elsif ($text =~ s#\[[特]]##) {
+    $prefixes .= $&;
+  }
+
+  $suffixes .= $& if $text =~ s/\<img alt="(?:\[|&#91;)刃(?:]|&#93;)"[^>]+?>//i;
+  $suffixes .= $& if $text =~ s/\<img alt="(?:\[|&#91;)打(?:]|&#93;)"[^>]+?>//i;
+  $suffixes .= $& if $text =~ s/\[刃]//;
+  $suffixes .= $& if $text =~ s/\[打]//;
+
+  return $raw if $text =~ /^(?:[(（].+[）)]|【.*】|《.*》|[〃？])$/; # アイテム名ではなさそうな文字列ならそのままにする.
 
   return "$prefixes〈$text〉$suffixes";
 }
