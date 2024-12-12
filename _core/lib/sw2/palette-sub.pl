@@ -250,14 +250,16 @@ sub palettePreset {
           my $duration = $craft{duration};
           $cost = $craft{cost} if defined($craft{cost}); # 明示的な消費ＭＰの指定があれば反映する（超越者向けの練技用）
 
-          if ($duration eq '30秒') {
-            push(@namesOf30secs, $craftName);
-            $costCountOf30secs{$cost} += 1;
-          }
+          if (!$craft{no_grouping}) {
+            if ($duration eq '30秒') {
+              push(@namesOf30secs, $craftName);
+              $costCountOf30secs{$cost} += 1;
+            }
 
-          if ($duration eq '10秒') {
-            push(@namesOf10secs, $craftName);
-            $costCountOf10secs{$cost} += 1;
+            if ($duration eq '10秒') {
+              push(@namesOf10secs, $craftName);
+              $costCountOf10secs{$cost} += 1;
+            }
           }
         }
 
