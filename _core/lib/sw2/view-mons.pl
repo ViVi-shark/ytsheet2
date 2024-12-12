@@ -92,7 +92,7 @@ $SHEET->param(rawName => $pc{characterName}?"$pc{characterName}（$pc{monsterNam
 
 ### タグ置換 #########################################################################################
 foreach (keys %pc) {
-  if($_ =~ /^(?:skills|description)$/){
+  if($_ =~ /^(?:skills|description|golemReinforcement_.+_details)$/){
     $pc{$_} = unescapeTagsLines($pc{$_});
   }
   $pc{$_} = unescapeTags($pc{$_});
@@ -143,6 +143,11 @@ foreach(split(/ /, $pc{tags})){
 }
 $SHEET->param(Tags => \@tags);
 
+### ゴーレム素材 --------------------------------------------------
+if ($pc{golem}) {
+  $SHEET->param(materialPriceNormal => commify $pc{materialPriceNormal}) if $pc{materialPriceNormal};
+  $SHEET->param(materialPriceHigher => commify $pc{materialPriceHigher}) if $pc{materialPriceHigher};
+}
 ### 価格 --------------------------------------------------
 {
   my $price;
@@ -233,6 +238,94 @@ $SHEET->param(Status => \@status_tbody);
 $SHEET->param(partsOn => 1) if ($pc{partsNum} > 1 || $pc{parts} || $pc{coreParts});
 $SHEET->param(parts => $pc{parts} =~ s#([^／]+)#<span>$1</span>#gr);
 
+
+### ゴーレム強化アイテム --------------------------------------------------
+if ($pc{golem}) {
+  require $set::data_mons;
+
+  my @allItems = data::getGolemReinforcementItems($::SW2_0 ? '2.0' : '2.5');
+  my $grade = $pc{reinforcementItemGrade};
+  my %itemsByPart = ('任意部位' => []);
+  my @partNames = ('任意部位');
+
+  if ($pc{parts} ne '') {
+    for my $partName (split(/[\/／]/, $pc{parts})) {
+      next if $partName eq '';
+      $partName =~ s/×\d+$//;
+      push(@partNames, $partName);
+    }
+
+    push(@partNames, '全部位必須');
+  }
+
+  for my $itemAddress (@allItems) {
+    my %itemDefinition = %{$itemAddress};
+
+    next if !$pc{"golemReinforcement_$itemDefinition{fieldName}_supported"};
+
+    my $price = $pc{"golemReinforcement_$itemDefinition{fieldName}_price"};
+
+    my %abilitySuffixes = $itemDefinition{abilitySuffixes} ? %{$itemDefinition{abilitySuffixes}} : ();
+    my $abilitySuffix = $abilitySuffixes{$grade} || '';
+
+    my %itemState = (
+        name    => "$itemDefinition{name}($grade)",
+        price   => commify($price),
+        ability => $itemDefinition{ability} . $abilitySuffix,
+    );
+
+    if ($itemDefinition{prerequisiteItem}) {
+      $itemState{'hasPrerequisiteItem'} = 1;
+    }
+
+    if ($itemDefinition{additionalField} eq '詳細') {
+      delete($itemState{ability});
+      $itemState{abilityDetails} = $pc{"golemReinforcement_$itemDefinition{fieldName}_details"};
+      $itemState{abilityDetails} =~ s/<br>/\n/gi;
+      if($::SW2_0){
+        $itemState{abilityDetails} =~ s/^((?:[○◯〇＞▶〆☆≫»□☐☑🗨▽▼]|&gt;&gt;)+.*?)(　|$)/"<\/p><h5>".&textToIcon($1)."<\/h5><p>".$2;/egim;
+      } else {
+        $itemState{abilityDetails} =~ s/^((?:[○◯〇△＞▶〆☆≫»□☐☑🗨]|&gt;&gt;)+.*?)(　|$)/"<\/p><h5>".&textToIcon($1)."<\/h5><p>".$2;/egim;
+      }
+      $itemState{abilityDetails} =~ s#(</h5><p>)\n#$1#i;
+      $itemState{abilityDetails} =~ s#\n#</p><p>#;
+      $itemState{abilityDetails} =~ s#^\s*</p>##mi;
+      $itemState{abilityDetails} .= '</p>' if $itemState{abilityDetails} !~ /\s*<\/p>\s*$/mi;
+    } elsif ($itemDefinition{additionalField} eq '打撃点') {
+      $itemState{abilityDetails} = '次手番必中、' if $itemState{ability} =~ /振りかぶる/;
+      $itemState{abilityDetails} .= '打撃点＋' . $pc{"golemReinforcement_$itemDefinition{fieldName}_damageOffset"};
+    } elsif ($itemDefinition{additionalField} eq '地上移動速度') {
+      $itemState{abilityDetails} = '地上移動速度：' . $pc{"golemReinforcement_$itemDefinition{fieldName}_landMobility"};
+    }
+
+    my $targetPart;
+    my $partCount = @partNames;
+    if ($partCount == 1) {
+      $targetPart = $partNames[0];
+    } elsif ($itemDefinition{requirementAllParts}) {
+      $targetPart = '全部位必須';
+    } else {
+      $targetPart = $pc{"golemReinforcement_$itemDefinition{fieldName}_partRestriction"};
+      $targetPart =~ s/のみ$//;
+      $targetPart = '任意部位' if $targetPart eq '';
+    }
+
+    {
+      $itemsByPart{$targetPart} = [] if !defined($itemsByPart{$targetPart});
+      my @a = @{$itemsByPart{$targetPart}};
+      push(@a, \%itemState);
+      $itemsByPart{$targetPart} = \@a;
+    }
+  }
+
+  my @expectedItems = ();
+  for my $partName (@partNames) {
+    next if !$itemsByPart{$partName};
+    push(@expectedItems, {PartName => $partName, Items => $itemsByPart{$partName}});
+  }
+
+  $SHEET->param(golemReinforcementItems => \@expectedItems);
+}
 
 ### 戦利品 --------------------------------------------------
 my @loots;
