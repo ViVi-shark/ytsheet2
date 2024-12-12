@@ -244,11 +244,13 @@ sub palettePreset {
         $craftName = "【${craftName}】";
 
         my $cost = 3; # 消費ＭＰの既定値は 3
+        my $costReduction = $::pc{lvSag} >= 9 ? 1 : 0; # 《マナセーブ》
 
         if (ref $craft) {
           my %craft = %{$craft};
           my $duration = $craft{duration};
           $cost = $craft{cost} if defined($craft{cost}); # 明示的な消費ＭＰの指定があれば反映する（超越者向けの練技用）
+          $cost -= $costReduction;
 
           if (!$craft{no_grouping}) {
             if ($duration eq '30秒') {
@@ -262,13 +264,16 @@ sub palettePreset {
             }
           }
         }
+        else {
+          $cost -= $costReduction;
+        }
 
         $text .= "\@MP-${cost} ${craftName}\n";
       }
 
       if ($#namesOf30secs > 0) {
         $text .= '@MP';
-        foreach my $cost (3, 10) {
+        foreach my $cost (2, 3, 9, 10) {
           $text .= "-${cost}*$costCountOf30secs{$cost}" if $costCountOf30secs{$cost};
         }
         $text .= ' ' . join('', @namesOf30secs) . "\n";
@@ -276,7 +281,7 @@ sub palettePreset {
 
       if ($#namesOf10secs > 0) {
         $text .= '@MP';
-        foreach my $cost (3, 10) {
+        foreach my $cost (2, 3, 9, 10) {
           $text .= "-${cost}*$costCountOf10secs{$cost}" if $costCountOf10secs{$cost};
         }
         $text .= ' ' . join('', @namesOf10secs) . "\n";
