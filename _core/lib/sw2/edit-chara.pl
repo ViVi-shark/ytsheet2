@@ -1072,18 +1072,18 @@ print <<"HTML";
                   @{[input("weapon${num}Name",'','changeWeaponName','placeholder="名称" list="list-weapon-name"')]}
                   <span class="handle"></span>
                   <dl><dt>部位<dd>@{[ selectBox "weapon${num}Part","calcWeapon",1..$pc{partNum} ]}</dl>
-                <td rowspan="2">@{[input("weapon${num}Usage","text",'changeWeaponName','list="list-usage"')]}
-                <td rowspan="2">@{[input("weapon${num}Reqd",'text','calcWeapon')]}
-                <td rowspan="2">+@{[input("weapon${num}Acc",'number','calcWeapon')]}<b id="weapon${num}-acc-total">0</b>
-                <td rowspan="2">@{[input("weapon${num}Rate")]}
-                <td rowspan="2">@{[input("weapon${num}Crit")]}
-                <td rowspan="2">+@{[input("weapon${num}Dmg",'number','calcWeapon')]}<b id="weapon${num}-dmg-total">0</b>
+                <td rowspan="1">@{[input("weapon${num}Usage","text",'changeWeaponName','list="list-usage"')]}
+                <td rowspan="1">@{[input("weapon${num}Reqd",'text','calcWeapon')]}
+                <td rowspan="1">+@{[input("weapon${num}Acc",'number','calcWeapon')]}<b id="weapon${num}-acc-total">0</b>
+                <td rowspan="1">@{[input("weapon${num}Rate")]}
+                <td rowspan="1">@{[input("weapon${num}Crit")]}
+                <td rowspan="1">+@{[input("weapon${num}Dmg",'number','calcWeapon')]}<b id="weapon${num}-dmg-total">0</b>
                 <td>@{[input("weapon${num}Own",'checkbox','calcWeapon')]}
                 <td><select name="weapon${num}Category" oninput="calcWeapon()">@{[option("weapon${num}Category",@data::weapon_names,'ガン（物理）','その他|<その他（盾など）>')]}</select>
                 <td><select name="weapon${num}Class" oninput="calcWeapon()">@{[option("weapon${num}Class",@weapon_users,'自動計算しない')]}</select>
                 <td rowspan="2"><span class="button" onclick="addWeapons(${num});setupBracketInputCompletion()">複<br>製</span>
               <tr>
-                <td colspan="3">@{[input("weapon${num}Note",'','calcWeapon','onchange="changeEquipMod()" placeholder="備考"')]}
+                <td colspan="9">@{[textarea("weapon${num}Note",'calcWeapon','onchange="changeEquipMod()" placeholder="備考"')]}
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
