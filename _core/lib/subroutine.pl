@@ -542,7 +542,7 @@ sub unescapeTags {
     my $number = "\x{FFFC}" . scalar(@linkPlaceholders) . "\x{FFFC}";
     if($txt =~ "^https?://"){ $txt = $number; } # $txtがURL形式なら$urlと同じに（二重リンクとURLの偽り防止）
     if($url =~ /^[#\.\/\?]/){ return '<a href="'.$number.'">'.$txt.'</a>'; }
-    else { return '<a href="'.$number.'" target="_blank">'.$txt.'</a>'; }
+    else { return '<a href="'.$number.'" target="_blank"><span class="text">'.$txt.'</span></a>'; }
   }
 }
 sub unescapeTagsLines {
@@ -650,6 +650,7 @@ sub generateTable {
       if($colspan > 1){ $output .= ' colspan="'.$colspan.'"'; $colspan = 1; }
       if($rowspan > 1){ $output .= ' rowspan="'.$rowspan.'"'; }
       if(@classesCell){ $output .= ' class="'.join(' ',@classesCell).'"' }
+      $col =~ s#^\s*([\d,]+)\s*$#<span class="number">$1</span>#;
       $output .= ">$col</$td>";
     }
     $output .= "</tr>";

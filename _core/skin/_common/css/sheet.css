@@ -683,6 +683,9 @@ table.note-table {
   & td {
     text-align: left;
   }
+  & tbody tr td span.number {
+    white-space: nowrap;
+  }
 }
 .note-table.width-max {
   width: 100%;
