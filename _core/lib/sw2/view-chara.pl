@@ -750,8 +750,16 @@ if($pc{forbiddenMode}){
 }
 else {
   my $first = 1;
+  my $herculean = $pc{raceAbility} =~ /［剛力］/ ? 2 : 0; # ミノタウロスのウィークリングの種族特徴［剛力］
+  $herculean += 2 if $herculean > 0 && $pc{level} >= 6;
+  $herculean += 2 if $herculean > 0 && $pc{level} >= 11;
   foreach (1 .. $pc{weaponNum}){
     next if !existsRow "weapon$_",'Name','Part','Usage','Reqd','Acc','Rate','Crit','Dmg','Own','Note';
+    if ($pc{'weapon'.$_.'Usage'} =~ /^2H投?$/ && $pc{'weapon'.$_.'Category'} =~ /^(?:ソード|アックス|スピア|メイス|スタッフ|フレイル|ウォーハンマー|絡み|格闘|ガン（物理）)$/) {
+      # ［剛力］の反映
+      $pc{'weapon'.$_.'Dmg'} += $herculean;
+      $pc{'weapon'.$_.'DmgTotal'} += $herculean;
+    }
     my $rowspan = 1; my $notespan = 1;
     for(my $num = $_+1; $num <= $pc{weaponNum}; $num++){
       last if $pc{'weapon'.$num.'NameOff'};
