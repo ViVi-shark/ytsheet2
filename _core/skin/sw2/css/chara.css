@@ -806,6 +806,7 @@ dl#level {
     &.power:empty::before,
     &.damage:empty::before {
       content: "―";
+      font-size: 1.5rem;
     }
   }
 
