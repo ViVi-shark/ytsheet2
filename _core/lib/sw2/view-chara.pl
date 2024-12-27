@@ -1088,7 +1088,7 @@ foreach (1 .. $pc{dishonorItemsNum}) {
   elsif($pc{"dishonorItem${_}PtType"} eq 'dragon'  ){ $type = '<small>竜</small>'; }
   push(@dishonoritems, {
     NAME => $pc{'dishonorItem'.$_},
-    PT   => $type.$pc{'dishonorItem'.$_.'Pt'},
+    PT   => commify($type.$pc{'dishonorItem'.$_.'Pt'}),
   } );
 }
 $SHEET->param(DishonorItems => \@dishonoritems);
