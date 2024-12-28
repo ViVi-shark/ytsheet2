@@ -268,7 +268,15 @@ sub palettePreset {
           $cost -= $costReduction;
         }
 
-        $text .= "\@MP-${cost} ${craftName}\n";
+        my $otherStatusManipulation = '';
+
+        if ($craftName eq '【リカバリィ】') {
+          $otherStatusManipulation .= 'HP+{エンハンサー}';
+        }
+
+        $text .= "\@MP-${cost}";
+        $text .= " ${otherStatusManipulation}" if $otherStatusManipulation ne '';
+        $text .= " ${craftName}\n";
       }
 
       if ($#namesOf30secs > 0) {
