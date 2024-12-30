@@ -1087,6 +1087,10 @@ sub getCraft {
         version       => $version,
     );
 
+    while ($version =~ s/\[[常補宣準主条選]]//) {
+      $craft{action} .= $&;
+    }
+
     if (ref $others) {
       my %others = %{$others};
 
