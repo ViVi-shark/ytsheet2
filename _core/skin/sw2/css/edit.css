@@ -843,7 +843,7 @@ option.zero-data::before {
   font-size: 90%;
   vertical-align: top;
 }
-#weapons table td:last-child {
+#weapons table tr:first-child td:last-child {
   padding: 0;
   border-right: 0;
   vertical-align: middle;
@@ -882,6 +882,20 @@ option.zero-data::before {
 }
 #weapons td:last-child span[onclick] {
   padding: 7px 5px;
+}
+#weapons tr.note {
+  border-bottom: none;
+}
+#weapons tr.options {
+  border-top: none;
+
+  td {
+    text-align: left;
+  }
+
+  label {
+    border: none;
+  }
 }
 @media screen and (width <= 735px){
   #attack-classes {

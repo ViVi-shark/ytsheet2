@@ -135,6 +135,7 @@ HTML
         foreach my $num (1 .. $pc{weaponNum}) {
             my $name = $pc{"weapon${num}Name"}.$pc{"weapon${num}Usage"} || '―';
             next if $added{$name};
+            next if $pc{"weapon${num}DisablePalette"};
             $html .= ::checkbox("paletteAttack${_}CheckWeapon${num}",$name,'setChatPalette');
             $added{$name} = 1;
         }

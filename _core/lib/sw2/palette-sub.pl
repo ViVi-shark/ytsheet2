@@ -668,6 +668,7 @@ sub palettePreset {
         $::pc{'weapon'.$_.'Class'} eq $::pc{'weapon'.($_-1).'Class'} &&
         $::pc{'weapon'.$_.'Category'} eq $::pc{'weapon'.($_-1).'Category'}
       );
+      next if $::pc{"weapon${_}DisablePalette"};
       $::pc{'weapon'.$_.'Name'} ||= $::pc{'weapon'.($_-1).'Name'};
       if($::pc{'weapon'.$_.'Name'} eq $::pc{'weapon'.($_-1).'Name'}){
         $::pc{'weapon'.$_.'Note'} ||= $::pc{'weapon'.($_-1).'Note'}

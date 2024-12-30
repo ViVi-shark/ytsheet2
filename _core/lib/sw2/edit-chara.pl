@@ -1068,7 +1068,7 @@ foreach my $num ('TMPL',1 .. $pc{weaponNum}) {
 print <<"HTML";
             <tbody id="weapon-row$num">
               <tr>
-                <td rowspan="2">
+                <td rowspan="3">
                   @{[input("weapon${num}Name",'','changeWeaponName','placeholder="名称" list="list-weapon-name"')]}
                   <span class="handle"></span>
                   <dl><dt>部位<dd>@{[ selectBox "weapon${num}Part","calcWeapon",1..$pc{partNum} ]}</dl>
@@ -1081,9 +1081,11 @@ print <<"HTML";
                 <td>@{[input("weapon${num}Own",'checkbox','calcWeapon')]}
                 <td><select name="weapon${num}Category" oninput="calcWeapon()">@{[option("weapon${num}Category",@data::weapon_names,'ガン（物理）','その他|<その他（盾など）>')]}</select>
                 <td><select name="weapon${num}Class" oninput="calcWeapon()">@{[option("weapon${num}Class",@weapon_users,'自動計算しない')]}</select>
-                <td rowspan="2"><span class="button" onclick="addWeapons(${num});setupBracketInputCompletion()">複<br>製</span>
-              <tr>
+                <td rowspan="3"><span class="button" onclick="addWeapons(${num});setupBracketInputCompletion()">複<br>製</span>
+              <tr class="note">
                 <td colspan="9">@{[textarea("weapon${num}Note",'calcWeapon','onchange="changeEquipMod()" placeholder="備考"')]}
+              <tr class="options">
+                <td colspan="9">@{[checkbox("weapon${num}DisablePalette",'チャットパレットから除外する','generatePaletteWeaponCheckbox();setChatPalette')]}
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
