@@ -683,7 +683,9 @@ body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks
       background-color: var(--monster-head-bg-color);
       border-width: 0px 1px 1px 0px;
       border-style: solid;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       min-width: 6em;
     }
     > dd {
