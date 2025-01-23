@@ -693,6 +693,7 @@ body:is(:not(.individualization), :not(.mount)) article > .skills .riding-checks
       padding: .2rem .5rem;
       border-width: 0px 0px 1px;
       border-style: solid;
+      word-break: auto-phrase;
     }
     > dt:last-of-type,
     > dd:last-of-type {
