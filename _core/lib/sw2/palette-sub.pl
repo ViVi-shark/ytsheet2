@@ -736,8 +736,8 @@ sub palettePreset {
   }
   ## 魔物
   elsif($type eq 'm') {
-    my $achievementDiceEnabled = $::in{sw2AchievementMode} ne 'fixed';
-    my $achievementFixedEnabled = $::in{sw2AchievementMode} ne 'dice';
+    my $achievementDiceEnabled = ($::in{sw2AchievementMode} // $::pc{sw2AchievementMode}) ne 'fixed';
+    my $achievementFixedEnabled = ($::in{sw2AchievementMode} // $::pc{sw2AchievementMode}) ne 'dice';
 
     if ($::pc{individualization}) {
       if ($::pc{mount}) {
