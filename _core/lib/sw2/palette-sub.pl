@@ -1080,8 +1080,25 @@ sub palettePreset {
     my $achievementDiceEnabled = ($::in{sw2AchievementMode} // $::pc{sw2AchievementMode}) ne 'fixed';
     my $achievementFixedEnabled = ($::in{sw2AchievementMode} // $::pc{sw2AchievementMode}) ne 'dice';
 
+    my $flyingName;
+    my $flyingBonus;
+    if ($::pc{skills} =~ /(?:^|\n)(?:[○◯〇])\s*((飛[行翔])Ⅱ?)(?:\s|\n|$)/) {
+      $flyingName = $2;
+
+      if ($1 =~ /Ⅱ/) {
+        $flyingBonus = 2;
+      }
+      else {
+        $flyingBonus = 1;
+      }
+    }
+    else {
+      $flyingBonus = 0;
+    }
+
     $text .= "//行為判定修正=0\n";
     $text .= "//行動判定修正=0\n";
+    $text .= "//${flyingName}=${flyingBonus}\n" if $flyingBonus > 0;
     $text .- "\n";
     $text .= "生死判定 2d+{生命抵抗}+{行為判定修正}\n" if $achievementDiceEnabled;
     $text .= "生死判定 {生命抵抗}（<f>$::pc{vitResistFix}+{行為判定修正}</f>）\n" if $achievementFixedEnabled;
@@ -1193,13 +1210,17 @@ sub palettePreset {
       if ($::pc{statusNum} > 1 && $::pc{'status'.$num.'Evasion'} ne '') {
         $text .= "\n";
         $text .= "//${partName}_回避修正=0\n";
+        $text .= "2d+{回避$_}+{${flyingName}}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正} 回避（${flyingName}）".$part."\n" if $achievementDiceEnabled && $flyingBonus > 0;
         $text .= "2d+{回避$_}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $achievementDiceEnabled;
+        $text .= "回避${part}（${flyingName}） {回避$_}（<f>" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${flyingName}}+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $achievementFixedEnabled && $flyingBonus > 0;
         $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status'.$num.'Evasion'} + 7) . "+{${partName}_回避修正}+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $achievementFixedEnabled;
         my $def = $::pc{'status'.$num.'Defense'} // 0;
         $text .= "\@${partName}:HP-+($def) ;物理ダメージ\n";
       }
       else {
+        $text .= "2d+{回避$_}+{${flyingName}}+{回避修正}+{行為判定修正}+{行動判定修正} 回避（${flyingName}）".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '' && $achievementDiceEnabled && $flyingBonus > 0;
         $text .= "2d+{回避$_}+{回避修正}+{行為判定修正}+{行動判定修正} 回避".$part."\n" if $::pc{'status' . $num . 'Evasion'} ne '' && $achievementDiceEnabled;
+        $text .= "回避${part}（${flyingName}） {回避$_}（<f>" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{${flyingName}}+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Evasion'} ne '' && $achievementFixedEnabled && $flyingBonus > 0;
         $text .= "回避${part} {回避$_}（<f>" . ($::pc{'status' . $num . 'Evasion'} + 7) . "+{回避修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Evasion'} ne '' && $achievementFixedEnabled;
         my $def = $::pc{'status'.$_.'Defense'} // 0;
         $text .= "\@HP-+($def) ;物理ダメージ\n";
@@ -1229,13 +1250,17 @@ sub palettePreset {
       if ($::pc{statusNum} > 1 && $part ne '' && $::pc{'status'.$num.'Accuracy'} ne '' && $::pc{'status'.$num.'Damage'} ne '') {
         $text .= "//${part}_命中修正=0\n";
         $text .= "//${part}_打撃修正=0\n";
-        $text .= "2d+{命中$_}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $achievementDiceEnabled;
-        $text .= "命中力${weapon} {命中${_}}（<f>" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $achievementFixedEnabled;
+        $text .= "2d+{命中$_}+{${flyingName}}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $achievementDiceEnabled && $flyingBonus > 0;
+        $text .= "2d+{命中$_}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $achievementDiceEnabled && $flyingBonus == 0;
+        $text .= "命中力${weapon} {命中${_}}（<f>" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${flyingName}}+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $achievementFixedEnabled && $flyingBonus > 0;
+        $text .= "命中力${weapon} {命中${_}}（<f>" . ($::pc{'status'.$num.'Accuracy'} + 7) . "+{${part}_命中修正}+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $achievementFixedEnabled && $flyingBonus == 0;
         $text .= "{ダメージ$_}+{${part}_打撃修正}+{打撃修正} ダメージ".$weapon."\n";
       }
       else {
-        $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementDiceEnabled;
-        $text .= "命中力${weapon} {命中$_}（<f>" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementFixedEnabled;
+        $text .= "2d+{命中$_}+{${flyingName}}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementDiceEnabled && $flyingBonus > 0;
+        $text .= "2d+{命中$_}+{命中修正}+{行為判定修正}+{行動判定修正} 命中力$weapon\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementDiceEnabled && $flyingBonus == 0;
+        $text .= "命中力${weapon} {命中$_}（<f>" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{${flyingName}}+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementFixedEnabled && $flyingBonus > 0;
+        $text .= "命中力${weapon} {命中$_}（<f>" . ($::pc{'status' . $num . 'Accuracy'} + 7) . "+{命中修正}+{行為判定修正}+{行動判定修正}</f>）\n" if $::pc{'status' . $num . 'Accuracy'} ne '' && $achievementFixedEnabled && $flyingBonus == 0;
         $text .= "{ダメージ$_}+{打撃修正} ダメージ" . $weapon . "\n" if $::pc{'status' . $num . 'Damage'} ne '';
       }
       $text .= "###\n" if $::pc{statusNum} > 1;
@@ -1307,6 +1332,7 @@ sub palettePreset {
       (?=^$skillMarkRE|^●|\z)
       /
       foreach my $skillName (split('、', $+{name})) {
+      next if $skillName eq '飛行' || $skillName eq '飛行Ⅱ' || $skillName eq '飛翔' || $skillName eq '飛翔Ⅱ';
       $text .= ($achievementFixedEnabled || $+{base} eq '' ? (convertMark($+{mark}).$skillName.($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n") : '')
             .($+{base} ne '' && $achievementDiceEnabled ?"2d+{${skillName}}+{行為判定修正}+{行動判定修正} ".convertMark($+{mark})."${skillName}$+{other}\n":'')
             .skillNote($+{head},$skillName,$+{note})."\n";
