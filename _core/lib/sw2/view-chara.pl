@@ -111,6 +111,9 @@ if($pc{forbidden} && !$pc{yourAuthor}){
   $pc{forbidden} = $forbidden;
   $pc{forbiddenMode} = 1;
 }
+else {
+  $pc{cashbook} = "[↓]自動転記\n$pc{additionalExpenses}\n[---]\n" . $pc{cashbook} if $pc{additionalExpenses} ne '';
+}
 
 ### その他 --------------------------------------------------
 $SHEET->param(rawName => $pc{characterName} || ($pc{aka} ? "“$pc{aka}”" : ''));
@@ -680,6 +683,18 @@ if(!$pc{forbiddenMode}){
 }
 $SHEET->param(AttackClasses => \@atacck);
 
+# 支出記法を除去する
+sub removeExpense {
+  my $text = shift;
+  $text =~ s#::-\d[-+*/\d,]*(?:[GＧ]|(\s|[\r\n]|<|&lt;)|$)#$1#i;
+  return $text;
+}
+sub removeAllExpenses {
+  my $text = shift;
+  $text =~ s#::-\d[-+*/\d,]*(?:[GＧ]|(\s|[\r\n]|<|&lt;)|$)#$1#gi;
+  return $text;
+}
+
 ### 武器 --------------------------------------------------
 sub replaceModificationNotation {
   my $sourceText = shift // '';
@@ -767,7 +782,7 @@ else {
       DMG      => addNum($pc{'weapon'.$_.'Dmg'}),
       DMGTOTAL => $pc{'weapon'.$_.'DmgTotal'},
       OWN      => $pc{'weapon'.$_.'Own'},
-      NOTE     => replaceModificationNotation($pc{'weapon'.$_.'Note'}),
+      NOTE     => removeExpense(replaceModificationNotation($pc{'weapon'.$_.'Note'})),
       NOTESPAN => $pc{'weapon'.$_.'NoteSpan'},
       NOTEOFF  => $pc{'weapon'.$_.'NoteOff'},
       CLOSE    => ($pc{'weapon'.$_.'NameOff'} || $first ? 0 : 1),
@@ -909,7 +924,7 @@ else {
       EVA  => $pc{'armour'.$_.'Eva'} ? addNum($pc{'armour'.$_.'Eva'}) : ($pc{'armour'.$_.'Category'} =~ /[鎧盾]/ ? '―' : ''),
       DEF  => $pc{'armour'.$_.'Def'} // ($pc{'armour'.$_.'Category'} =~ /[鎧盾]/ ? '0' : ''),
       OWN  => $pc{'armour'.$_.'Own'},
-      NOTE => replaceModificationNotation($pc{'armour'.$_.'Note'}),
+      NOTE => removeExpense(replaceModificationNotation($pc{'armour'.$_.'Note'})),
     } );
   }
   $SHEET->param(Armours => \@armours);
@@ -984,11 +999,14 @@ else {
       TYPE => @$_[0],
       NAME => formatItemName($pc{'accessory'.@$_[1].'Name'}),
       OWN  => $pc{'accessory'.@$_[1].'Own'},
-      NOTE => replaceModificationNotation($pc{'accessory'.@$_[1].'Note'}),
+      NOTE => removeExpense(replaceModificationNotation($pc{'accessory'.@$_[1].'Note'})),
     } );
   }
   $SHEET->param(Accessories => \@accessories);
 }
+
+### 所持品 --------------------------------------------------
+$SHEET->param(items => removeAllExpenses($pc{items}));
 
 ### 部位 --------------------------------------------------
 if(exists $data::races{$pc{race}}{parts}){

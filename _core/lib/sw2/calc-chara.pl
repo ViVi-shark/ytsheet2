@@ -58,7 +58,9 @@ sub data_calc {
   $pc{historyMoneyTotal} = $pc{moneyTotal};
   $pc{historyHonorTotal} = $pc{honor};
   ## 収支履歴計算
+  $pc{additionalExpenses} = findExpensesFromItems(\%pc);
   my $cashbook = $pc{cashbook};
+  $cashbook = findExpensesFromItems(\%pc) . "\n" . $cashbook if $pc{additionalExpenses} ne '';
   $cashbook =~ s/::((?:[\+\-\*\/]?[0-9,]+)+)/$pc{moneyTotal} += s_eval($1)/eg;
   $cashbook =~ s/:>((?:[\+\-\*\/]?[0-9,]+)+)/$pc{depositTotal} += s_eval($1)/eg;
   $cashbook =~ s/:<((?:[\+\-\*\/]?[0-9,]+)+)/$pc{debtTotal} += s_eval($1)/eg;
@@ -804,6 +806,7 @@ sub data_calc {
   $pc{fellowNote}    =~ s/\r\n?|\n/<br>/g;
   $pc{chatPalette}   =~ s/\r\n?|\n/<br>/g;
   $pc{'chatPaletteInsert'.$_} =~ s/\r\n?|\n/<br>/g foreach(1..$pc{chatPaletteInsertNum});
+  $pc{additionalExpenses} =~ s/\r\n?|\n/<br>/g;
   $pc{$_} =~ s/\r\n?|\n/<br>/g foreach (grep {/^fellow[-0-9]+(?:Action|Note)$/} keys %pc);
   
   #### 保存処理でなければここまで --------------------------------------------------
@@ -840,6 +843,80 @@ sub data_calc {
                "$pc{lastSession}<>$pc{image}<> $pc{tags} <>$pc{hide}<>$pc{fellowPublic}<>";
 
   return %pc;
+}
+
+sub findExpensesFromItems {
+  my %pc = %{shift;};
+
+  sub pushRowIfMatchedExpensePattern {
+    my @rows = @{shift;};
+    my $text = shift;
+    my $title = shift;
+    push(@rows, ($title // $1) . $2) if $text =~ /^(.*?)(::-\d[-+*\/\d,]*)(?:[GＧ]|\s|[\r\n]|$)/i;
+    return @rows;
+  }
+
+  sub findExpensesFromWeapons {
+    my $weaponNum = $pc{weaponNum} // 0;
+    return () if $weaponNum == 0;
+
+    my @rows = ();
+
+    foreach my $i (1 .. $weaponNum) {
+      my $name = $pc{"weapon${i}Name"} // '';
+      my $note = $pc{"weapon${i}Note"} // '';
+      @rows = pushRowIfMatchedExpensePattern(\@rows, $note, $name);
+    }
+
+    return @rows;
+  }
+
+  sub findExpensesFromArmours {
+    my $armourNum = $pc{armourNum} // 0;
+    return () if $armourNum == 0;
+
+    my @rows = ();
+
+    foreach my $i (1 .. $armourNum) {
+      my $name = $pc{"armour${i}Name"} // '';
+      my $note = $pc{"armour${i}Note"} // '';
+      @rows = pushRowIfMatchedExpensePattern(\@rows, $note, $name);
+    }
+
+    return @rows;
+  }
+
+  sub findExpensesFromAccessories {
+    my @rows = ();
+
+    foreach (::getAvailableAccessories(\%pc)) {
+      my %accessory = %{$_};
+      my $name = $accessory{name} // '';
+      my $note = $accessory{note} // '';
+      @rows = pushRowIfMatchedExpensePattern(\@rows, $note, $name);
+    }
+
+    return @rows;
+  }
+
+  sub findExpensesFromBaggage {
+    my $text = $pc{items} // '';
+    my @rows = ();
+
+    foreach my $row (split(/[\r\n]+/, $text)) {
+      @rows = pushRowIfMatchedExpensePattern(\@rows, $row, undef);
+    }
+
+    return @rows;
+  }
+
+  my @all = ();
+  push(@all, findExpensesFromWeapons());
+  push(@all, findExpensesFromArmours());
+  push(@all, findExpensesFromAccessories());
+  push(@all, findExpensesFromBaggage());
+
+  return join("\n", @all);
 }
 
 1;

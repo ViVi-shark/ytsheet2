@@ -1050,7 +1050,7 @@ print <<"HTML";
                 <td><select name="weapon${num}Class" oninput="calcWeapon()">@{[option("weapon${num}Class",@weapon_users,'自動計算しない')]}</select>
                 <td rowspan="2"><span class="button" onclick="addWeapons(${num});setupBracketInputCompletion()">複<br>製</span>
               <tr>
-                <td colspan="3">@{[input("weapon${num}Note",'','calcWeapon','onchange="changeEquipMod()" placeholder="備考"')]}
+                <td colspan="3">@{[input("weapon${num}Note",'','calcWeapon','onchange="changeEquipMod();calcCash()" placeholder="備考"')]}
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
@@ -1060,6 +1060,7 @@ print <<"HTML";
           <ul class="annotate">
             <li>Ｃ値は自動計算されません。
             <li><code>\@防護点+1</code>や<code>\@回避力+1</code>のように記述すると、<span class="text-em">常時</span>有効な上昇効果が自動計算されます。<br>有効な項目は、装飾品欄と同様です。
+            <li><code>::-57,000</code>のように記述すると、支出として所持金の自動計算に加味されます。<br>末尾に単位<code>G</code>をつけて、<code>-57,000G</code>のようにも記述できます。
             <li id="artisan-annotate" @{[ display $pc{masteryArtisan} ]}>※備考欄に<code>〈魔器〉</code>と記入すると魔器習熟が反映されます。
           </ul>
           <div class="add-del-button"><a onclick="addWeapons();setupBracketInputCompletion()">▼</a><a onclick="delWeapons()">▲</a></div>
@@ -1177,7 +1178,7 @@ foreach my $num ('TMPL',1 .. $pc{armourNum}) {
                 <td>@{[ input "armour${num}Eva",'number','calcDefense' ]}
                 <td>@{[ input "armour${num}Def",'number','calcDefense' ]}
                 <td>@{[ input "armour${num}Own",'checkbox','calcDefense();calcMobility','disabled' ]}
-                <td>@{[ input "armour${num}Note",'','','onchange="changeEquipMod()"' ]}
+                <td>@{[ input "armour${num}Note",'','','onchange="changeEquipMod();calcCash()"' ]}
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
@@ -1221,6 +1222,7 @@ print <<"HTML";
             <li><code>\@敏捷度-6</code>や<code>\@精神抵抗力+2</code>のように記述すると、<span class="text-em">常時</span>有効な上昇効果が自動計算されます。<br>
               有効な項目は、装飾品欄と同様です。<br>
               <code>\@</code>による修正は合算のチェックに関わらず計算されるため、予備装備や切り替えが想定されるものは注意してください。<br>
+            <li><code>::-57,000</code>のように記述すると、支出として所持金の自動計算に加味されます。<br>末尾に単位<code>G</code>をつけて、<code>-57,000G</code>のようにも記述できます。
           </ul>
         </div>
 
@@ -1322,7 +1324,7 @@ foreach (
         <option value="HP" @{[ $pc{"accessory@$_[1]Own"} eq 'HP' ? 'selected':'']}>HP+2</option>
         <option value="MP" @{[ $pc{"accessory@$_[1]Own"} eq 'MP' ? 'selected':'' ]}>MP+2</option>
       </select>
-    <td>@{[input('accessory'.@$_[1].'Note','','','onchange="changeEquipMod()"')]}
+    <td>@{[input('accessory'.@$_[1].'Note','','','onchange="changeEquipMod();calcCash()"')]}
 HTML
 }
 print <<"HTML";
@@ -1335,6 +1337,7 @@ print <<"HTML";
             有効な項目は、<code>器用度</code>～<code>精神力</code> <code>生命抵抗力</code> <code>精神抵抗力</code> <code>回避力</code> <code>防護点</code> <code>移動力</code> <code>魔力</code> <code>行使判定</code> <code>魔物知識判定</code> <code>先制判定</code> <code>武器必筋上限</code>です。<br>
             同じ項目へは累積するため、同名や効果排他のアイテムには注意してください。<br>
             能力値の増強にかぎり、<code>\@筋力増強+2</code>のように<code>増強</code>の文言を記述することで、能力値ごとに最大の値のみを採用できます。
+          <li><code>::-57,000</code>のように記述すると、支出として所持金の自動計算に加味されます。<br>末尾に単位<code>G</code>をつけて、<code>-57,000G</code>のようにも記述できます。
         </ul>
         </div>
       </div>
@@ -1350,7 +1353,10 @@ print <<"HTML";
           </dl>
           <div class="box" id="items">
             <h2 class="in-toc">所持品</h2>
-            <textarea name="items">$pc{items}</textarea>
+            <textarea name="items" onchange="calcCash()">$pc{items}</textarea>
+            <ul class="annotate">
+              <li><code>::-57,000</code>のように記述すると、支出として所持金の自動計算に加味されます。<br>末尾に単位<code>G</code>をつけて、<code>-57,000G</code>のようにも記述できます。
+            </ul>
           </div>
         </div>
         <div id="area-items-R">

@@ -1920,6 +1920,7 @@ function calcCash(){
   }
   document.getElementById("history-money-total").textContent = commify(cash);
   let s = form.cashbook.value;
+  s = findExpensesFromItems() + '\n' + s;
   s.replace(
     /::([\+\-\*\/]?[0-9,]+)+/g,
     function (num, idx, old) {
@@ -1956,6 +1957,104 @@ function calcCash(){
     form.deposit.readOnly = true;
   }
   else { form.deposit.readOnly = false; }
+}
+
+/**
+ * @return {string}
+ */
+function findExpensesFromItems() {
+  const expenseRe = /(::-\d[-+*\/\d,]*)(?:[GＧ]|\s|[\r\n]|$)/i;
+
+  /**
+   * @return {string[]}
+   */
+  function findExpensesFromWeapons() {
+    const weaponNum = parseInt(document.querySelector('input[name="weaponNum"]').value ?? '0');
+    const rows = [];
+
+    for (let i = 1; i <= weaponNum; i++) {
+      const note = document.querySelector(`[name="weapon${i}Note"]`).value ?? '';
+      const m = note.match(expenseRe);
+
+      if (m != null) {
+        rows.push(m[1]);
+      }
+    }
+
+    return rows;
+  }
+
+  /**
+   * @return {string[]}
+   */
+  function findExpensesFromArmours() {
+    const armourNum = parseInt(document.querySelector('input[name="armourNum"]').value ?? '0');
+    const rows = [];
+
+    for (let i = 1; i <= armourNum; i++) {
+      const note = document.querySelector(`[name="armour${i}Note"]`).value ?? '';
+      const m = note.match(expenseRe);
+
+      if (m != null) {
+        rows.push(m[1]);
+      }
+    }
+
+    return rows;
+  }
+
+  /**
+   * @return {string[]}
+   */
+  function findExpensesFromAccessories() {
+    const rows = [];
+
+    for (const slotName of ['Head', 'Ear', 'Face', 'Neck', 'Back', 'HandR', 'HandL', 'Waist', 'Leg', 'Other', 'Other2', 'Other3', 'Other4']) {
+      const suffixes = [''];
+
+      if (document.querySelector(`[name="accessory${slotName}Add"]`).checked) {
+        suffixes.push('_');
+
+        if (document.querySelector(`[name="accessory${slotName}_Add"]`).checked) {
+          suffixes.push('__');
+        }
+      }
+
+      for (const suffix of suffixes) {
+        const note = document.querySelector(`[name="accessory${slotName}${suffix}Note"]`).value ?? '';
+        const m = note.match(expenseRe);
+
+        if (m != null) {
+          rows.push(m[1]);
+        }
+      }
+    }
+
+    return rows;
+  }
+
+  /**
+   * @return {string[]}
+   */
+  function findExpensesFromBaggage() {
+    const text = document.querySelector('[name="items"]').value ?? '';
+
+    return text
+        .split(/[\r\n]+/)
+        .map(
+            row => {
+              const m = row.match(expenseRe);
+              return m != null ? m[1] : null;
+            }
+        )
+        .filter(x => x != null);
+  }
+
+  return findExpensesFromWeapons()
+      .concat(findExpensesFromArmours())
+      .concat(findExpensesFromAccessories())
+      .concat(findExpensesFromBaggage())
+      .join('\n');
 }
 
 // 穢れ・侵蝕の影響など ----------------------------------------
