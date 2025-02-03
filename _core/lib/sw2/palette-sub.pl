@@ -509,6 +509,8 @@ sub palettePreset {
       $text .= "//回復量修正=0\n" if $::pc{lvCon} || $::pc{lvPri} || $::pc{lvAby} || $::pc{lvGri} || $::pc{lvBar} || $::pc{lvMag} >= 2;
     }
 
+    my $hasVeilOfGoddess = (grep { $_ =~ /女神のヴェール/ } getAvailableAccessoryNames(\%::pc)) ? 1 : 0;
+
     foreach my $class (@classNames){
       next if !($data::class{$class}{magic}{jName} || $data::class{$class}{craft}{stt});
       my $id   = $data::class{$class}{id};
@@ -600,7 +602,9 @@ sub palettePreset {
             }
             next if !$exist;
           }
-          $text .= "k${pow}[13]+$magicPower+{回復量修正} 回復量\n"
+          my $critical = 13;
+          $critical = 10 if $data::class{$class}{magic}{jName} eq '神聖魔法' && $hasVeilOfGoddess;
+          $text .= "k${pow}[${critical}]+$magicPower+{回復量修正} 回復量\n"
         }
 
         $text =~ s/^(k[0-9]+)\[(.+?)\]/$1\[($2)\]/gm if $bot{BCD};
