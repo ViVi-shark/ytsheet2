@@ -196,7 +196,10 @@ sub palettePreset {
     $text .= "//行動判定修正=0\n";
     # 基本判定
     require($::core_dir . '/lib/sw2/data-chara-checking.pl');
-    $text .= "### ■非戦闘系\n";
+    $text .= "### ■非戦闘系";
+    $text .= "・魔物知識" if $::pc{monsterLore};
+    $text .= "・先制" if $::pc{initiative};
+    $text .= "\n";
     foreach my $statusName ('器用度', '敏捷度', '筋力', '生命力', '知力') {
       my $statusNameShort = substr($statusName, 0, 2);
 
