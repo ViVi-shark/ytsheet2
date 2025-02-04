@@ -484,19 +484,26 @@ sub palettePreset {
     }
     $text .= appendPaletteInsert('feats');
 
-    # 魔法
-    foreach my $name (@classNames){
+    # 魔法・技芸
+    my @magicSectionHeadlineParts = ();
+    foreach my $name (@classNames) {
       next if !($data::class{$name}{magic}{jName} || $data::class{$name}{craft}{stt});
       next if !$::pc{'lv' . $data::class{$name}{id} };
+
+      unshift(@magicSectionHeadlineParts, '魔法') if $data::class{$name}{magic}{jName} && $magicSectionHeadlineParts[0] ne '魔法';
+      push(@magicSectionHeadlineParts, $data::class{$name}{craft}{jName}) if $data::class{$name}{craft}{jName};
+      push(@magicSectionHeadlineParts, '終律') if !$::SW2_0 && $data::class{$name}{craft}{jName} eq '呪歌';
+    }
+
+    if (@magicSectionHeadlineParts) {
       $text .= "###\n" if $bot{TKY};
-      $text .= "### ■魔法系\n";
+      $text .= "### ■@{[join('・', @magicSectionHeadlineParts)]}の判定や威力\n";
       $text .= "//魔力修正=".($::pc{magicPowerAdd}+$::pc{magicPowerEquip})."\n";
       $text .= "//行使修正=".($::pc{magicCastAdd }+$::pc{magicCastEquip })."\n";
       $text .= "//魔法C=10\n";
       $text .= "//魔法D修正=".($::pc{magicDamageAdd}+$::pc{magicDamageEquip})."\n";
       $text .= "//物理魔法D修正=".($::pc{magicDamageAdd}||0)."\n" if $::pc{lvDru} || $::pc{lvSor} >= 12 || ($::pc{lvFai} && $::pc{fairyContractEarth});
       $text .= "//回復量修正=0\n" if $::pc{lvCon} || $::pc{lvPri} || $::pc{lvAby} || $::pc{lvGri} || $::pc{lvBar} || $::pc{lvMag} >= 2;
-      last;
     }
 
     foreach my $class (@classNames){
