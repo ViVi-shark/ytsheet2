@@ -106,8 +106,7 @@ table.data-table tbody span.source .source-page::before {
   display: none;
 }
 
-@media screen and (max-width:767px){
-  #area-status {
+#area-status {
   @media screen and (width <= 767px){
     min-height: 0%;
     grid-gap: .5rem;
