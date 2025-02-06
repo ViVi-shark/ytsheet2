@@ -1333,7 +1333,11 @@ sub palettePreset {
       /
       foreach my $skillName (split('、', $+{name})) {
       next if $skillName eq '飛行' || $skillName eq '飛行Ⅱ' || $skillName eq '飛翔' || $skillName eq '飛翔Ⅱ';
-      $text .= ($achievementFixedEnabled || $+{base} eq '' ? (convertMark($+{mark}).$skillName.($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n") : '')
+      my $displayName = $skillName;
+      $displayName = '２回攻撃' if $displayName eq '2回攻撃';
+      $displayName = '３回攻撃' if $displayName eq '3回攻撃';
+      $displayName = '４回攻撃' if $displayName eq '4回攻撃';
+      $text .= ($achievementFixedEnabled || $+{base} eq '' ? (convertMark($+{mark}).$displayName.($+{fix} ne '' || $+{other} ne '' ? "／$+{fix}$+{other}" : '')."\n") : '')
             .($+{base} ne '' && $achievementDiceEnabled ?"2d+{${skillName}}+{行為判定修正}+{行動判定修正} ".convertMark($+{mark})."${skillName}$+{other}\n":'')
             .skillNote($+{head},$skillName,$+{note})."\n";
       }
