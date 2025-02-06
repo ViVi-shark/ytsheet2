@@ -272,6 +272,7 @@ sub palettePreset {
 
         if ($craftName eq '【リカバリィ】') {
           $otherStatusManipulation .= 'HP+{エンハンサー}';
+          $otherStatusManipulation .= '+{生命B}' if grep { /スマルティエの武道帯/ } getAvailableAccessoryNames(\%::pc);
         }
 
         $text .= "\@MP-${cost}";

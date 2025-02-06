@@ -309,6 +309,47 @@ sub fairyRank {
   return $rank{$i}[$lv] || '×';
 }
 
+### 有効な装飾品を抽出する --------------------------------------------------
+sub getAvailableAccessories {
+  my %pc = %{shift;};
+
+  my @accessories = ();
+
+  foreach my $accessorySlotName ('Head', 'Ear', 'Face', 'Neck', 'Back', 'HandR', 'HandL', 'Waist', 'Leg', 'Other', 'Other2', 'Other3', 'Other4') {
+    my @suffixes = ('');
+    push(@suffixes, '_') if $pc{"accessory${accessorySlotName}Add"};
+    push(@suffixes, '__') if $pc{"accessory${accessorySlotName}Add"} && $pc{"accessory${accessorySlotName}_Add"};
+
+    foreach my $suffix (@suffixes) {
+      my $accessoryName = $pc{"accessory${accessorySlotName}${suffix}Name"};
+      next unless defined($accessoryName) && $accessoryName ne '';
+
+      push(
+          @accessories,
+          {
+              name => $accessoryName,
+              note => $pc{"accessory${accessorySlotName}${suffix}Note"},
+              own  => $pc{"accessory${accessorySlotName}${suffix}Own"},
+          }
+      );
+    }
+  }
+
+  return @accessories;
+}
+sub getAvailableAccessoryNames {
+  my %pc = %{shift;};
+
+  my @names = ();
+
+  foreach (getAvailableAccessories(\%pc)) {
+    my %accessory = %{$_};
+    push(@names, $accessory{name});
+  }
+
+  return @names;
+}
+
 ### 補正値記法の解釈 --------------------------------------------------
 sub extractModifications {
   my %pc = %{shift;};
