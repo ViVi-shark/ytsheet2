@@ -353,7 +353,7 @@ article {
     grid-template-columns: 4.2em 1fr;
   }
 }
-.data-magic.data-arts dl.premise dd {
+.data-magic.data-arts dl:is(.premise, .equip) dd {
   > .content {
     width: 100%;
     height: max-content;
