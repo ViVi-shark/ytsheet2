@@ -575,7 +575,7 @@ sub palettePreset {
         else {
           $text .= "k$::pc{'weapon'.$_.'Rate'}\[";
           $text .= "(" if $bot{BCD};
-          $text .= "$::pc{'weapon'.$_.'Crit'}+{C修正}$activeCrit";
+          $text .= "$::pc{'weapon'.$_.'Crit'}@{[makeStatesExpression(\%::pc, ['武器攻撃クリティカル値'])]}+{C修正}$activeCrit";
           $text .= ")" if $bot{BCD};
           $text .= "\]+";
           $text .= $::pc{paletteUseVar} ? "{追加D$_}" : $::pc{"weapon${_}DmgTotal"};

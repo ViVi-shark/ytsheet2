@@ -37,6 +37,14 @@ our @stateTargets = (
         fieldName => 'magicDamage',
     },
     {
+        name      => '武器攻撃クリティカル値',
+        fieldName => 'weaponAttackCritical',
+    },
+    {
+        name      => '魔法クリティカル値',
+        fieldName => 'magicCritical',
+    },
+    {
         name      => '先制判定',
         fieldName => 'initiative',
     },
