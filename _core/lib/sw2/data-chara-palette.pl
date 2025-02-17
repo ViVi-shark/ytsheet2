@@ -49,6 +49,14 @@ our @stateTargets = (
         fieldName => 'mndB',
     },
     {
+        name      => '行為判定',
+        fieldName => 'checkingAny',
+    },
+    {
+        name      => '行動判定',
+        fieldName => 'checkingAction',
+    },
+    {
         name      => '技巧判定',
         fieldName => 'packageTec',
     },
