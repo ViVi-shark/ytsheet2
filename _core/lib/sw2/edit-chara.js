@@ -2416,7 +2416,7 @@ function generatePaletteWeaponCheckbox (){
     for(let num = 1; num <= form.weaponNum.value; num++){
       const name = (form[`weapon${num}Name`].value || form[`weapon${num-1}Name`]?.value || '')+form[`weapon${num}Usage`].value;
 
-      if (form[`weapon${num}DisablePalette`].checked) {
+      if (form[`weapon${num}DisableHitInPalette`]?.checked && form[`weapon${num}DisableRateInPalette`]?.checked) {
         continue;
       }
 

@@ -655,6 +655,7 @@ sub palettePreset {
     }
     
     foreach (1 .. $::pc{weaponNum}){
+      my $weaponId = $_;
       next if $::pc{'weapon'.$_.'Acc'}.$::pc{'weapon'.$_.'Rate'}.
               $::pc{'weapon'.$_.'Crit'}.$::pc{'weapon'.$_.'Dmg'} eq '';
       next if (
@@ -668,7 +669,7 @@ sub palettePreset {
         $::pc{'weapon'.$_.'Class'} eq $::pc{'weapon'.($_-1).'Class'} &&
         $::pc{'weapon'.$_.'Category'} eq $::pc{'weapon'.($_-1).'Category'}
       );
-      next if $::pc{"weapon${_}DisablePalette"};
+      next if $::pc{"weapon${_}DisableHitInPalette"} && $::pc{"weapon${_}DisableRateInPalette"};
       $::pc{'weapon'.$_.'Name'} ||= $::pc{'weapon'.($_-1).'Name'};
       if($::pc{'weapon'.$_.'Name'} eq $::pc{'weapon'.($_-1).'Name'}){
         $::pc{'weapon'.$_.'Note'} ||= $::pc{'weapon'.($_-1).'Note'}
@@ -680,6 +681,7 @@ sub palettePreset {
       my %dmgTexts;
       foreach my $paNum (0 .. $::pc{paletteAttackNum}){
         next if($paNum && !($::pc{'paletteAttack'.$paNum.'Name'} && $::pc{'paletteAttack'.$paNum.'CheckWeapon'.$_}));
+        next if $::pc{"weapon${weaponId}DisableRateInPalette"};
 
         my $text;
         my $activeCrit = $::pc{'paletteAttack'.$paNum.'Crit'} ? optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Crit'}" : '';
@@ -769,6 +771,7 @@ sub palettePreset {
           $text .= "＋$::pc{'paletteAttack'.$paNum.'Name'}";
         }
         $text .= "\n";
+        $text =~ s/[^\n]+\n$// if !defined($dmgTexts{$paNum}) || $::pc{"weapon${weaponId}DisableHitInPalette"};
         
         if($dmgTexts{$paNum + 1} && $dmgTexts{$paNum} eq $dmgTexts{$paNum + 1}){
           next;

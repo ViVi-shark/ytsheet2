@@ -1085,7 +1085,9 @@ print <<"HTML";
               <tr class="note">
                 <td colspan="9">@{[textarea("weapon${num}Note",'calcWeapon','onchange="changeEquipMod()" placeholder="備考"')]}
               <tr class="options">
-                <td colspan="9">@{[checkbox("weapon${num}DisablePalette",'チャットパレットから除外する','generatePaletteWeaponCheckbox();setChatPalette')]}
+                <td colspan="9">
+                  @{[checkbox("weapon${num}DisableHitInPalette",'チャットパレットから命中を除外する','generatePaletteWeaponCheckbox();setChatPalette')]}
+                  @{[checkbox("weapon${num}DisableRateInPalette",'チャットパレットからダメージを除外する','generatePaletteWeaponCheckbox();setChatPalette')]}
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
