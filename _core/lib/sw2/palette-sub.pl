@@ -805,6 +805,9 @@ sub palettePreset {
           $magicalDefense .= addNum(abs($attributeOffset));
         }
 
+        $physicalDefense .= makeStatesExpression(\%::pc, ["${attributeName}属性軽減"]);
+        $magicalDefense .= makeStatesExpression(\%::pc, ["${attributeName}属性軽減"]);
+
         if ($taxaOffset < 0) {
           $physicalDefense .= addNum(abs($taxaOffset));
           $magicalDefense .= addNum(abs($taxaOffset));

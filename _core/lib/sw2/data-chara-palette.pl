@@ -48,6 +48,54 @@ our @stateTargets = (
         name      => '先制判定',
         fieldName => 'initiative',
     },
+    {
+        name      => '土属性軽減',
+        fieldName => 'earthDamageReduction',
+    },
+    {
+        name      => '水・氷属性軽減',
+        fieldName => 'waterDamageReduction',
+    },
+    {
+        name      => '炎属性軽減',
+        fieldName => 'flameDamageReduction',
+    },
+    {
+        name      => '風属性軽減',
+        fieldName => 'windDamageReduction',
+    },
+    {
+        name      => '雷属性軽減',
+        fieldName => 'thunderDamageReduction',
+    },
+    {
+        name      => '純エネルギー属性軽減',
+        fieldName => 'energyDamageReduction',
+    },
+    {
+        name      => '断空属性軽減',
+        fieldName => 'slashDamageReduction',
+    },
+    {
+        name      => '衝撃属性軽減',
+        fieldName => 'impactDamageReduction',
+    },
+    {
+        name      => '毒属性軽減',
+        fieldName => 'poisonDamageReduction',
+    },
+    {
+        name      => '病気属性軽減',
+        fieldName => 'diseaseDamageReduction',
+    },
+    {
+        name      => '精神効果属性軽減',
+        fieldName => 'mentalDamageReduction',
+    },
+    {
+        name      => '呪い属性軽減',
+        fieldName => 'curseDamageReduction',
+    },
 );
 
 sub getPaletteStateFieldNames {
