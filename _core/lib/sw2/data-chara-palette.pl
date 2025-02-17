@@ -49,6 +49,22 @@ our @stateTargets = (
         fieldName => 'mndB',
     },
     {
+        name      => '技巧判定',
+        fieldName => 'packageTec',
+    },
+    {
+        name      => '運動判定',
+        fieldName => 'packageAgi',
+    },
+    {
+        name      => '観察判定',
+        fieldName => 'packageObs',
+    },
+    {
+        name      => '知識判定',
+        fieldName => 'packageKno',
+    },
+    {
         name      => '行使判定',
         fieldName => 'cast',
     },

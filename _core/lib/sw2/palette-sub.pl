@@ -221,13 +221,16 @@ sub palettePreset {
         my $name = $class.$data{$p_id}{name};
         my $packageModifiers = '';
         if ($name =~ /技巧$/) {
-          $packageModifiers = makeStatesExpression(\%::pc, '器用度ボーナス');
+          $packageModifiers = makeStatesExpression(\%::pc, ['技巧判定', '器用度ボーナス']);
         }
         elsif ($name =~ /運動$/) {
-          $packageModifiers = makeStatesExpression(\%::pc, '敏捷度ボーナス');
+          $packageModifiers = makeStatesExpression(\%::pc, ['運動判定', '敏捷度ボーナス']);
         }
         elsif ($name =~ /(?:観察|知識)$/) {
-          $packageModifiers = makeStatesExpression(\%::pc, '知力ボーナス');
+          my @targets = ('知力ボーナス');
+          unshift(@targets, '観察判定') if $name =~ /観察/;
+          unshift(@targets, '知識判定') if $name =~ /知識/;
+          $packageModifiers = makeStatesExpression(\%::pc, \@targets);
         }
 
         $text .= "2d+{$name}${packageModifiers}+{行為判定修正}+{行動判定修正} $name\n";
