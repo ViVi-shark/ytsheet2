@@ -207,7 +207,7 @@ sub palettePreset {
         my $fieldName = "checking_$checking{fieldName}_mod";
         next unless $::pc{$fieldName};
         my $mod = addNum $::pc{$fieldName};
-        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}+{行動判定修正} ${checkingName}（冒険者）\n";
+        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
       }
     }
     foreach my $class (@classNames){
@@ -266,7 +266,7 @@ sub palettePreset {
         if (@modifiedCheckingNames) {
           foreach my $checkingName (@modifiedCheckingNames) {
             my $mod = $checkingModifiers{$checkingName};
-            $text .= "2d+{${name}}+{${statusJa}B}${mod}+{行為判定修正}+{行動判定修正} ${checkingName}（${name}）\n";
+            $text .= "2d+{${name}}+{${statusJa}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '' : '+{行動判定修正}']} ${checkingName}（${name}）\n";
           }
         }
       }
