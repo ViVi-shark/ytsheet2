@@ -463,10 +463,21 @@ sub palettePreset {
         my $activePower = $::pc{'paletteMagic'.$paNum.'Power'} ? optimizeOperatorFirst("+$::pc{'paletteMagic'.$paNum.'Power'}") : '';
         my $activeCast  = $::pc{'paletteMagic'.$paNum.'Cast' } ? optimizeOperatorFirst("+$::pc{'paletteMagic'.$paNum.'Cast' }") : '';
 
+        my $modification;
+        if ($name =~ /魔/) {
+          $modification = makeStatesExpression(\%::pc, ['知力ボーナス', '行使判定']);
+        }
+        elsif ($name =~ /歌/ || $name eq '操気') {
+          $modification = makeStatesExpression(\%::pc, ['精神力ボーナス']);
+        }
+        elsif ($name eq '賦術') {
+          $modification = makeStatesExpression(\%::pc, ['知力ボーナス']);
+        }
+
         $text .= "2d+{$power}";
-        if   ($name =~ /魔/){ $text .= "$activePower+{行使修正}+{行為判定修正}+{行動判定修正}$activeCast ${name}行使$activeName\n"; }
-        elsif($name =~ /歌/){ $text .= "+{行為判定修正}+{行動判定修正} 呪歌演奏\n"; }
-        else                { $text .= "+{行為判定修正}+{行動判定修正} ${name}\n"; }
+        if   ($name =~ /魔/){ $text .= "$activePower${modification}+{行使修正}+{行為判定修正}+{行動判定修正}$activeCast ${name}行使$activeName\n"; }
+        elsif($name =~ /歌/){ $text .= "${modification}+{行為判定修正}+{行動判定修正} 呪歌演奏\n"; }
+        else                { $text .= "${modification}+{行為判定修正}+{行動判定修正} ${name}\n"; }
         
         if($dmgTexts{$paNum + 1} && $dmgTexts{$paNum} eq $dmgTexts{$paNum + 1}){
           next;
