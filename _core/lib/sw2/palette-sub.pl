@@ -874,8 +874,7 @@ sub palettePreset {
             $line .= $bot{YTC} ? '首切' : $bot{BCD} ? 'r5' : '';
           }
           $line .= " ダメージ";
-          $line .= extractWeaponMarks($::pc{'weapon'.$_.'Name'}.$::pc{'weapon'.$_.'Note'}) unless $bot{BCD};
-          $line .= "／$::pc{'weapon'.$_.'Name'}$::pc{'weapon'.$_.'Usage'}" if $bot{BCD};
+          $line .= "／$::pc{'weapon'.$_.'Name'}$::pc{'weapon'.$_.'Usage'}";
           $line .= "（${partName}）" if $partName && $bot{BCD};
 
           foreach (makeDamageCommandVariations($line, \%::pc, '物理')) {
