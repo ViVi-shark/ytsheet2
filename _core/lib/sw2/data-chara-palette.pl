@@ -77,6 +77,10 @@ our @stateTargets = (
         fieldName => 'initiative',
     },
     {
+        name      => '生死判定',
+        fieldName => 'survival',
+    },
+    {
         name      => '与物理ダメージ',
         fieldName => 'physicsDamage',
     },
