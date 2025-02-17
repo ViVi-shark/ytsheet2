@@ -784,8 +784,8 @@ sub palettePreset {
     foreach my $attributeName (undef, @data::attributeNames) {
       my $attributeFieldName = $attributeName ? $data::attributeFieldNames{$attributeName} : undef;
       my $attributeOffset = $attributeFieldName ? $::pc{"paletteTakenDamageOffset${attributeFieldName}"} : 0;
-      $text .= "//${attributeName}属性ダメージ増減=0\n" if $::pc{"paletteDamageVarReservation${attributeFieldName}"};
-      next if $attributeName && $attributeOffset == 0 && !$::pc{"paletteDamageVarReservation${attributeFieldName}"};
+      $text .= "//${attributeName}属性ダメージ増減=0\n" if $::pc{"paletteTakenDamageVarReservation${attributeFieldName}"};
+      next if $attributeName && $attributeOffset == 0 && !$::pc{"paletteTakenDamageVarReservation${attributeFieldName}"};
 
       foreach my $taxa (undef, @data::taxa) {
         my @taxa = ref $taxa ? @{$taxa} : ();
@@ -817,11 +817,6 @@ sub palettePreset {
         $physicalDamageText .= "\@HP-";
         $magicalDamageText .= "\@HP-";
 
-        if ($::pc{"paletteDamageVarReservation${attributeFieldName}"}) {
-          $physicalDamageText .= "-({${attributeName}属性ダメージ増減})";
-          $magicalDamageText .= "-({${attributeName}属性ダメージ増減})";
-        }
-
         $physicalDamageText .= "+(${physicalDefense})";
         $magicalDamageText .= "+(${magicalDefense})";
 
@@ -833,6 +828,11 @@ sub palettePreset {
         if ($taxaOffset > 0) {
           $physicalDamageText .= addNum($taxaOffset);
           $magicalDamageText .= addNum($taxaOffset);
+        }
+
+        if ($::pc{"paletteTakenDamageVarReservation${attributeFieldName}"}) {
+          $physicalDamageText .= "-({${attributeName}属性ダメージ増減})";
+          $magicalDamageText .= "-({${attributeName}属性ダメージ増減})";
         }
 
         $physicalDamageText .= " ;物理ダメージ${labelSuffix}\n";
