@@ -1138,13 +1138,10 @@ dl#level {
   }
 }
 
-/* 魔晶石 */
-#mana-gems {
+/* アイテム在庫管理 */
+#mana-gems,
+#charms {
   table {
-    .point {
-      width: 3em;
-    }
-
     td.total {
       display: grid;
       grid-template-columns: max-content 1fr max-content;
@@ -1180,7 +1177,7 @@ dl#level {
     }
   }
 
-  #clearing-off-mana-gems-offset {
+  button.clearing-off {
     margin: 0.25em;
 
     &[disabled] {
@@ -1191,12 +1188,7 @@ dl#level {
 
   dl {
     display: grid;
-    grid-template-columns: repeat(2, max-content max-content 1fr);
     padding: 0 0.5em;
-
-    .point {
-      text-align: right;
-    }
 
     .total {
       i {
@@ -1204,7 +1196,6 @@ dl#level {
       }
 
       text-align: right;
-      padding-left: 0.5em;
 
       .mark {
         float: left;
@@ -1218,6 +1209,63 @@ dl#level {
       .unit {
         font-size: smaller;
       }
+    }
+  }
+}
+
+/* 魔晶石 */
+#mana-gems {
+  table {
+    .point {
+      width: 3em;
+    }
+  }
+
+  dl {
+    grid-template-columns: repeat(2, max-content max-content 1fr);
+
+    .point {
+      text-align: right;
+    }
+
+    .total {
+      padding-left: 0.5em;
+    }
+  }
+}
+
+/* 魔符 */
+#charms {
+  table {
+    .kind:not([colspan="2"]) {
+      width: 2.5em;
+    }
+
+    .rank {
+      width: 3.5em;
+    }
+
+    tbody {
+      .kind[rowspan]:not([rowspan="1"]) {
+        background-color: gray;
+        color: white;
+      }
+    }
+  }
+
+  dl {
+    grid-template-columns: max-content max-content 1fr;
+
+    .total {
+      padding-left: 0.125em;
+    }
+
+    > dt {
+      grid-column: 1 / 2;
+    }
+
+    > dd {
+      grid-column: 2 / 3;
     }
   }
 }

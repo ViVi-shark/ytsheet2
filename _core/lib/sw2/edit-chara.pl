@@ -1411,7 +1411,7 @@ HTML
 foreach my $point (1 .. 20) {
   my $key = $point < 10 ? ('0' . $point) : $point;
   print <<"HTML";
-                <tr data-point="${point}">
+                <tr class="count" data-point="${point}" data-row-name="魔晶石（${point}点）">
                   <th class="point">${point}点
                   <td class="quantity">@{[input "manaGem${key}Quantity",'number',"calcManaGem(${point})",'min="0"']}
                   <td class="offset">@{[input "manaGem${key}Offset",'number',"calcManaGem(${point})"]}
@@ -1422,7 +1422,7 @@ HTML
 print <<"HTML";
               </tbody>
             </table>
-            <button type="button" id="clearing-off-mana-gems-offset" onclick="clearOffManaGemsOffset();" disabled>一時的増減を清算する</button>
+            <button type="button" class="clearing-off" id="clearing-off-mana-gems-offset" onclick="clearOffManaGemsOffset();" disabled>一時的増減を清算する</button>
           </details>
           <div class="box" id="material-cards"@{[ display $pc{lvAlc} ]}>
             <h2 class="in-toc">マテリアルカード</h2>
@@ -1435,6 +1435,59 @@ print <<"HTML";
             <tr class="cards-gol"><th>金<td>@{[input 'cardGolB','number']}<td>@{[input 'cardGolA','number']}<td>@{[input 'cardGolS','number']}<td>@{[input 'cardGolSS','number']}
             </table>
           </div>
+          <details class="box" id="charms" open>
+            <summary class="in-toc">魔符</summary>
+            <table class="edit-table no-border-cells">
+              <thead>
+                <tr>
+                  <th class="kind">種類
+                  <th class="rank">ランク
+                  <th class="quantity">所持数
+                  <th class="offset">一時的増減
+                  <th class="total">
+              </thead>
+              <tbody>
+HTML
+my $charmRowIndex = 0;
+foreach (0 .. $#data::charms) {
+  my %charm = %{$data::charms[$_]};
+  my $kind = $charm{ja};
+  my @ranks = ref $charm{ranks} ? @{$charm{ranks}} : (undef);
+  my $rankCount = @ranks;
+
+  foreach my $rank (@ranks) {
+    $charmRowIndex++;
+
+    my $keyPrefix = "charm@{[ ucfirst $charm{en} ]}@{[ defined($rank) ? $rank : '' ]}_";
+
+    print <<"HTML";
+                <tr class="count" data-index="${charmRowIndex}" data-row-name="${kind}の魔符@{[ defined($rank) ? "（+${rank}）" : '' ]}">
+HTML
+    if (!defined($rank) || $rank == 1) {
+      print <<"HTML";
+                  <th class="kind" rowspan="${rankCount}" colspan="@{[ defined($rank) ? 1 : 2 ]}">${kind}
+HTML
+    }
+    if (defined($rank)) {
+      print <<"HTML";
+                  <th class="rank">+${rank}
+HTML
+    }
+    print <<"HTML";
+                  <td class="quantity">@{[ input "${keyPrefix}Quantity",'number',"calcCharm(${charmRowIndex})",'min="0"' ]}
+                  <td class="offset">@{[ input "${keyPrefix}Offset",'number',"calcCharm(${charmRowIndex})" ]}
+                  <td class="total">=<span class="value"></span><i class="unit">枚</i>
+HTML
+    print <<"HTML";
+                </tr>
+HTML
+  }
+}
+print <<"HTML";
+              </tbody>
+            </table>
+            <button type="button" class="clearing-off" id="clearing-off-charms-offset" onclick="clearOffCharmsOffset();" disabled>一時的増減を清算する</button>
+          </details>
           <div class="box" id="battle-items"@{[ display $set::battleitem ]}>
           <h2 class="in-toc">戦闘用アイテム</h2>
           <ul id="battle-items-list">

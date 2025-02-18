@@ -1048,6 +1048,32 @@ my @manaGems = ();
 }
 $SHEET->param(ManaGems => \@manaGems);
 
+### 魔符 --------------------------------------------------
+my @charms = ();
+foreach (@data::charms) {
+  my %charm = %{$_};
+  my @ranks = ref $charm{ranks} ? @{$charm{ranks}} : (undef);
+
+  my @quantities = ();
+
+  foreach my $rank (@ranks) {
+    my $keyPrefix = "charm@{[ ucfirst $charm{en} ]}@{[ defined($rank) ? $rank : '' ]}_";
+
+    my $quantity = $pc{"${keyPrefix}Quantity"} // 0;
+    my $offset = $pc{"${keyPrefix}Offset"} // 0;
+
+    my $total = $quantity + $offset;
+    next if $total == 0;
+
+    push(@quantities, {RANK => $rank ? "+${rank}" : undef, QUANTITY => $total});
+  }
+
+  next unless @quantities;
+
+  push(@charms, {NAME => "$charm{ja}の魔符", QUANTITIES => \@quantities});
+}
+$SHEET->param(Charms => \@charms);
+
 ### 履歴 --------------------------------------------------
 
 $pc{history0Grow} .= '器用'.$pc{sttPreGrowA} if $pc{sttPreGrowA};

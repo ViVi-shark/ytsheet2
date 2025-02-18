@@ -90,6 +90,7 @@ window.onload = function() {
   calcDishonor();
   calcCommonClass();
   calcManaGems();
+  calcCharms();
   checkEffectAll();
   setupBracketInputCompletion();
   
@@ -2636,18 +2637,11 @@ function delPart(){
   delRow('partNum', '#parts tbody tr:last-of-type');
   calcParts();
 }
-// 魔晶石 ----------------------------------------
-function calcManaGems() {
-  for (let point = 1; point <= 20; point++) {
-    calcManaGem(point);
-  }
-}
+// アイテムの在庫 ----------------------------------------
 /**
- * @param {int} point
+ * @param {HTMLTableRowElement} tr
  */
-function calcManaGem(point) {
-  const tr = document.querySelector(`#mana-gems table tr[data-point="${point}"]`);
-
+function refreshItemQuantity(tr) {
   const quantity = parseInt(tr.querySelector('.quantity input').value);
   const offset = parseInt(tr.querySelector('.offset input').value);
 
@@ -2657,30 +2651,30 @@ function calcManaGem(point) {
   valueElement.textContent = commify(total);
   valueElement.classList.toggle('zero', total === 0);
   valueElement.classList.toggle('minus', total < 0);
-
-  switchManaGemClearingOffButton();
 }
-function switchManaGemClearingOffButton() {
-  let hasOffset = false;
 
-  for (let point = 1; point <= 20; point++) {
-    const offset = parseInt(document.querySelector(`#mana-gems table tr[data-point="${point}"] .offset input`).value);
+/**
+ * @param {HTMLTableElement} itemTable
+ */
+function switchItemClearingOffButton(itemTable) {
+  const hasOffset = [...itemTable.querySelectorAll('tbody tr.count')].some(
+      tr => {
+        const offset = parseInt(tr.querySelector(`.offset input`).value);
+        return !isNaN(offset) && offset !== 0;
+      }
+  );
 
-    if (!isNaN(offset) && offset !== 0) {
-      hasOffset = true;
-      break;
-    }
-  }
-
-  document.getElementById('clearing-off-mana-gems-offset').disabled = !hasOffset;
+  itemTable.closest('.box').querySelector('.clearing-off').disabled = !hasOffset;
 }
-function clearOffManaGemsOffset() {
+
+/**
+ * @param {HTMLTableElement} table
+ */
+function clearItemCountOffset(table) {
   /** @var {Array<Function>} */
   const clearingFunctions = [];
 
-  for (let point = 1; point <= 20; point++) {
-    const tr = document.querySelector(`#mana-gems table tr[data-point="${point}"]`);
-
+  for (const tr of table.querySelectorAll('tbody tr.count[data-row-name]')) {
     const quantityInput = tr.querySelector('.quantity input');
     const offsetInput = tr.querySelector('.offset input');
 
@@ -2694,7 +2688,7 @@ function clearOffManaGemsOffset() {
     const clearedQuantity = quantity + offset;
 
     if (clearedQuantity < 0) {
-      alert(`魔晶石（${point}点）の減少量が元の所持数より大きいため清算できません。`);
+      alert(`${tr.dataset.rowName}の減少量が元の所持数より大きいため清算できません。`);
       return;
     }
 
@@ -2712,8 +2706,52 @@ function clearOffManaGemsOffset() {
   }
 
   clearingFunctions.forEach(x => x.call());
+}
+// 魔晶石 ----------------------------------------
+function calcManaGems() {
+  for (let point = 1; point <= 20; point++) {
+    calcManaGem(point);
+  }
+}
+/**
+ * @param {int} point
+ */
+function calcManaGem(point) {
+  const tr = document.querySelector(`#mana-gems table tr[data-point="${point}"]`);
+
+  refreshItemQuantity(tr);
 
   switchManaGemClearingOffButton();
+}
+function switchManaGemClearingOffButton() {
+  switchItemClearingOffButton(document.querySelector('#mana-gems table'));
+}
+function clearOffManaGemsOffset() {
+  clearItemCountOffset(document.querySelector('#mana-gems table'));
+  switchManaGemClearingOffButton();
+}
+// 魔符 ----------------------------------------
+function calcCharms() {
+  document.querySelectorAll('#charms table tbody tr[data-index]').forEach(
+      x => calcCharm(parseInt(x.dataset.index))
+  );
+}
+/**
+ * @param {int} index
+ */
+function calcCharm(index) {
+  const tr = document.querySelector(`#charms table tbody tr[data-index="${index}"]`);
+
+  refreshItemQuantity(tr);
+
+  switchCharmClearingOffButton();
+}
+function switchCharmClearingOffButton() {
+  switchItemClearingOffButton(document.querySelector('#charms table'));
+}
+function clearOffCharmsOffset() {
+  clearItemCountOffset(document.querySelector('#charms table'));
+  switchCharmClearingOffButton();
 }
 // 名誉アイテム欄 ----------------------------------------
 // 追加

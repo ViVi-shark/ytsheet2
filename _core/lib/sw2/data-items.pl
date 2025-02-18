@@ -77,4 +77,21 @@ our @drugs = (
     },
 );
 
+our @charms = (
+    {
+        en    => 'sunlight',
+        ja    => '陽光',
+        ranks => [1 .. 3],
+    },
+    {
+        en    => 'moonlight',
+        ja    => '月光',
+        ranks => [1 .. 3],
+    },
+    {
+        en    => 'ignis',
+        ja    => 'イグニス',
+    },
+);
+
 1;
