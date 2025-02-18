@@ -547,12 +547,12 @@ if ($pc{mount} && $pc{individualization}) {
     my $partName = $pc{'status' . $_ . 'Style'};
     $partName =~ s/^.+[(（]\s*(.+?)\s*[）)]\s*$/$1/;
 
-    my $weaponName = $pc{'partEquipment' . $_ . '-weapon-name'} || '';
+    my $weaponName = formatItemName($pc{'partEquipment' . $_ . '-weapon-name'}) || '';
     my $weaponAccuracy = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-weapon-accuracy'} || 0);
     my $weaponDamage = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-weapon-damage'} || 0);
     my $hasWeapon = $weaponName || $weaponAccuracy || $weaponDamage ? 1 : 0;
 
-    my $armorName = $pc{'partEquipment' . $_ . '-armor-name'} || '';
+    my $armorName = formatItemName($pc{'partEquipment' . $_ . '-armor-name'}) || '';
     my $armorEvasion = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-armor-evasion'} || 0);
     my $armorDefense = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-armor-defense'} || 0);
     my $armorHp = formatMountEquipmentOffset($pc{'partEquipment' . $_ . '-armor-hp'} || 0);

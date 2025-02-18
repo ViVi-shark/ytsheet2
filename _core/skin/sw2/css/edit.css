@@ -2905,18 +2905,17 @@ form#monster .mount-equipments {
     grid-template-columns: max-content 1fr;
     margin: 0;
 
+    & .weapon,
+    & .armor {
+      border-bottom: 1px solid lightgray;
+    }
+
     & .weapon {
       grid-row: 1 / 2;
-      padding-top: 0.125em;
     }
 
     & .armor {
       grid-row: 2 / 3;
-      border-style: solid;
-      border-color: lightgray;
-      border-width: 1px 0 1px 0;
-      padding: 0.25em 0;
-      margin-top: 0.25em;
     }
 
     & dt:is(.weapon, .armor) {
@@ -2924,22 +2923,29 @@ form#monster .mount-equipments {
       display: flex;
       flex-flow: row;
       align-items: center;
+      height: 100%;
+      position: relative;
+      padding-right: 0.5em;
     }
 
     & dt:is(.weapon, .armor)::after {
       content: "";
-      display: inline-block;
-      height: 100%;
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 0.75em;
+      bottom: 0.75em;
       width: 1px;
       box-sizing: border-box;
       border-right: 1px dotted lightgray;
-      margin: 0 0.5em;
     }
 
     & dd.weapon,
     & dd.armor {
       grid-column: 2 / 3;
       width: 100%;
+      height: max-content;
+      padding: 0.75em 0 0.75em calc(0.5em - 1px);
     }
 
     & input {

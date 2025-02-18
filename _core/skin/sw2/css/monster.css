@@ -405,6 +405,10 @@ section.mount-equipments {
       background-color: var(--monster-head-bg-color);
       padding: 0.25em 1em;
       margin-right: 0.45em;
+
+      &:first-of-type:last-of-type {
+        display: none;
+      }
     }
 
     & dd.part {
@@ -430,9 +434,16 @@ section.mount-equipments {
     grid-template-rows: repeat(2, max-content);
     grid-template-columns: max-content 1fr;
 
+    > dt,
+    > dd {
+      border-bottom: 1px solid lightgray;
+      padding-top: 0.25em;
+    }
+
     & dt.weapon,
     & dt.armor {
       grid-column: 1 / 2;
+      padding-right: 0.5em;
     }
 
     & dt:is(.weapon, .armor)::after {
@@ -446,14 +457,6 @@ section.mount-equipments {
       & span:not(:first-of-type)::before {
         content: "、";
       }
-    }
-
-    & .name::before {
-      content: "〈";
-    }
-
-    & .name::after {
-      content: "〉";
     }
   }
 }
