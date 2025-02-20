@@ -587,16 +587,16 @@ sub palettePreset {
           my $modifiedRate = modifyRate($pow, $activeRate);
           next if $modifiedRate eq $lastModifiedRate;
 
-          $text .= "k${modifiedRate}[{魔法C}$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与魔法ダメージ')."+{魔法D修正}$activeDmg ダメージ\n";
+          $text .= "k${modifiedRate}[{魔法C}$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与魔法ダメージ')."+{魔法D修正}$activeDmg${activeRoll} ダメージ\n";
           if ($id eq 'Sor' && $pow == 30 && $::pc{lvSor} >= 12) {
-            $text .= "k${modifiedRate}\[10$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与物理ダメージ')."+{物理魔法D修正}$activeDmg 物理ダメージ\n";
+            $text .= "k${modifiedRate}\[10$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与物理ダメージ')."+{物理魔法D修正}$activeDmg${activeRoll} 物理ダメージ\n";
           }
           if ($id eq 'Fai' && $::pc{fairyContractEarth} && ($pow == 10 || $pow == 50)) {
-            $text .= "k${modifiedRate}\[12$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与物理ダメージ')."+{物理魔法D修正}$activeDmg 物理ダメージ\n";
+            $text .= "k${modifiedRate}\[12$activeCrit]+$magicPower".addNum($::pc{'magicDamageAdd'.$id}).makeStatesExpression(\%::pc, '与物理ダメージ')."+{物理魔法D修正}$activeDmg${activeRoll} 物理ダメージ\n";
           }
           my $halfCrit = $activeName =~ /(?:クリティカル|テアリング)キャスト(?!(?:1|I(?:[^I]|$)|Ⅰ))/i ? "{魔法C}$activeCrit" : "13";
-          if ($bot{YTC}) { $half .= "k${modifiedRate}\[$halfCrit]+$magicPower" . "//" . addNum($::pc{'magicDamageAdd'.$id}) . "+{魔法D修正}$activeDmg 半減\n"; }
-          if ($bot{BCD}) { $half .= "k${modifiedRate}\[$halfCrit]+$magicPower" . "h+("  . ($::pc{'magicDamageAdd'.$id} || '') . "+{魔法D修正}$activeDmg) 半減\n"; }
+          if ($bot{YTC}) { $half .= "k${modifiedRate}\[$halfCrit]+$magicPower" . "//" . addNum($::pc{'magicDamageAdd'.$id}) . "+{魔法D修正}$activeDmg${activeRoll} 半減\n"; }
+          if ($bot{BCD}) { $half .= "k${modifiedRate}\[$halfCrit]+$magicPower" . "h+("  . ($::pc{'magicDamageAdd'.$id} || '') . "+{魔法D修正}$activeDmg)${activeRoll} 半減\n"; }
 
           $lastModifiedRate = $modifiedRate;
         }
@@ -648,7 +648,7 @@ sub palettePreset {
 
           my $critical = 13;
           $critical = 10 if $data::class{$class}{magic}{jName} eq '神聖魔法' && $hasVeilOfGoddess;
-          $text .= "k${modifiedRate}\[${critical}]+$magicPower+{回復量修正} 回復量\n";
+          $text .= "k${modifiedRate}\[${critical}]+$magicPower+{回復量修正}${activeRoll} 回復量\n";
 
           $lastModifiedRate = $modifiedRate;
         }
