@@ -635,6 +635,8 @@ print <<"HTML";
     <option value="《》《》">
     <option value="《》《》《》">
     <option value="《》《》《》《》">
+    <option value="【】">
+    <option value="【】【】">
   </datalist>
   <datalist id="list-arts-use">
     <option value="ファイター技能">
