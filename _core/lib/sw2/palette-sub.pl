@@ -800,7 +800,9 @@ sub palettePreset {
       $text .= "2d+";
       $text .= $::pc{paletteUseVar} ? "{回避${i}}" : $::pc{"defenseTotal${i}Eva"};
       $text .= makeStatesExpression(\%::pc, ['敏捷度ボーナス', '回避力']);
-      $text .= "+{回避修正}+{行為判定修正}+{行動判定修正} 回避力".($::pc{"defenseTotal${i}Note"}?"／$::pc{'defenseTotal'.$i.'Note'}":'')."\n";
+      $text .= "+{回避修正}+{行為判定修正}+{行動判定修正} 回避力";
+      $text .= '（' . $::pc{"evasionClass${i}"} . '）' if (grep { $::pc{"evasionClass${_}"} } (1 .. $::pc{defenseNum})) > 1;
+      $text .= ($::pc{"defenseTotal${i}Note"}?"／$::pc{'defenseTotal'.$i.'Note'}":'')."\n";
     }
     $text .= "//ダメージ軽減=0\n";
     $text .= "//物理ダメージ軽減=0\n";
