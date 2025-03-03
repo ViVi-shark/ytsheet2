@@ -782,7 +782,7 @@ sub palettePreset {
     require($::core_dir . '/lib/sw2/data-attribute.pl');
     foreach my $attributeName (undef, @data::attributeNames) {
       my $attributeFieldName = $attributeName ? $data::attributeFieldNames{$attributeName} : undef;
-      my $attributeOffset = $attributeFieldName ? $::pc{"paletteDamageOffset${attributeFieldName}"} : 0;
+      my $attributeOffset = $attributeFieldName ? $::pc{"paletteTakenDamageOffset${attributeFieldName}"} : 0;
       next if $attributeName && $attributeOffset == 0;
       my $labelSuffix = $attributeName ? "／${attributeName}属性" : '';
       my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, '防護点') ]}+{ダメージ軽減}+{物理ダメージ軽減}";
