@@ -751,6 +751,12 @@ dl#level {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  .mod {
+    &:has(.value:empty) {
+      display: none;
+    }
+  }
 }
 /* Monster-Lore  */
 #monster-lore {

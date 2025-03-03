@@ -1206,9 +1206,12 @@ function calcPackage() {
     }
   }
 
-  
-  document.getElementById("monster-lore-value").textContent = (Math.max(...lore) || 0) + Number(form.monsterLoreAdd.value);
-  document.getElementById("initiative-value"  ).textContent = (Math.max(...init) || 0) + Number(form.initiativeAdd.value);
+  const monsterLoreMod = equipMod.MonsterLore ?? 0;
+  const initiativeMod = equipMod.Initiative ?? 0;
+  document.getElementById('monster-lore-mod').textContent = monsterLoreMod !== 0 ? monsterLoreMod.toString() : '';
+  document.getElementById('initiative-mod').textContent = initiativeMod !== 0 ? initiativeMod.toString() : '';
+  document.getElementById("monster-lore-value").textContent = (Math.max(...lore) || 0) + Number(form.monsterLoreAdd.value) + monsterLoreMod;
+  document.getElementById("initiative-value"  ).textContent = (Math.max(...init) || 0) + Number(form.initiativeAdd.value)  + initiativeMod;
 }
 
 // 魔力計算 ----------------------------------------
@@ -2529,6 +2532,7 @@ let equipMod = {};
 function changeEquipMod (){
   if(checkEquipMod()){
     calcStt();
+    calcPackage();
   }
 }
 function checkEquipMod (){
@@ -2555,6 +2559,8 @@ function checkEquipMod (){
     ['MagicPower', '魔力'],
     ['MagicCast', '(?:魔法)?行使(?:判定)?'],
     ['MagicDamage', '魔法のダメージ'],
+    ['MonsterLore', '魔物知識(?:判定)?'],
+    ['Initiative', '先制(?:判定)?'],
     ['WeaponReqd','武器(?:必要筋力|必筋)上限'],
   ];
   let newMod = {};

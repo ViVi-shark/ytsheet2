@@ -247,7 +247,9 @@ foreach ('A'..'F'){
 }
 
 ### HPなど --------------------------------------------------
-foreach('vitResistAddTotal','mndResistAddTotal','hpAddTotal','mpAddTotal','mobilityAddTotal','monsterLoreAdd','initiativeAdd'){
+$pc{monsterLoreAddTotal} //= $pc{monsterLoreAdd};
+$pc{initiativeAddTotal} //= $pc{initiativeAdd};
+foreach('vitResistAddTotal','mndResistAddTotal','hpAddTotal','mpAddTotal','mobilityAddTotal','monsterLoreAddTotal','initiativeAddTotal'){
   $SHEET->param($_ => addNum $pc{$_});
 }
 
@@ -698,6 +700,8 @@ sub replaceModificationNotation {
         魔力          |
         (?:魔法)?行使(?:判定)?|
         魔法のダメージ|
+        魔物知識(?:判定)? |
+        先制(?:判定)? |
         武器(?:必要筋力|必筋)上限
       )
       ([＋+－-][0-9]+)

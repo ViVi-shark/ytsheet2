@@ -215,6 +215,8 @@ sub palettePreset {
         $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
       }
     }
+    $::pc{monsterLoreAddTotal} //= $::pc{monsterLoreAdd};
+    $::pc{initiativeAddTotal} //= $::pc{initiativeAdd};
     foreach my $class (@classNames){
       my $c_id = $data::class{$class}{id};
       next if !$data::class{$class}{package} || !$::pc{'lv'.$c_id};
@@ -236,9 +238,9 @@ sub palettePreset {
         }
 
         $text .= "2d+{$name}${packageModifiers}+{行為判定修正}+{行動判定修正} $name\n";
-        if($data{$p_id}{monsterLore} && $::pc{monsterLoreAdd}){ $text .= "2d+{$name}+$::pc{monsterLoreAdd}+{行為判定修正}+{行動判定修正} 魔物知識\n"; }
+        if($data{$p_id}{monsterLore} && $::pc{monsterLoreAddTotal}){ $text .= "2d+{$name}+$::pc{monsterLoreAddTotal}+{行為判定修正}+{行動判定修正} 魔物知識\n"; }
         my $initiativeModifiers = makeStatesExpression(\%::pc, '先制判定');
-        if($data{$p_id}{initiative } && ($::pc{initiativeAdd} || $initiativeModifiers)){ $text .= "2d+{$name}+$::pc{initiativeAdd }${initiativeModifiers}+{行為判定修正}+{行動判定修正} 先制\n"; }
+        if($data{$p_id}{initiative } && ($::pc{initiativeAddTotal} || $initiativeModifiers)){ $text .= "2d+{$name}+$::pc{initiativeAddTotal}${initiativeModifiers}+{行為判定修正}+{行動判定修正} 先制\n"; }
       }
       foreach my $status ('器用度', '敏捷度', '筋力', '生命力', '知力', '精神力') {
         my $statusVarName = substr($status, 0, 2) . 'B';

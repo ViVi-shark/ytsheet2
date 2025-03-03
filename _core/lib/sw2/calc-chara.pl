@@ -302,7 +302,7 @@ sub data_calc {
       $equipModStatusIncrement{$_} //= 0;
       $equipModStatusIncrement{$_} = max($equipModStatusIncrement{$_}, $mod{"${_}:increment"} // 0);
     }
-    foreach ('vResist','mResist','eva','def','mobility'){
+    foreach ('vResist','mResist','eva','def','mobility', 'monsterLore', 'initiative'){
       $equipModTotal{$_} += $mod{$_} // 0;
     }
     foreach ('magicPower','magicCast','magicDamage'){
@@ -533,8 +533,10 @@ sub data_calc {
   }
 
   ## 魔物知識／先制力
-  $pc{monsterLore} = max(@pack_lore) + $pc{monsterLoreAdd};
-  $pc{initiative}  = max(@pack_init) + $pc{initiativeAdd};
+  $pc{monsterLoreAddTotal} = $pc{monsterLoreAdd} + $equipModTotal{monsterLore};
+  $pc{monsterLore} = max(@pack_lore) + $pc{monsterLoreAddTotal};
+  $pc{initiativeAddTotal} = $pc{initiativeAdd} + $equipModTotal{initiative};
+  $pc{initiative} = max(@pack_init) + $pc{initiativeAddTotal};
 
   ## 魔力
   foreach my $name (@data::class_caster){

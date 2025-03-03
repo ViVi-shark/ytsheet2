@@ -793,11 +793,11 @@ print <<"HTML";
         <div id="area-other-actions">
           <dl class="box" id="monster-lore">
             <dt>魔物知識
-            <dd>+@{[ input 'monsterLoreAdd', 'number','calcPackage' ]}=<span id="monster-lore-value">$pc{monsterLore}</span>
+            <dd><span class="mod">+<span id="monster-lore-mod" class="value"></span></span>+@{[ input 'monsterLoreAdd', 'number','calcPackage' ]}=<span id="monster-lore-value">$pc{monsterLore}</span>
           </dl>
           <dl class="box" id="initiative">
             <dt>先制力
-            <dd>+@{[ input 'initiativeAdd', 'number','calcPackage' ]}=<span id="initiative-value">$pc{initiative}</span>
+            <dd><span class="mod">+<span id="initiative-mod" class="value"></span></span>+@{[ input 'initiativeAdd', 'number','calcPackage' ]}=<span id="initiative-value">$pc{initiative}</span>
           </dl>
           <dl class="box in-toc" id="mobility" data-content-title="移動力">
             <dt>制限移動<dd><b id="mobility-limited">$pc{mobilityLimited}</b> m
@@ -1327,7 +1327,7 @@ print <<"HTML";
           <li>左のボックスにチェックを入れると欄が一つ追加されます
           <li>
             <code>\@器用度+1</code>や<code>\@防護点+1</code>のように記述すると、<span class="text-em">常時</span>有効な上昇効果が自動計算されます。<br>
-            有効な項目は、<code>器用度</code>～<code>精神力</code> <code>生命抵抗力</code> <code>精神抵抗力</code> <code>回避力</code> <code>防護点</code> <code>移動力</code> <code>魔力</code> <code>行使判定</code> <code>武器必筋上限</code>です。<br>
+            有効な項目は、<code>器用度</code>～<code>精神力</code> <code>生命抵抗力</code> <code>精神抵抗力</code> <code>回避力</code> <code>防護点</code> <code>移動力</code> <code>魔力</code> <code>行使判定</code> <code>魔物知識判定</code> <code>先制判定</code> <code>武器必筋上限</code>です。<br>
             同じ項目へは累積するため、同名や効果排他のアイテムには注意してください。<br>
             能力値の増強にかぎり、<code>\@筋力増強+2</code>のように<code>増強</code>の文言を記述することで、能力値ごとに最大の値のみを採用できます。
         </ul>

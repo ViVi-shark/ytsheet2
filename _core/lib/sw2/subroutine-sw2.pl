@@ -415,6 +415,8 @@ sub extractModifications {
       'magicPower' => '魔力',
       'magicCast' => '(?:魔法)?行使(?:判定)?',
       'magicDamage' => '魔法のダメージ',
+      'monsterLore' => '魔物知識(?:判定)?',
+      'initiative' => '先制(?:判定)?',
       'reqdWeapon' => '武器(?:必要筋力|必筋)上限'
     );
     my %modData;
