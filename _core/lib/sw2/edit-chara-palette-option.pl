@@ -197,6 +197,20 @@ HTML
     }
     $html .= <<"HTML";
             </dl>
+            <section>
+              <h5>属性ごとの変数</h5>
+              <ul class="var-reservation">
+HTML
+    foreach my $attributeName (@data::attributeNames) {
+        $html .= <<"HTML";
+                <li data-attribute="${attributeName}">
+                  @{[ ::checkbox "paletteDamageVarReservation$data::attributeFieldNames{$attributeName}",$attributeName,'setChatPalette' ]}
+                </li>
+HTML
+    }
+    $html .= <<"HTML";
+              </ul>
+            </section>
           </section>
           <section class="taxa">
             <h4>分類ごとの増減</h4>
