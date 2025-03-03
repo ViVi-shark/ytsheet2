@@ -899,6 +899,36 @@ sub findExpensesFromItems {
     return @rows;
   }
 
+  sub findExpensesFromManaGems {
+    return () unless $pc{manaGemQuantityExpensesAutomatically} || $pc{manaGemOffsetExpensesAutomatically};
+
+    sub getPriceByPoint {
+      my $point = shift;
+
+      my $unit;
+      $unit = 100 if 1 <= $point && $point <= 5;
+      $unit = 200 if 6 <= $point && $point <= 10;
+      $unit = 300 if 11 <= $point && $point <= 15;
+      $unit = 400 if 16 <= $point && $point <= 20;
+
+      return $unit * $point;
+    }
+
+    my @rows = ();
+
+    foreach my $point (1 .. 20) {
+      my $key = $point < 10 ? '0' . $point : $point;
+      my $quantity = $pc{manaGemQuantityExpensesAutomatically} ? ($pc{"manaGem${key}Quantity"} // 0) : 0;
+      my $offset = max($pc{manaGemOffsetExpensesAutomatically} ? ($pc{"manaGem${key}Offset"} // 0) : 0, 0);
+      next if $quantity == 0 && $offset == 0;
+
+      my $count = $quantity + $offset;
+      push(@rows, "[魔]〈魔晶石（${point}点）〉×${count}::-@{[ getPriceByPoint($point) ]}*${count}");
+    }
+
+    return @rows;
+  }
+
   sub findExpensesFromBaggage {
     my $text = $pc{items} // '';
     my @rows = ();
@@ -914,6 +944,7 @@ sub findExpensesFromItems {
   push(@all, findExpensesFromWeapons());
   push(@all, findExpensesFromArmours());
   push(@all, findExpensesFromAccessories());
+  push(@all, findExpensesFromManaGems());
   push(@all, findExpensesFromBaggage());
 
   return join("\n", @all);

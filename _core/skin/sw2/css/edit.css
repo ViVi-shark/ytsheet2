@@ -1159,6 +1159,14 @@ option.zero-data::before {
 }
 
 
+#mana-gems {
+  > label {
+    margin: calc(0.25em / 0.8);
+    font-size: 80%;
+  }
+}
+
+
 #battle-items ul {
   & li {
     display: grid;

@@ -1376,7 +1376,7 @@ foreach my $point (1 .. 20) {
   print <<"HTML";
                 <tr data-point="${point}">
                   <th class="point">${point}点
-                  <td class="quantity">@{[input "manaGem${key}Quantity",'number',"calcManaGem(${point})",'min="0"']}
+                  <td class="quantity">@{[input "manaGem${key}Quantity",'number',"calcManaGem(${point});calcCash()",'min="0"']}
                   <td class="offset">@{[input "manaGem${key}Offset",'number',"calcManaGem(${point})"]}
                   <td class="total">=<span class="value"></span><i class="unit">個</i>
                 </tr>
@@ -1385,6 +1385,8 @@ HTML
 print <<"HTML";
               </tbody>
             </table>
+            @{[ checkbox 'manaGemQuantityExpensesAutomatically', '所持数を支出に加味する（新規作成向け）', 'calcCash' ]}
+            @{[ checkbox 'manaGemOffsetExpensesAutomatically', '一時的増減を支出に加味する（新規作成向け／正数のみ）', 'calcCash' ]}
             <button type="button" id="clearing-off-mana-gems-offset" onclick="clearOffManaGemsOffset();" disabled>一時的増減を清算する</button>
           </details>
           <div class="box" id="material-cards"@{[ display $pc{lvAlc} ]}>

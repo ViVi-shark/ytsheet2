@@ -2036,6 +2036,64 @@ function findExpensesFromItems() {
   /**
    * @return {string[]}
    */
+  function findExpensesFromManaGems() {
+    const supportsQuantity = document.querySelector('[name="manaGemQuantityExpensesAutomatically"]').checked;
+    const supportsOffset = document.querySelector('[name="manaGemQuantityExpensesAutomatically"]').checked;
+
+    if (!(supportsQuantity || supportsOffset)) {
+      return [];
+    }
+
+    /**
+     * @param {int} point
+     * @return {int}
+     */
+    function getPriceByPoint(point) {
+      return (point => {
+        if (1 <= point && point <= 5) {
+          return 100;
+        }
+
+        if (6 <= point && point <= 10) {
+          return 200;
+        }
+
+        if (11 <= point && point <= 15) {
+          return 300;
+        }
+
+        if (16 <= point && point <= 20) {
+          return 400;
+        }
+
+        return NaN;
+      })(point) * point;
+    }
+
+    const rows = [];
+
+    for (let point = 1; point <= 20; point++) {
+      const tr = document.querySelector(`#mana-gems table tbody tr[data-point="${point}"]`);
+      const quantity = supportsQuantity ? parseInt(tr.querySelector('td.quantity input').value ?? '') : NaN;
+      const offset = supportsOffset ? parseInt(tr.querySelector('td.offset input').value ?? '') : NaN;
+
+      if ((isNaN(quantity) || quantity === 0) && (isNaN(offset) || offset <= 0)) {
+        continue;
+      }
+
+      const count =
+          (isNaN(quantity) ? 0 : quantity) +
+          (isNaN(offset) || offset <= 0 ? 0 : offset);
+
+      rows.push(`::-${getPriceByPoint(point)}*${count}`);
+    }
+
+    return rows;
+  }
+
+  /**
+   * @return {string[]}
+   */
   function findExpensesFromBaggage() {
     const text = document.querySelector('[name="items"]').value ?? '';
 
@@ -2053,6 +2111,7 @@ function findExpensesFromItems() {
   return findExpensesFromWeapons()
       .concat(findExpensesFromArmours())
       .concat(findExpensesFromAccessories())
+      .concat(findExpensesFromManaGems())
       .concat(findExpensesFromBaggage())
       .join('\n');
 }
