@@ -226,6 +226,15 @@ sub palettePreset {
       my %data = %{$data::class{$class}{package}};
       foreach my $p_id (sort{$data{$a}{stt} cmp $data{$b}{stt} || $data{$a} cmp $data{$b}} keys %data){
         my $name = $class.$data{$p_id}{name};
+
+        if ($data{$p_id}{unlockCraft}) {
+          my $craftEName = $data::class{$class}{craft}{eName};
+          my $craftNum = $::pc{"lv${c_id}"} + ($::pc{"${craftEName}Addition"} // 0);
+
+          # 条件となる技芸を習得していなければ出力しない.
+          next unless grep { $::pc{"craft@{[ucfirst($craftEName)]}${_}"} eq $data{$p_id}{unlockCraft} } (1 .. $craftNum);
+        }
+
         my $packageModifiers = '';
         if ($name =~ /技巧$/) {
           $packageModifiers = makeStatesExpression(\%::pc, ['技巧判定', '器用度ボーナス']);
