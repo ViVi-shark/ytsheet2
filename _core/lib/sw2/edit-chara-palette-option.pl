@@ -198,6 +198,22 @@ HTML
     $html .= <<"HTML";
             </dl>
           </section>
+          <section class="taxa">
+            <h4>分類ごとの増減</h4>
+            <dl>
+HTML
+    require($::core_dir . '/lib/sw2/data-mons.pl');
+    foreach (@data::taxa) {
+        (my $taxaJa, my $__, my $__, my $taxaEn) = @{$_};
+        next unless $taxaEn;
+        $html .= <<"HTML";
+              <dt data-taxa="${taxaJa}">${taxaJa}
+              <dd data-taxa="${taxaJa}">@{[ ::input "paletteDamageOffset${taxaEn}",'number','setChatPalette' ]}
+HTML
+    }
+    $html .= <<"HTML";
+            </dl>
+          </section>
         </details>
       </div>
 HTML
