@@ -182,7 +182,30 @@ HTML
           <div class="add-del-button"><a onclick="addPaletteMagic()">▼</a><a onclick="delPaletteMagic()">▲</a></div>
           @{[ ::input "paletteMagicNum","hidden" ]}
         </details>
-        <details id="palette-damage">
+        <details id="palette-giving-damage">
+          <summary class="header2">与ダメージの追加オプション</summary>
+          <section class="taxa">
+            <h4>分類ごとの増減</h4>
+            <dl>
+HTML
+    require($::core_dir . '/lib/sw2/data-mons.pl');
+    foreach (@data::taxa) {
+        (my $taxaJa, my $__, my $__, my $taxaEn) = @{$_};
+        next unless $taxaEn;
+        $html .= "<dt data-taxa=\"${taxaJa}\">${taxaJa}";
+        $html .= "<dd data-taxa=\"${taxaJa}\"><dl>";
+        foreach ([ '全般', 'General' ], [ '物理', 'Physical' ], [ '魔法', 'Magical' ]) {
+            (my $damageJa, my $damageEn) = @{$_};
+            $html .= "<dt>${damageJa}</dt>";
+            $html .= "<dd>@{[ ::input('paletteGivingDamageOffset' . $taxaEn . $damageEn, 'number', 'setChatPalette') ]}</dd>";
+        }
+        $html .= '</dl></dd>';
+    }
+    $html .= <<"HTML";
+            </dl>
+          </section>
+        </details>
+        <details id="palette-taken-damage">
           <summary class="header2">被ダメージの追加オプション</summary>
           <section class="attributes">
             <h4>属性ごとの増減</h4>
@@ -192,7 +215,7 @@ HTML
     foreach my $attributeName (@data::attributeNames) {
         $html .= <<"HTML";
               <dt data-attribute="${attributeName}">${attributeName}
-              <dd data-attribute="${attributeName}">@{[ ::input "paletteDamageOffset$data::attributeFieldNames{$attributeName}",'number','setChatPalette' ]}
+              <dd data-attribute="${attributeName}">@{[ ::input "paletteTakenDamageOffset$data::attributeFieldNames{$attributeName}",'number','setChatPalette' ]}
 HTML
     }
     $html .= <<"HTML";
@@ -204,7 +227,7 @@ HTML
     foreach my $attributeName (@data::attributeNames) {
         $html .= <<"HTML";
                 <li data-attribute="${attributeName}">
-                  @{[ ::checkbox "paletteDamageVarReservation$data::attributeFieldNames{$attributeName}",$attributeName,'setChatPalette' ]}
+                  @{[ ::checkbox "paletteTakenDamageVarReservation$data::attributeFieldNames{$attributeName}",$attributeName,'setChatPalette' ]}
                 </li>
 HTML
     }
@@ -222,7 +245,7 @@ HTML
         next unless $taxaEn;
         $html .= <<"HTML";
               <dt data-taxa="${taxaJa}">${taxaJa}
-              <dd data-taxa="${taxaJa}">@{[ ::input "paletteDamageOffset${taxaEn}",'number','setChatPalette' ]}
+              <dd data-taxa="${taxaJa}">@{[ ::input "paletteTakenDamageOffset${taxaEn}",'number','setChatPalette' ]}
 HTML
     }
     $html .= <<"HTML";
