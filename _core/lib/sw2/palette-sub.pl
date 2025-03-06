@@ -816,8 +816,8 @@ sub palettePreset {
         my $taxaOffset = $taxaFieldName ? $::pc{"paletteDamageOffset${taxaFieldName}"} : 0;
         next if $taxaName && $taxaOffset == 0;
 
-        my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, ['防護点', '物理ダメージ軽減']) ]}+{ダメージ軽減}+{物理ダメージ軽減}";
-        my $magicalDefense = "@{[$::pc{lvSag} >= 12 ? 5 : 0]}@{[ makeStatesExpression(\%::pc, '魔法ダメージ軽減') ]}+{ダメージ軽減}+{魔法ダメージ軽減}";
+        my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, ['防護点', 'ダメージ軽減', '物理ダメージ軽減']) ]}+{ダメージ軽減}+{物理ダメージ軽減}";
+        my $magicalDefense = "@{[$::pc{lvSag} >= 12 ? 5 : 0]}@{[ makeStatesExpression(\%::pc, 'ダメージ軽減', '魔法ダメージ軽減') ]}+{ダメージ軽減}+{魔法ダメージ軽減}";
 
         my $labelSuffix = '';
         $labelSuffix .= "／${attributeName}属性" if $attributeName;

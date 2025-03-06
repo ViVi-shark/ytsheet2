@@ -97,6 +97,10 @@ our @stateTargets = (
         fieldName => 'magicCritical',
     },
     {
+        name      => 'ダメージ軽減',
+        fieldName => 'damageReduction',
+    },
+    {
         name      => '物理ダメージ軽減',
         fieldName => 'physicsDamageReduction',
     },
