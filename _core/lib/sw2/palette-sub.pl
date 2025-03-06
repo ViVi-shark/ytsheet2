@@ -199,7 +199,10 @@ sub palettePreset {
     $text .= "### ■非戦闘系\n";
     foreach my $statusName ('器用度', '敏捷度', '筋力', '生命力', '知力') {
       my $statusNameShort = substr($statusName, 0, 2);
-      $text .= "2d+{冒険者}+{${statusNameShort}B}+{行為判定修正}+{行動判定修正} 冒険者＋${statusNameShort}\n";
+
+      my $statesExpression = makeStatesExpression(\%::pc, "${statusName}ボーナス");
+
+      $text .= "2d+{冒険者}+{${statusNameShort}B}${statesExpression}+{行為判定修正}+{行動判定修正} 冒険者＋${statusNameShort}\n";
 
       foreach (@{data::findChecking({ className => '冒険者', status => $statusName })}) {
         my %checking = %{$_};
@@ -207,7 +210,7 @@ sub palettePreset {
         my $fieldName = "checking_$checking{fieldName}_mod";
         next unless $::pc{$fieldName};
         my $mod = addNum $::pc{$fieldName};
-        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
+        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}${statesExpression}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
       }
     }
     foreach my $class (@classNames){
@@ -216,7 +219,18 @@ sub palettePreset {
       my %data = %{$data::class{$class}{package}};
       foreach my $p_id (sort{$data{$a}{stt} cmp $data{$b}{stt} || $data{$a} cmp $data{$b}} keys %data){
         my $name = $class.$data{$p_id}{name};
-        $text .= "2d+{$name}+{行為判定修正}+{行動判定修正} $name\n";
+        my $packageModifiers = '';
+        if ($name =~ /技巧$/) {
+          $packageModifiers = makeStatesExpression(\%::pc, '器用度ボーナス');
+        }
+        elsif ($name =~ /運動$/) {
+          $packageModifiers = makeStatesExpression(\%::pc, '敏捷度ボーナス');
+        }
+        elsif ($name =~ /(?:観察|知識)$/) {
+          $packageModifiers = makeStatesExpression(\%::pc, '知力ボーナス');
+        }
+
+        $text .= "2d+{$name}${packageModifiers}+{行為判定修正}+{行動判定修正} $name\n";
         if($data{$p_id}{monsterLore} && $::pc{monsterLoreAdd}){ $text .= "2d+{$name}+$::pc{monsterLoreAdd}+{行為判定修正}+{行動判定修正} 魔物知識\n"; }
         my $initiativeModifiers = makeStatesExpression(\%::pc, '先制判定');
         if($data{$p_id}{initiative } && ($::pc{initiativeAdd} || $initiativeModifiers)){ $text .= "2d+{$name}+$::pc{initiativeAdd }${initiativeModifiers}+{行為判定修正}+{行動判定修正} 先制\n"; }
@@ -275,14 +289,17 @@ sub palettePreset {
     $text .= appendPaletteInsert('common');
 
     # バフ・デバフ
-    $text .= "### バフ・デバフ\n";
-    foreach (@{getAvailableStates(\%::pc)}) {
-      my %state = %{$_};
-      my $stateName = $state{name};
-      my $defaultValue = $state{defaultValue};
-      $text .= "//${stateName}=${defaultValue}\n";
+    my @availableStates = @{getAvailableStates(\%::pc)};
+    if (@availableStates) {
+      $text .= "### バフ・デバフ\n";
+      foreach (@availableStates) {
+        my %state = %{$_};
+        my $stateName = $state{name};
+        my $defaultValue = $state{defaultValue};
+        $text .= "//${stateName}=${defaultValue}\n";
+      }
+      $text .= "###\n";
     }
-    $text .= "###\n";
 
     # 練技
     if ($::pc{lvEnh} > 0) {
@@ -728,7 +745,7 @@ sub palettePreset {
 
         $text .= "2d+";
         $text .= $::pc{paletteUseVar} ? "{命中$_}" : $::pc{"weapon${_}AccTotal"};
-        $text .= makeStatesExpression(\%::pc, '命中力');
+        $text .= makeStatesExpression(\%::pc, ['器用度ボーナス', '命中力']);
         $text .= "+{命中修正}+{行為判定修正}+{行動判定修正}";
         if($::pc{'paletteAttack'.$paNum.'Acc'}){
           $text .= optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Acc'}";
@@ -771,7 +788,7 @@ sub palettePreset {
 
       $text .= "2d+";
       $text .= $::pc{paletteUseVar} ? "{回避${i}}" : $::pc{"defenseTotal${i}Eva"};
-      $text .= makeStatesExpression(\%::pc, '回避力');
+      $text .= makeStatesExpression(\%::pc, ['敏捷度ボーナス', '回避力']);
       $text .= "+{回避修正}+{行為判定修正}+{行動判定修正} 回避力".($::pc{"defenseTotal${i}Note"}?"／$::pc{'defenseTotal'.$i.'Note'}":'')."\n";
     }
     $text .= "//ダメージ軽減=0\n";
@@ -794,8 +811,8 @@ sub palettePreset {
         my $taxaOffset = $taxaFieldName ? $::pc{"paletteDamageOffset${taxaFieldName}"} : 0;
         next if $taxaName && $taxaOffset == 0;
 
-        my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, '防護点') ]}+{ダメージ軽減}+{物理ダメージ軽減}";
-        my $magicalDefense = "@{[$::pc{lvSag} >= 12 ? 5 : 0]}+{ダメージ軽減}+{魔法ダメージ軽減}";
+        my $physicalDefense = "{防護1}@{[ makeStatesExpression(\%::pc, ['防護点', '物理ダメージ軽減']) ]}+{ダメージ軽減}+{物理ダメージ軽減}";
+        my $magicalDefense = "@{[$::pc{lvSag} >= 12 ? 5 : 0]}@{[ makeStatesExpression(\%::pc, '魔法ダメージ軽減') ]}+{ダメージ軽減}+{魔法ダメージ軽減}";
 
         my $labelSuffix = '';
         $labelSuffix .= "／${attributeName}属性" if $attributeName;

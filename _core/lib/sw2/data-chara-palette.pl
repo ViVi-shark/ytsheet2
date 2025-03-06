@@ -25,8 +25,40 @@ our @stateTargets = (
         fieldName => 'mndResist',
     },
     {
+        name      => '器用度ボーナス',
+        fieldName => 'dexB',
+    },
+    {
+        name      => '敏捷度ボーナス',
+        fieldName => 'agiB',
+    },
+    {
         name      => '筋力ボーナス',
         fieldName => 'strB',
+    },
+    {
+        name      => '生命力ボーナス',
+        fieldName => 'vitB',
+    },
+    {
+        name      => '知力ボーナス',
+        fieldName => 'intB',
+    },
+    {
+        name      => '精神力ボーナス',
+        fieldName => 'mndB',
+    },
+    {
+        name      => '行使判定',
+        fieldName => 'cast',
+    },
+    {
+        name      => '魔物知識判定',
+        fieldName => 'monsterLore',
+    },
+    {
+        name      => '先制判定',
+        fieldName => 'initiative',
     },
     {
         name      => '与物理ダメージ',
@@ -45,8 +77,12 @@ our @stateTargets = (
         fieldName => 'magicCritical',
     },
     {
-        name      => '先制判定',
-        fieldName => 'initiative',
+        name      => '物理ダメージ軽減',
+        fieldName => 'physicsDamageReduction',
+    },
+    {
+        name      => '魔法ダメージ軽減',
+        fieldName => 'magicDamageReduction',
     },
     {
         name      => '土属性軽減',
