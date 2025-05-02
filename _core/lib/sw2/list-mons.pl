@@ -117,7 +117,7 @@ elsif($taxa_query) {
     @list = grep { $_ =~ /^(?:[^<]*?<>){6}その他/ } @list;
   }
   elsif($taxa_query ne 'all') {
-    @list = grep { $_ =~ /^(?:[^<]*?<>){6}\Q$taxa_query\E</ } @list;
+    @list = grep { $_ =~ /^(?:[^<]*?<>){6}(?:その他:[^<]*?)?\Q$taxa_query\E[^<]*?</ } @list;
   }
 }
 if($::in{mount}){ $INDEX->param(group => '騎獣'.($taxa_query?"／$taxa_query":'')      ); }
