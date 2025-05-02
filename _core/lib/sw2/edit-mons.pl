@@ -313,7 +313,7 @@ print <<"HTML";
           <dd>@{[ input 'initiative' ]}<span data-related-field="initiative"></span><span class="offset-by-treasure-enhancement"></span>
         </dl>
         <dl class="mobility">
-          <dt>移動速度<dd>@{[ input 'mobility' ]}
+          <dt>移動速度<dd>@{[ input 'mobility','','','list="data-mobility"' ]}
           <dd class="individualization-only">
         </dl>
         <dl class="monster-only vit-resistance">
@@ -927,6 +927,9 @@ print <<"HTML";
     <option value="属性ダメージ+3点">
     <option value="回復効果ダメージ+3点">
     <option value="なし">
+  </datalist>
+  <datalist id="data-mobility">
+    <option value="―／―">
   </datalist>
   <datalist id="data-roots-num">
     <option value="自動">
