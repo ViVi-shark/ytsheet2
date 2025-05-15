@@ -201,7 +201,7 @@ foreach my $num ('TMPL', 1 .. $pc{weaponNum}){
             <td>@{[ input "weapon${num}Reqd" ]}
             <td>@{[ input "weapon${num}Acc" ]}
             <td>@{[ input "weapon${num}Rate" ]}
-            <td>@{[ input "weapon${num}Crit" ]}
+            <td>@{[ input "weapon${num}Crit",'','','list="list-weapon-crit"' ]}
             <td>@{[ input "weapon${num}Dmg" ]}
             <td class="range">@{[ input "weapon${num}Range",'','','list="list-weapon-range"' ]}
             <td>@{[ input "weapon${num}Note" ]}
@@ -301,6 +301,14 @@ print <<"HTML";
     <option value="2H投">
     <option value="振2H">
     <option value="突2H">
+  </datalist>
+  <datalist id="list-weapon-crit">
+    <option value="⑫">
+    <option value="⑪">
+    <option value="⑩">
+    <option value="⑨">
+    <option value="⑧">
+    <option value="なし">
   </datalist>
   <datalist id="list-weapon-range">
     <option value="1(10m)">
