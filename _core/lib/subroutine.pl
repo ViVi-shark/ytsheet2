@@ -513,7 +513,7 @@ sub unescapeTags {
   
   our @linkPlaceholders;
   $text =~ s/((?:making|能力値作成(?:履歴)?)#([0-9]+(?:-[0-9]+)?))/ &generateLinkTag("?&mode=making&num=$2",$1) /egi if($set::game eq 'sw2'); # メイキングリンク
-  $text =~ s/\[\[(.+?)&gt;((?:(?!<br>)[^"])+?)\]\]/ &generateLinkTag($2,$1) /egi; # リンク
+  $text =~ s/\[\[(.+?)&gt;((?:(?!<br>|<d[ltd]>)[^"])+?)\]\]/ &generateLinkTag($2,$1) /egi; # リンク
   $text =~ s/\[(.+?)#([a-zA-Z0-9\-]+?)\]/ &generateLinkTag("?id=$2",$1) /egi; # シート内リンク
   $text =~ s/(https?:\/\/[^\s\<]+)/ &generateLinkTag($1,$1) /egi; # 自動リンク
   
