@@ -341,6 +341,19 @@ foreach my $lv (2 .. ($pc{lvMax}-$pc{lvMin}+1)){
   foreach (1 .. $pc{statusNum}){
     my $num = "$_-$lv";
 
+    next if $pc{mount} && join('', (
+        $pc{'status'.$num.'Accuracy'},
+        $pc{'status'.$num.'AccuracyFix'},
+        $pc{'status'.$num.'Damage'},
+        $pc{'status'.$num.'Evasion'},
+        $pc{'status'.$num.'EvasionFix'},
+        $pc{'status'.$num.'Defense'},
+        $pc{'status'.$num.'Hp'},
+        $pc{'status'.$num.'Mp'},
+        $pc{'status'.$num.'Vit'},
+        $pc{'status'.$num.'Mnd'},
+    )) =~ /^(?:<span class="d-dash">―<\/span>)*$/;
+
     $pc{'status'.$num.'Damage'} = '―' if $pc{'status'.$num.'Damage'} eq '2d+' && ($pc{'status'.$num.'Accuracy'} eq '' || $pc{'status'.$num.'Accuracy'} eq '―');
 
 
@@ -395,6 +408,7 @@ foreach my $lv (2 .. ($pc{lvMax}-$pc{lvMin}+1)){
       MND      => $pc{'status'.$num.'Mnd'     } // '―',
     } );
   }
+  next if $pc{mount} && !@status_row;
   push(@status_tbody, { ROW => \@status_row }) if !$pc{mount} || $pc{lv} eq '' || $lv+$pc{lvMin}-1 == $pc{lv};
 }
 $SHEET->param(Status => \@status_tbody);
