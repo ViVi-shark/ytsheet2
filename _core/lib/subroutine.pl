@@ -634,12 +634,12 @@ sub generateTable {
     foreach my $col (@{$row}){
       my $rowspan = 1;
       my $td = 'td';
-      while($data[$row_num+$rowspan][$col_num] eq '~'){ $rowspan++; }
+      while($data[$row_num+$rowspan][$col_num] =~ /^~\s*$/){ $rowspan++; }
       $col_num++;
       my @classesCell;
       if($classes[$col_num-1]){ push(@classesCell, @{$classes[$col_num-1]}); }
       if   ($col eq '&gt;'){ $colspan++; next; }
-      elsif($col eq '~')   { next; }
+      elsif($col =~ /^~\s*$/ && $output =~ /<\/tr>/) { next; }
       elsif($col =~ s/^~//){ $td = 'th' }
       else {
         while($col =~ s/^(LEFT|CENTER|RIGHT|NOWRAP|SMALL)://){
