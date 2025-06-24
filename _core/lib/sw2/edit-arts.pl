@@ -607,6 +607,7 @@ print <<"HTML";
     <option value="2(20m)">
     <option value="2(30m)">
     <option value="2(50m)">
+    <option value="2(100m)">
     <option value="2(無限)">
     <option value="2()">
   </datalist>
