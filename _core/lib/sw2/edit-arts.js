@@ -207,7 +207,7 @@ async function addSchoolItem(){
         itemName = `〈${itemName}〉`;
       }
       tr.innerHTML = `
-        <td><a href="${url}">${itemName}</a></td>
+        <td><a href="${url}" target="_blank">${itemName}</a></td>
         <td>${data?.category.replaceAll(/\s+/g, '<hr>') ?? ''}</td>
         <td>${data.summary ||''}</td>
         <td class="button" onclick="delSchoolItem(this,'${url}')">×</td>
