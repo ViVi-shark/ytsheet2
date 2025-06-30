@@ -540,6 +540,10 @@ print <<"HTML";
     <option value="なし">
     <option value="【】">
   </datalist>
+  <datalist id="list-premise-of-move">
+    <option value="―">
+    <option value="【】">
+  </datalist>
   <datalist id="list-cost">
     <option value="―">
     <option value="MP">

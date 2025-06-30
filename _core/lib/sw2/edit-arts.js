@@ -128,7 +128,7 @@ function checkMagicClass(){
     viewMagicInputs(['type','rank','command','commcost']);
   }
   else if(magic == '陣率'){
-    viewMagicInputs(['premise','condition','commcost']);
+    viewMagicInputs(['premise','condition','commcost'], {premise: 'move'});
   }
   else if(magic == '占瞳'){
     viewMagicInputs(['type','target','range','duration']);
@@ -172,7 +172,12 @@ function checkMagicClass(){
     levelInput.removeAttribute('list');
   }
 }
-function viewMagicInputs(items){
+
+/**
+ * @param {string[]} items
+ * @param {null|{premise?: string}} options
+ */
+function viewMagicInputs(items, options = null){
   document.querySelectorAll(`#data-magic dl`).forEach(obj => {
     obj.style.display = 'none';
   });
@@ -182,6 +187,13 @@ function viewMagicInputs(items){
       obj.style.display = '';
     });
   }
+
+  document.querySelector('#data-magic dl.premise input[list]').setAttribute(
+      'list',
+      options?.premise != null
+        ? `list-premise-of-${options.premise}`
+        : 'list-premise'
+  );
 }
 // 流派装備欄 ----------------------------------------
 // 追加
