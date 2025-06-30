@@ -676,7 +676,7 @@ print <<"HTML";
     <option value="大中小">
     <option value="大（＿個）">
   </datalist>
-  <datalist id="list-song-condition">
+  <datalist id="list-condition-of-song">
     <option value="なし">
     <option value="⤴">
     <option value="⤵">
@@ -684,6 +684,9 @@ print <<"HTML";
     <option value="⤴⤵">
     <option value="⤴♡">
     <option value="⤵♡">
+  </datalist>
+  <datalist id="list-condition-of-move">
+    <option value="なし（補助動作で使用）">
   </datalist>
   <datalist id="list-songpoint">
     <option value="⤴">

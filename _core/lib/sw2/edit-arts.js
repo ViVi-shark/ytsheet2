@@ -104,7 +104,7 @@ function checkMagicClass(){
     viewMagicInputs(['duration']);
   }
   else if(magic == '呪歌'){
-    viewMagicInputs(['song','condition','resist','element']);
+    viewMagicInputs(['song','condition','resist','element'], {condition: 'song'});
   }
   else if(magic == '終律'){
     viewMagicInputs(['cost','resist','element']);
@@ -128,7 +128,7 @@ function checkMagicClass(){
     viewMagicInputs(['type','rank','command','commcost']);
   }
   else if(magic == '陣率'){
-    viewMagicInputs(['premise','condition','commcost'], {premise: 'move'});
+    viewMagicInputs(['premise','condition','commcost'], {premise: 'move', condition: 'move'});
   }
   else if(magic == '占瞳'){
     viewMagicInputs(['type','target','range','duration']);
@@ -175,7 +175,7 @@ function checkMagicClass(){
 
 /**
  * @param {string[]} items
- * @param {null|{premise?: string}} options
+ * @param {null|{premise?: string, condition?: string}} options
  */
 function viewMagicInputs(items, options = null){
   document.querySelectorAll(`#data-magic dl`).forEach(obj => {
@@ -193,6 +193,13 @@ function viewMagicInputs(items, options = null){
       options?.premise != null
         ? `list-premise-of-${options.premise}`
         : 'list-premise'
+  );
+
+  document.querySelector('#data-magic dl.condition input[list]').setAttribute(
+      'list',
+      options?.condition != null
+          ? `list-condition-of-${options.condition}`
+          : 'list-condition'
   );
 }
 // 流派装備欄 ----------------------------------------
