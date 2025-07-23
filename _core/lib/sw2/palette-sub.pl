@@ -350,6 +350,15 @@ sub palettePreset {
           $line .= $fixedValue;
         }
 
+        if ($drugCategory eq '薬草' && $line =~ /^k/ && $items =~ /薬師道具セット/) {
+          if ($bot{YTC}) {
+            $line .= '$4';
+          }
+          elsif ($bot{BCD}) {
+            # BCDice においては〈薬師道具セット〉のルールが定かでないとされるため、何もしない.
+          }
+        }
+
         unless ($line =~ /^k/) { # 威力がなければ計算コマンドにする（〈魔香水〉）
           if ($bot{YTC}) {
             $line .= '=';
