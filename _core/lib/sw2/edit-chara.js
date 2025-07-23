@@ -2599,12 +2599,34 @@ setSortable('weapon', '#weapons-table', 'tbody',
   }
 );
 
+function makeWeaponUsageName(itemName, usage, itemNote) {
+  let name = itemName + usage;
+
+  {
+    let note = itemNote;
+    const re = /\[tag:(.+?)]/;
+    while (re.test(note)) {
+      const m = note.match(re);
+      name += `，${m[1]}`;
+      note = note.replace(re, '');
+    }
+  }
+
+  return name;
+}
 function changeWeaponName (){
   let rowNum = 0;
   document.querySelectorAll(`#palette-attack .palette-attack-checklist`).forEach(row => {
     rowNum++;
     for(let num = 1; num <= form.weaponNum.value; num++){
-      const name = (form[`weapon${num}Name`].value || form[`weapon${num-1}Name`]?.value || '')+form[`weapon${num}Usage`].value;
+      const name = makeWeaponUsageName(
+        (form[`weapon${num}Name`].value || form[`weapon${num-1}Name`]?.value || ''),
+        form[`weapon${num}Usage`].value,
+        form[`weapon${num}Note`].value
+      );
+      if (form[`paletteAttack${rowNum}CheckWeapon${num}`] == null) {
+        continue;
+      }
       form[`paletteAttack${rowNum}CheckWeapon${num}`].nextElementSibling.textContent = name;
     }
   });
@@ -2626,7 +2648,11 @@ function generatePaletteWeaponCheckbox (){
     row.innerHTML = '';
     const added = {};
     for(let num = 1; num <= form.weaponNum.value; num++){
-      const name = (form[`weapon${num}Name`].value || form[`weapon${num-1}Name`]?.value || '')+form[`weapon${num}Usage`].value;
+      const name = makeWeaponUsageName(
+        (form[`weapon${num}Name`].value || form[`weapon${num-1}Name`]?.value || ''),
+        form[`weapon${num}Usage`].value,
+        form[`weapon${num}Note`].value
+      );
 
       if (form[`weapon${num}DisableHitInPalette`]?.checked && form[`weapon${num}DisableRateInPalette`]?.checked) {
         continue;

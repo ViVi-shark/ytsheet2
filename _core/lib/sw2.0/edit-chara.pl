@@ -1050,7 +1050,7 @@ print <<"HTML";
                 <td><select name="weapon${num}Class" oninput="calcWeapon()">@{[option("weapon${num}Class",@weapon_users,'自動計算しない')]}</select>
                 <td rowspan="2"><span class="button" onclick="addWeapons(${num});setupBracketInputCompletion()">複<br>製</span>
               <tr>
-                <td colspan="3">@{[input("weapon${num}Note",'','calcWeapon','onchange="changeEquipMod();calcCash()" placeholder="備考"')]}
+                <td colspan="3">@{[input("weapon${num}Note",'','calcWeapon','onchange="changeEquipMod();calcCash();changeWeaponName()" placeholder="備考"')]}
 HTML
   if($num eq 'TMPL'){ print '</template>' }
 }
@@ -1060,6 +1060,7 @@ print <<"HTML";
           <ul class="annotate">
             <li>Ｃ値は自動計算されません。
             <li><code>\@防護点+1</code>や<code>\@回避力+1</code>のように記述すると、<span class="text-em">常時</span>有効な上昇効果が自動計算されます。<br>有効な項目は、装飾品欄と同様です。
+            <li>備考欄に<code>[tag:任意の文言]</code>と記述すると、<code>任意の文言</code>の部分がチャットパレットに反映されます。
             <li><code>::-57,000</code>のように記述すると、支出として所持金の自動計算に加味されます。<br>末尾に単位<code>G</code>をつけて、<code>-57,000G</code>のようにも記述できます。
             <li id="artisan-annotate" @{[ display $pc{masteryArtisan} ]}>※備考欄に<code>〈魔器〉</code>と記入すると魔器習熟が反映されます。
           </ul>

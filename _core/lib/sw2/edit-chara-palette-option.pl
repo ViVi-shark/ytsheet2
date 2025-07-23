@@ -134,6 +134,10 @@ HTML
         my %added;
         foreach my $num (1 .. $pc{weaponNum}) {
             my $name = $pc{"weapon${num}Name"}.$pc{"weapon${num}Usage"} || '―';
+            if ($name ne '―') {
+                my $note = $pc{"weapon${num}Note"};
+                $name .= "，$1" while $note =~ s#\[tag:(.+?)]##;
+            }
             next if $added{$name};
             next if $pc{"weapon${num}DisableHitInPalette"} && $pc{"weapon${num}DisableRateInPalette"};
             $html .= ::checkbox("paletteAttack${_}CheckWeapon${num}",$name,'setChatPalette');

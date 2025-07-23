@@ -922,6 +922,12 @@ sub palettePreset {
       $::pc{'weapon'.$_.'Crit'} = normalizeCrit $::pc{'weapon'.$_.'Crit'};
       my $partName = $::pc{'part'.$::pc{'weapon'.$_.'Part'}.'Name'};
       
+      my $weaponTags = '';
+      {
+        my $note = $::pc{'weapon' . $_ . 'Note'};
+        $weaponTags .= "，$1" while $note =~ s#\[tag:(.+?)]##;
+      }
+      
       my %dmgTexts;
       foreach my $paNum (0 .. $::pc{paletteAttackNum}){
         next if($paNum && !($::pc{'paletteAttack'.$paNum.'Name'} && $::pc{'paletteAttack'.$paNum.'CheckWeapon'.$_}));
@@ -985,7 +991,7 @@ sub palettePreset {
             $line .= $bot{YTC} ? '首切' : $bot{BCD} ? 'r5' : '';
           }
           $line .= " ダメージ";
-          $line .= "／$::pc{'weapon'.$_.'Name'}@{[extractWeaponMarks($::pc{'weapon'.$_.'Note'})]}$::pc{'weapon'.$_.'Usage'}";
+          $line .= "／$::pc{'weapon'.$_.'Name'}@{[extractWeaponMarks($::pc{'weapon'.$_.'Note'})]}$::pc{'weapon'.$_.'Usage'}${weaponTags}";
           $line .= "（${partName}）" if $partName && $bot{BCD};
 
           foreach (makeDamageCommandVariations($line, \%::pc, '物理')) {
@@ -1008,7 +1014,7 @@ sub palettePreset {
           if($::pc{'paletteAttack'.$paNum.'Acc'}){
             $text .= optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Acc'}";
           }
-          $text .= " 命中力／$::pc{'weapon'.$_.'Name'}$::pc{'weapon'.$_.'Usage'}";
+          $text .= " 命中力／$::pc{'weapon'.$_.'Name'}$::pc{'weapon'.$_.'Usage'}${weaponTags}";
           $text .= "〈$::pc{'weapon'.$_.'Category'}〉" if $::pc{'weapon'.$_.'Usage'} =~ /H投/i && $::pc{'weapon'.$_.'Category'};
           $text .= "（${partName}）" if $partName;
           if($::pc{'paletteAttack'.$paNum.'Name'}){

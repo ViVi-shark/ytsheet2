@@ -727,6 +727,14 @@ sub replaceModificationNotation {
   return $sourceText;
 }
 
+sub replaceWeaponTagNotation {
+  my $text = shift // '';
+
+  $text =~ s#\[tag\:(.+?)\]#<i class="user-tag term-em">$1</i>#gi;
+
+  return $text;
+}
+
 my @weapons;
 if($pc{forbiddenMode}){
   push(@weapons,{
@@ -783,7 +791,7 @@ else {
       DMG      => addNum($pc{'weapon'.$_.'Dmg'}),
       DMGTOTAL => $pc{'weapon'.$_.'DmgTotal'},
       OWN      => $pc{'weapon'.$_.'Own'},
-      NOTE     => removeExpense(replaceModificationNotation($pc{'weapon'.$_.'Note'})),
+      NOTE     => removeExpense(replaceWeaponTagNotation(replaceModificationNotation($pc{'weapon'.$_.'Note'}))),
       NOTESPAN => $pc{'weapon'.$_.'NoteSpan'},
       NOTEOFF  => $pc{'weapon'.$_.'NoteOff'},
       CLOSE    => ($pc{'weapon'.$_.'NameOff'} || $first ? 0 : 1),
