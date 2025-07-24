@@ -194,6 +194,7 @@ sub palettePreset {
     $text .= appendPaletteInsert('');
     $text .= "//行為判定修正=0\n";
     $text .= "//行動判定修正=0\n";
+    $text .= "//生死判定修正=0\n";
     # 基本判定
     require($::core_dir . '/lib/sw2/data-chara-checking.pl');
     $text .= "### ■非戦闘系";
@@ -215,7 +216,7 @@ sub palettePreset {
         my $mod = addNum $::pc{$fieldName};
         $mod .= makeStatesExpression(\%::pc, $checkingName);
         $mod .= $statesExpression;
-        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '+{HP}>=0' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
+        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '+{生死判定修正}+{HP}>=0' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
       }
     }
     $::pc{monsterLoreAddTotal} //= $::pc{monsterLoreAdd};
