@@ -264,7 +264,7 @@ sub palettePreset {
         $text .= "\@MP-${cost} ${craftName}\n";
       }
 
-      if ($#namesOf30secs > 1) {
+      if ($#namesOf30secs > 0) {
         $text .= '@MP';
         foreach my $cost (3, 10) {
           $text .= "-${cost}*$costCountOf30secs{$cost}" if $costCountOf30secs{$cost};
@@ -272,7 +272,7 @@ sub palettePreset {
         $text .= ' ' . join('', @namesOf30secs) . "\n";
       }
 
-      if ($#namesOf10secs > 1) {
+      if ($#namesOf10secs > 0) {
         $text .= '@MP';
         foreach my $cost (3, 10) {
           $text .= "-${cost}*$costCountOf10secs{$cost}" if $costCountOf10secs{$cost};
