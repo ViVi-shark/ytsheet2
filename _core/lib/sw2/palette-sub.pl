@@ -211,11 +211,11 @@ sub palettePreset {
         my %checking = %{$_};
         my $checkingName = $checking{name};
         my $fieldName = "checking_$checking{fieldName}_mod";
-        next unless $::pc{$fieldName};
+        next if !$::pc{$fieldName} && $checkingName !~ /生死判定/;
         my $mod = addNum $::pc{$fieldName};
         $mod .= makeStatesExpression(\%::pc, $checkingName);
         $mod .= $statesExpression;
-        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
+        $text .= "2d+{冒険者}+{${statusNameShort}B}${mod}+{行為判定修正}@{[$checkingName =~ /生死判定/ ? '+{HP}>=0' : '+{行動判定修正}']} ${checkingName}（冒険者）\n";
       }
     }
     $::pc{monsterLoreAddTotal} //= $::pc{monsterLoreAdd};
