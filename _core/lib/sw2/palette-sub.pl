@@ -285,8 +285,9 @@ sub palettePreset {
       next if !$::pc{"commonClass$i"};
       my $name = removeTags unescapeTags $::pc{'commonClass'.$i};
       $name =~ s/[(（].+?[）)]$//;
-      foreach (['器用', 'Dex'], ['敏捷', 'Agi'], ['筋力', 'Str'], ['生命', 'Vit'], ['知力', 'Int'], ['精神', 'Mnd']) {
-        (my $statusJa, my $statusEn) = @{$_};
+      foreach (['器用度', 'Dex'], ['敏捷度', 'Agi'], ['筋力', 'Str'], ['生命力', 'Vit'], ['知力', 'Int'], ['精神力', 'Mnd']) {
+        (my $statusJaFull, my $statusEn) = @{$_};
+        my $statusJa = substr($statusJaFull, 0, 2);
         my @checkingNames = ();
         my @modifiedCheckingNames = ();
         my %checkingModifiers = ();
@@ -300,13 +301,13 @@ sub palettePreset {
             push(@checkingNames, $checkingName);
           }
           else {
-            $checkingModifiers{$checkingName} = "@{[addNum $generalMod]}${localMod}";
+            $checkingModifiers{$checkingName} = "@{[addNum $generalMod]}${localMod}" . makeStatesExpression(\%::pc, $statusJaFull . 'ボーナス');
             push(@modifiedCheckingNames, $checkingName);
           }
         }
         if ($::pc{"paletteCommonClass${i}${statusEn}"} && @checkingNames) {
           my $checkingNames = @checkingNames ? '（' . join('、', @checkingNames) . '）' : '';
-          $text .= "2d+{$name}+{${statusJa}B}+{行為判定修正}+{行動判定修正} ${name}＋${statusJa}${checkingNames}\n";
+          $text .= "2d+{$name}+{${statusJa}B}@{[makeStatesExpression(\%::pc, $statusJaFull . 'ボーナス')]}+{行為判定修正}+{行動判定修正} ${name}＋${statusJa}${checkingNames}\n";
         }
         if (@modifiedCheckingNames) {
           foreach my $checkingName (@modifiedCheckingNames) {
