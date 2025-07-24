@@ -550,6 +550,41 @@ sub palettePreset {
       $text .= "###\n";
     }
 
+    # 操気
+    if ($::pc{lvDar} > 0) {
+      $text .= "### ■操気\n";
+
+      foreach (1 .. $::pc{lvDar}) {
+        my $craftName = $::pc{"craftPsychokinesis${_}"};
+        next unless $craftName;
+
+        my $craft = data::getDarkHunterCraft($craftName);
+        next unless ref $craft;
+
+        my %craft = %{$craft};
+        $text .= "\@HP-$craft{消費} " if $craft{消費};
+
+        my $action = $craft{action};
+
+        if ($action =~ s/\[補]//g) {
+          $text .= '[補]';
+          $text .= '[準]' if $action =~ s/\[準]//g;
+          $text .= "【${craftName}】\n";
+        }
+        elsif ($action =~ s/\[準]//g) {
+          $text .= "[準]【${craftName}】\n";
+        }
+        elsif ($action =~ s/\[主]//g) {
+          $text .= "[主]【${craftName}】\n";
+        }
+        elsif ($action =~ s/\[常]//g) {
+          $text .= "[常]【${craftName}】\n";
+        }
+      }
+
+      $text .= "###\n";
+    }
+
     # 宣言特技
     require $set::data_feats;
     my @declarationFeats = ();
