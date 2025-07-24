@@ -1058,8 +1058,8 @@ sub palettePreset {
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
     $text .= "//回避修正=0\n";
-    $text .= "2d+{生命抵抗}@{[ makeStatesExpression(\%::pc, '生命抵抗力') ]}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
-    $text .= "2d+{精神抵抗}@{[ makeStatesExpression(\%::pc, '精神抵抗力') ]}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
+    $text .= "2d+{生命抵抗}@{[ makeStatesExpression(\%::pc, ['生命抵抗力', '生命力ボーナス']) ]}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
+    $text .= "2d+{精神抵抗}@{[ makeStatesExpression(\%::pc, ['精神抵抗力', '精神力ボーナス']) ]}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
     foreach my $i (1..$::pc{defenseNum}){
       my $hasChecked = 0;
       foreach my $j (1..$::pc{armourNum}){
