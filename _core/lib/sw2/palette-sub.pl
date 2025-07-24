@@ -341,8 +341,8 @@ sub palettePreset {
 
         if ($::pc{lvRan} > 0) {
           $fixedValue .= '{レンジャー}';
-          $fixedValue .= '+{器用B}' if $drugCategory eq '薬草';
-          $fixedValue .= '+{知力B}' if $drugCategory eq 'ポーション';
+          $fixedValue .= '+{器用B}' . makeStatesExpression(\%::pc, '器用度ボーナス') if $drugCategory eq '薬草';
+          $fixedValue .= '+{知力B}' . makeStatesExpression(\%::pc, '知力ボーナス') if $drugCategory eq 'ポーション';
         }
 
         if ($drug{add} ne '') {
