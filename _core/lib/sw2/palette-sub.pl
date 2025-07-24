@@ -1059,7 +1059,17 @@ sub palettePreset {
     $text .= "//精神抵抗修正=0\n";
     $text .= "//回避修正=0\n";
     $text .= "2d+{生命抵抗}@{[ makeStatesExpression(\%::pc, ['生命抵抗力', '生命力ボーナス']) ]}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
+    foreach (1 .. 3) {
+      my $charmClass = $_;
+      $charmClass =~ tr#1-3#①-③#;
+      $text .= "\@陽光${charmClass}-1 〈陽光の魔符（+${_}）〉\n" if $::pc{"charmSunlight${_}_Quantity"} > 0;
+    }
     $text .= "2d+{精神抵抗}@{[ makeStatesExpression(\%::pc, ['精神抵抗力', '精神力ボーナス']) ]}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
+    foreach (1 .. 3) {
+      my $charmClass = $_;
+      $charmClass =~ tr#1-3#①-③#;
+      $text .= "\@月光${charmClass}-1 〈月光の魔符（+${_}）〉\n" if $::pc{"charmMoonlight${_}_Quantity"} > 0;
+    }
     foreach my $i (1..$::pc{defenseNum}){
       my $hasChecked = 0;
       foreach my $j (1..$::pc{armourNum}){
