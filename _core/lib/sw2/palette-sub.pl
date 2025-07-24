@@ -504,6 +504,8 @@ sub palettePreset {
     if ($::pc{lvAlc} > 0) {
       $text .= "### ■賦術\n";
 
+      my %colorMap = (赤 => 'Red', 緑 => 'Gre', 黒 => 'Bla', 白 => 'Whi', 金 => 'Gol');
+
       foreach (1 .. $::pc{lvAlc}) {
         my $craftName = $::pc{"craftAlchemy${_}"};
         next unless $craftName;
@@ -514,16 +516,25 @@ sub palettePreset {
         my %craft = %{$craft};
         my $action = $craft{action};
 
-        if ($action =~ s/\[補]//g) {
-          $text .= '[補]';
-          $text .= '[準]' if $action =~ s/\[準]//g;
-          $text .= "【${craftName}】\n";
+        my $base;
+        $base .= '[補]' if $action =~ s/\[補]//g;
+        $base .= '[準]' if $action =~ s/\[準]//g;
+        $base .= "[主]" if $action =~ s/\[準]//g;
+        $base .= "【${craftName}】";
+
+        if ($craft{cost} =~ /([赤緑黒白金])(\d+)?/) {
+          my $color = $1;
+          my $costUnit = $2 // 1;
+
+          foreach my $rank ('B', 'A', 'S', 'SS') {
+            my $fieldName = "card$colorMap{$color}${rank}";
+            next if ($::pc{$fieldName} // 0) <= 0;
+
+            $text .= "\@${color}${rank}-${costUnit} ${base}\n";
+          }
         }
-        elsif ($action =~ s/\[準]//g) {
-          $text .= "[準]【${craftName}】\n";
-        }
-        elsif ($action =~ s/\[主]//g) {
-          $text .= "[主]【${craftName}】\n";
+        else {
+          $text .= "${base}\n";
         }
       }
 

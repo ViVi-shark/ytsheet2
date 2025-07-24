@@ -412,7 +412,7 @@ foreach my $class (@data::class_names){
     my $craft = $_->[1];
     my $notes = $_->[2];
     if($class eq 'アルケミスト'){
-      while($notes =~ s/\[([赤緑黒白金])\]//){ $craftType{$craft} .= '<i class="s-icon m-card" data-color="'.$1.'"></i>' }
+      while($notes =~ s/\[([赤緑黒白金])\d*\]//){ $craftType{$craft} .= '<i class="s-icon m-card" data-color="'.$1.'"></i>' }
     }
     if($notes =~ /(\[[常主補準宣]\])+/){ $craftType{$craft} .= textToIcon $&; }
   }
