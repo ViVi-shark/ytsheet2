@@ -1305,6 +1305,15 @@ sub palettePreset {
   }
   ## 魔物
   elsif($type eq 'm') {
+    if ($::pc{mount}) {
+      $text .= "### 騎手データ\n";
+      $text .= "//ライダー技能レベル=\n";
+      foreach ('器用', '敏捷', '筋力', '生命', '知力', '精神') {
+        $text .= "//騎手_${_}B=\n";
+      }
+      $text .= "###\n";
+    }
+
     my $achievementDiceEnabled = ($::in{sw2AchievementMode} // $::pc{sw2AchievementMode}) ne 'fixed';
     my $achievementFixedEnabled = ($::in{sw2AchievementMode} // $::pc{sw2AchievementMode}) ne 'dice';
 
