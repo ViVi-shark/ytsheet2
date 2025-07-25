@@ -1723,13 +1723,25 @@ function mountStatusOptionsUpdated() {
       node => node.dataset.offset = hpOffsetTotal.toString()
   );
 
-  document.querySelectorAll('#source-status-table tr.core .accuracy .acc-option-offset').forEach(
-      node => node.dataset.offset = accOffsetTotal.toString()
-  );
+  const reinforcementPartRows = (() => {
+    const corePartRows = document.querySelectorAll('#source-status-table tbody tr.core');
 
-  document.querySelectorAll('#source-status-table tr.core .evasion .eva-option-offset').forEach(
-      node => node.dataset.offset = evaOffsetTotal.toString()
-  );
+    if (corePartRows.length > 0) {
+      return corePartRows;
+    }
+
+    return document.querySelectorAll('#source-status-table tbody tr');
+  })();
+
+  for (const tr of reinforcementPartRows) {
+    tr.querySelectorAll('.accuracy .acc-option-offset').forEach(
+        node => node.dataset.offset = accOffsetTotal.toString()
+    );
+
+    tr.querySelectorAll('.evasion .eva-option-offset').forEach(
+        node => node.dataset.offset = evaOffsetTotal.toString()
+    );
+  }
 }
 document.querySelectorAll('[data-related-field]').forEach(
     node => {

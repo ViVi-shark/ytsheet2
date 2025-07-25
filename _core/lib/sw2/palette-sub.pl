@@ -1357,12 +1357,12 @@ sub palettePreset {
             $partName =~ s/\)/）/g;
           }
 
-          if ($::pc{ridingMountReinforcement} && index($partName, $corePartName) >= 0) {
+          if ($::pc{ridingMountReinforcement} && (index($partName, $corePartName) >= 0 || $corePartName eq 'なし')) {
             $::pc{'status' . $num . 'Accuracy'} += 1 if $::pc{'status' . $num . 'Accuracy'} ne '';
             $::pc{'status' . $num . 'Evasion'} += 1 if $::pc{'status' . $num . 'Evasion'} ne '';
           }
 
-          if ($::pc{ridingMountReinforcementSuper} && index($partName, $corePartName) >= 0) {
+          if ($::pc{ridingMountReinforcementSuper} && (index($partName, $corePartName) >= 0 || $corePartName eq 'なし')) {
             $::pc{'status' . $num . 'Accuracy'} += 1 if $::pc{'status' . $num . 'Accuracy'} ne '';
             $::pc{'status' . $num . 'Evasion'} += 1 if $::pc{'status' . $num . 'Evasion'} ne '';
           }

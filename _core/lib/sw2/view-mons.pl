@@ -312,12 +312,12 @@ foreach (1 .. $pc{statusNum}){
     $partName =~ s/\)/）/g;
   }
 
-  if ($pc{'status' . $_ . 'Accuracy'} ne '―' && index($partName, $corePartName) >= 0) {
+  if ($pc{'status' . $_ . 'Accuracy'} ne '―' && (index($partName, $corePartName) >= 0 || $corePartName eq 'なし')) {
     $pc{'status' . $_ . 'Accuracy'} += 1 if $pc{'ridingMountReinforcement'};
     $pc{'status' . $_ . 'Accuracy'} += 1 if $pc{'ridingMountReinforcementSuper'};
   }
 
-  if ($pc{'status' . $_ . 'Evasion'} ne '―' && index($partName, $corePartName) >= 0) {
+  if ($pc{'status' . $_ . 'Evasion'} ne '―' && (index($partName, $corePartName) >= 0 || $corePartName eq 'なし')) {
     $pc{'status' . $_ . 'Evasion'} += 1 if $pc{'ridingMountReinforcement'};
     $pc{'status' . $_ . 'Evasion'} += 1 if $pc{'ridingMountReinforcementSuper'};
   }
