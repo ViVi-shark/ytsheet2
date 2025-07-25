@@ -231,6 +231,27 @@ sub createUnitStatus {
         push(@unitStatus, { $propertyName => $quantity });
       }
     }
+
+    # 薬草・ポーション
+    {
+      my $items = $pc{items};
+      $items =~ tr/０-９＋/0-9+/;
+      $items =~ s#[x×](\d+)#*$1#g;
+
+      foreach (reverse @data::drugs) {
+        # 〈ヒーリングポーション+1〉を〈ヒーリングポーション〉より先に解決するために逆順
+        my %drug = %{$_};
+        my $drugName = $drug{name};
+
+        next unless $items =~ s/\Q${drugName}\E[〉>]?(?:\*(\d+)|(\d+)個)?//g;
+        my $quantity = $1 // $2 // 1;
+
+        my $shortName = $drugName;
+        $shortName =~ s/ポーション(\+1)?$/$1/;
+
+        push(@unitStatus, { $shortName => $quantity });
+      }
+    }
   }
 
   @unitStatus = @{formatUnitStatus \@unitStatus};
