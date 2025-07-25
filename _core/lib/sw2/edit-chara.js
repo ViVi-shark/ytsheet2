@@ -2094,6 +2094,51 @@ function findExpensesFromItems() {
   /**
    * @return {string[]}
    */
+  function findExpensesFromCards() {
+    const supportsQuantity = document.querySelector('[name="cardQuantityExpensesAutomatically"]').checked;
+
+    if (!supportsQuantity) {
+      return [];
+    }
+
+    /**
+     * @param {'B'|'A'|'S'|'SS'} rank
+     * @return {int}
+     */
+    function getPriceByRank(rank) {
+      switch (rank) {
+        case 'B':
+          return 20;
+        case 'A':
+          return 200;
+        case 'S':
+          return 2000;
+        case 'SS':
+          return 20000;
+      }
+    }
+
+    const rows = [];
+
+    for (const color of ['Red', 'Gre', 'Bla', 'Whi', 'Gol']) {
+      for (const rank of ['B', 'A', 'S', 'SS']) {
+        const input = document.querySelector(`#material-cards input[name="card${color}${rank}"]`);
+        const quantity = input.value ?? NaN;
+
+        if (isNaN(quantity) || quantity === 0 || quantity === '') {
+          continue;
+        }
+
+        rows.push(`::-${getPriceByRank(rank)}*${quantity}`);
+      }
+    }
+
+    return rows;
+  }
+
+  /**
+   * @return {string[]}
+   */
   function findExpensesFromBaggage() {
     const text = document.querySelector('[name="items"]').value ?? '';
 
@@ -2112,6 +2157,7 @@ function findExpensesFromItems() {
       .concat(findExpensesFromArmours())
       .concat(findExpensesFromAccessories())
       .concat(findExpensesFromManaGems())
+      .concat(findExpensesFromCards())
       .concat(findExpensesFromBaggage())
       .join('\n');
 }

@@ -929,6 +929,34 @@ sub findExpensesFromItems {
     return @rows;
   }
 
+  sub findExpensesFromCards {
+    return () unless $pc{cardQuantityExpensesAutomatically};
+
+    sub getPriceByRank {
+      my $rank = shift;
+
+      return 20 if $rank eq 'B';
+      return 200 if $rank eq 'A';
+      return 2000 if $rank eq 'S';
+      return 20000 if $rank eq 'SS';
+    }
+
+    my @rows = ();
+
+    foreach ([ Red => '赤' ], [ Gre => '緑' ], [ Bla => '黒' ], [ Whi => '白' ], [ Gol => '金' ]) {
+      (my $colorEn, my $colorJa) = @{$_};
+
+      foreach my $rank ('B', 'A', 'S', 'SS') {
+        my $quantity = $pc{"card${colorEn}${rank}"} // 0;
+        next if $quantity == 0;
+
+        push(@rows, "〈マテリアルカード（${colorJa}${rank}）〉×${quantity}::-@{[ commify(getPriceByRank($rank)) ]}*${quantity}");
+      }
+    }
+
+    return @rows;
+  }
+
   sub findExpensesFromBaggage {
     my $text = $pc{items} // '';
     my @rows = ();
@@ -945,6 +973,7 @@ sub findExpensesFromItems {
   push(@all, findExpensesFromArmours());
   push(@all, findExpensesFromAccessories());
   push(@all, findExpensesFromManaGems());
+  push(@all, findExpensesFromCards());
   push(@all, findExpensesFromBaggage());
 
   return join("\n", @all);

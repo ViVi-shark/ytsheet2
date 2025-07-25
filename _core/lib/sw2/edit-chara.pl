@@ -1436,12 +1436,13 @@ print <<"HTML";
             <h2 class="in-toc">マテリアルカード</h2>
             <table class="edit-table no-border-cells" >
             <tr><th>  <th>B<th>A<th>S<th>SS
-            <tr class="cards-red"><th>赤<td>@{[input 'cardRedB','number']}<td>@{[input 'cardRedA','number']}<td>@{[input 'cardRedS','number']}<td>@{[input 'cardRedSS','number']}
-            <tr class="cards-gre"><th>緑<td>@{[input 'cardGreB','number']}<td>@{[input 'cardGreA','number']}<td>@{[input 'cardGreS','number']}<td>@{[input 'cardGreSS','number']}
-            <tr class="cards-bla"><th>黒<td>@{[input 'cardBlaB','number']}<td>@{[input 'cardBlaA','number']}<td>@{[input 'cardBlaS','number']}<td>@{[input 'cardBlaSS','number']}
-            <tr class="cards-whi"><th>白<td>@{[input 'cardWhiB','number']}<td>@{[input 'cardWhiA','number']}<td>@{[input 'cardWhiS','number']}<td>@{[input 'cardWhiSS','number']}
-            <tr class="cards-gol"><th>金<td>@{[input 'cardGolB','number']}<td>@{[input 'cardGolA','number']}<td>@{[input 'cardGolS','number']}<td>@{[input 'cardGolSS','number']}
+            <tr class="cards-red"><th>赤<td>@{[input 'cardRedB','number','calcCash']}<td>@{[input 'cardRedA','number','calcCash']}<td>@{[input 'cardRedS','number','calcCash']}<td>@{[input 'cardRedSS','number','calcCash']}
+            <tr class="cards-gre"><th>緑<td>@{[input 'cardGreB','number','calcCash']}<td>@{[input 'cardGreA','number','calcCash']}<td>@{[input 'cardGreS','number','calcCash']}<td>@{[input 'cardGreSS','number','calcCash']}
+            <tr class="cards-bla"><th>黒<td>@{[input 'cardBlaB','number','calcCash']}<td>@{[input 'cardBlaA','number','calcCash']}<td>@{[input 'cardBlaS','number','calcCash']}<td>@{[input 'cardBlaSS','number','calcCash']}
+            <tr class="cards-whi"><th>白<td>@{[input 'cardWhiB','number','calcCash']}<td>@{[input 'cardWhiA','number','calcCash']}<td>@{[input 'cardWhiS','number','calcCash']}<td>@{[input 'cardWhiSS','number','calcCash']}
+            <tr class="cards-gol"><th>金<td>@{[input 'cardGolB','number','calcCash']}<td>@{[input 'cardGolA','number','calcCash']}<td>@{[input 'cardGolS','number','calcCash']}<td>@{[input 'cardGolSS','number','calcCash']}
             </table>
+            @{[ checkbox 'cardQuantityExpensesAutomatically', '所持数を支出に加味する（新規作成向け）', 'calcCash' ]}
           </div>
           <details class="box" id="charms" open>
             <summary class="in-toc">魔符</summary>
