@@ -667,7 +667,7 @@ print <<"HTML";
         </div>
         <div data-related-field="skills"></div>
       </div>
-      <div class="box additional-skills individualization-only monster-only">
+      <div class="box additional-skills individualization-only omit-if-golem">
         <h2>追加特殊能力</h2>
         <textarea name="additionalSkills">$pc{additionalSkills}</textarea>
       </div>
