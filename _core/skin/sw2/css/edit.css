@@ -1541,7 +1541,12 @@ article > form > hr {
         margin-bottom: 0;
       }
     }
-
+  }
+}
+#palette-giving-damage,
+#palette-taken-damage,
+#palette-resistance {
+  .attributes {
     ul.var-reservation {
       display: block;
       list-style-type: none;
@@ -1606,6 +1611,58 @@ article > form > hr {
       :is([data-taxa="人族"], [data-taxa="神族"]) {
         grid-row: 3 / 4;
         margin-bottom: 0;
+      }
+    }
+  }
+}
+#palette-resistance {
+  > section {
+    > dl {
+      display: grid;
+      grid-template-columns: repeat(4, 7em 4em) 1fr;
+      grid-gap: 0.75em;
+      margin: 0.75em;
+
+      > dt {
+        background-color: rgba(128, 128, 128, 0.35);
+        padding-right: 0.5em;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-weight: normal;
+
+        &:nth-of-type(4n+1) {
+          grid-column-start: 1;
+        }
+      }
+
+      > dd {
+        > dl {
+          font-size: 80%;
+          display: grid;
+          grid-template-rows: repeat(4, max-content);
+          grid-template-columns: auto;
+
+          > dt {
+            font-weight: normal;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 100%;
+          }
+
+          > dd {
+            width: 100%;
+
+            &:first-of-type {
+              margin-bottom: 0.5em;
+            }
+
+            > input {
+              width: 100%;
+            }
+          }
+        }
       }
     }
   }

@@ -267,6 +267,78 @@ HTML
             </dl>
           </section>
         </details>
+HTML
+    my $paletteResistanceOpen = (grep { $pc{$_} } (grep { $_ =~ /^(?:paletteResistanceOffset|paletteResistanceVarReservation)/ } keys %pc)) ? 'open' : '';
+    $html .= <<"HTML";
+        <details id="palette-resistance" ${paletteResistanceOpen}>
+          <summary class="header2">抵抗の追加オプション</summary>
+          <section class="attributes">
+            <h4>属性ごとの増減</h4>
+            <dl>
+HTML
+    foreach my $attributeName (@data::attributeNames) {
+        $html .= <<"HTML";
+              <dt data-attribute="${attributeName}">${attributeName}
+              <dd data-attribute="${attributeName}">
+                <dl>
+HTML
+        foreach (['Vit' => '生命'], ['Mnd' => '精神']) {
+            (my $modeNameEn, my $modeNameJa) = @{$_};
+            $html .= <<"HTML";
+                  <dt>${modeNameJa}
+                  <dd>@{[ ::input "paletteResistanceOffset$data::attributeFieldNames{$attributeName}${modeNameEn}",'number','setChatPalette' ]}
+HTML
+        }
+        $html .= <<"HTML";
+                </dl>
+              </dd>
+HTML
+    }
+    $html .= <<"HTML";
+            </dl>
+            <section>
+              <h5>属性ごとの変数</h5>
+              <ul class="var-reservation">
+HTML
+    foreach my $attributeName (@data::attributeNames) {
+        $html .= <<"HTML";
+                <li data-attribute="${attributeName}">
+                  @{[ ::checkbox "paletteResistanceVarReservation$data::attributeFieldNames{$attributeName}",$attributeName,'setChatPalette' ]}
+                </li>
+HTML
+    }
+    $html .= <<"HTML";
+              </ul>
+            </section>
+          </section>
+          <section class="taxa">
+            <h4>分類ごとの増減</h4>
+            <dl>
+HTML
+    foreach (@data::taxa) {
+        (my $taxaJa, my $__, my $__, my $taxaEn) = @{$_};
+        next unless $taxaEn;
+        $html .= <<"HTML";
+              <dt data-taxa="${taxaJa}">${taxaJa}
+              <dd data-taxa="${taxaJa}">
+                <dl>
+HTML
+        foreach (['Vit' => '生命'], ['Mnd' => '精神']) {
+            (my $modeNameEn, my $modeNameJa) = @{$_};
+            $html .= <<"HTML";
+                  <dt>${modeNameJa}
+                  <dd>@{[ ::input "paletteResistanceOffset${taxaEn}${modeNameEn}",'number','setChatPalette' ]}
+HTML
+        }
+        $html .= <<"HTML";
+                </dl>
+              </dd>
+HTML
+    }
+    $html .= <<"HTML";
+            </dl>
+          </section>
+        </details>
       </div>
 HTML
 }

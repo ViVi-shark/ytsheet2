@@ -1057,19 +1057,108 @@ sub palettePreset {
     $text .= "### ■抵抗・回避・ダメージ\n";
     $text .= "//生命抵抗修正=0\n";
     $text .= "//精神抵抗修正=0\n";
+    require($::core_dir . '/lib/sw2/data-attribute.pl');
+    sub makeAttributeResistanceVarName {
+      my $attributeName = shift;
+      my $mode = shift;
+      return "抵抗_${attributeName}属性_" . ($mode // '共通');
+    }
+    my @reservedResistanceAttributeVars = ();
+    foreach my $attributeNameJa (@data::attributeNames) {
+      my $attributeNameEn = $data::attributeFieldNames{$attributeNameJa};
+      next unless $::pc{"paletteResistanceVarReservation${attributeNameEn}"};
+
+      push(@reservedResistanceAttributeVars, $attributeNameJa);
+      $text .= "//@{[ makeAttributeResistanceVarName($attributeNameJa) ]}=0\n";
+      $text .= "//@{[ makeAttributeResistanceVarName($attributeNameJa, '生命') ]}=0\n";
+      $text .= "//@{[ makeAttributeResistanceVarName($attributeNameJa, '精神') ]}=0\n";
+    }
+    my @settings = (
+        {
+            modeNameJa  => '生命',
+            modeNameEn  => 'Vit',
+            charmNameJa => '陽光',
+            charmNameEn => 'Sunlight',
+        },
+        {
+            modeNameJa  => '精神',
+            modeNameEn  => 'Mnd',
+            charmNameJa => '月光',
+            charmNameEn => 'Moonlight',
+        },
+    );
+    foreach (@settings) {
+      my %h = %{$_};
+      my $modeNameJa = $h{modeNameJa};
+      my $modeNameEn = $h{modeNameEn};
+      my $charmNameJa = $h{charmNameJa};
+      my $charmNameEn = $h{charmNameEn};
+
+      my $mod = makeStatesExpression(\%::pc, ["${modeNameJa}抵抗力", "${modeNameJa}力ボーナス"]);
+      my $commandBase = "2d+{${modeNameJa}抵抗}${mod}+{${modeNameJa}抵抗修正}+{行為判定修正}";
+      my $labelBase = "${modeNameJa}抵抗力";
+
+      my @individualizedAttributeNames = ();
+      my %attributeOffsets = ();
+      foreach my $attributeNameJa (@data::attributeNames) {
+        my $attributeNameEn = $data::attributeFieldNames{$attributeNameJa};
+        my $offset = $::pc{"paletteResistanceOffset${attributeNameEn}${modeNameEn}"} // 0;
+
+        $attributeOffsets{$attributeNameJa} = $offset if $offset != 0;
+        push(@individualizedAttributeNames, $attributeNameJa) if $offset != 0 || grep { $_ eq $attributeNameJa } @reservedResistanceAttributeVars;
+      }
+
+      my @taxaOffsets = ();
+      require($::core_dir . '/lib/sw2/data-mons.pl');
+      foreach (@data::taxa) {
+        (my $taxaNameJa, my $__, my $___, my $taxaNameEn) = $_ ? @{$_} : ();
+        my $offset = $::pc{"paletteResistanceOffset${taxaNameEn}${modeNameEn}"} // 0;
+        next if $offset == 0;
+
+        push(@taxaOffsets, [$taxaNameJa => $offset]);
+      }
+
+      foreach (undef, @individualizedAttributeNames) {
+        my $attributeName = $_;
+        my $attributeOffset = $attributeOffsets{$attributeName};
+
+        foreach (undef, @taxaOffsets) {
+          (my $taxaName, my $taxaOffset) = @{$_ // [ undef, 0 ]};
+
+          my @offsets = ();
+          my @labelItems = ();
+
+          if ($taxaOffset != 0) {
+            push(@offsets, addNum $taxaOffset);
+            push(@labelItems, $taxaName);
+          }
+
+          if ($attributeOffset != 0) {
+            push(@offsets, addNum $attributeOffset);
+            push(@labelItems, $attributeName);
+          }
+
+          if (grep { $_ eq $attributeName } @reservedResistanceAttributeVars) {
+            push(@offsets, "+{@{[ makeAttributeResistanceVarName($attributeName) ]}}");
+            push(@offsets, "+{@{[ makeAttributeResistanceVarName($attributeName, $modeNameJa) ]}}");
+            push(@labelItems, $attributeName) if $attributeOffset == 0;
+          }
+
+          my $command = $commandBase . join('', @offsets);
+          my $label = $labelBase . (@offsets ? '／' . join('｜', @labelItems) : '');
+          $text .= "${command} ${label}\n";
+        }
+      }
+
+      # 魔符消費コマンド.
+      foreach (1 .. 3) {
+        my $charmClass = $_;
+        $charmClass =~ tr#1-3#①-③#;
+        $text .= "\@${charmNameJa}${charmClass}-1 〈${charmNameJa}の魔符（+${_}）〉\n" if $::pc{"charm${charmNameEn}${_}_Quantity"} > 0;
+      }
+    }
+    $text .= "\n";
     $text .= "//回避修正=0\n";
-    $text .= "2d+{生命抵抗}@{[ makeStatesExpression(\%::pc, ['生命抵抗力', '生命力ボーナス']) ]}+{生命抵抗修正}+{行為判定修正} 生命抵抗力\n";
-    foreach (1 .. 3) {
-      my $charmClass = $_;
-      $charmClass =~ tr#1-3#①-③#;
-      $text .= "\@陽光${charmClass}-1 〈陽光の魔符（+${_}）〉\n" if $::pc{"charmSunlight${_}_Quantity"} > 0;
-    }
-    $text .= "2d+{精神抵抗}@{[ makeStatesExpression(\%::pc, ['精神抵抗力', '精神力ボーナス']) ]}+{精神抵抗修正}+{行為判定修正} 精神抵抗力\n";
-    foreach (1 .. 3) {
-      my $charmClass = $_;
-      $charmClass =~ tr#1-3#①-③#;
-      $text .= "\@月光${charmClass}-1 〈月光の魔符（+${_}）〉\n" if $::pc{"charmMoonlight${_}_Quantity"} > 0;
-    }
     foreach my $i (1..$::pc{defenseNum}){
       my $hasChecked = 0;
       foreach my $j (1..$::pc{armourNum}){
@@ -1084,13 +1173,12 @@ sub palettePreset {
       $text .= '（' . $::pc{"evasionClass${i}"} . '）' if (grep { $::pc{"evasionClass${_}"} } (1 .. $::pc{defenseNum})) > 1;
       $text .= ($::pc{"defenseTotal${i}Note"}?"／$::pc{'defenseTotal'.$i.'Note'}":'')."\n";
     }
+    $text .= "\n";
     $text .= "//ダメージ軽減=0\n";
     $text .= "//物理ダメージ軽減=0\n";
     $text .= "//魔法ダメージ軽減=0\n";
     my $physicalDamageText = '';
     my $magicalDamageText = '';
-    require($::core_dir . '/lib/sw2/data-attribute.pl');
-    require($::core_dir . '/lib/sw2/data-mons.pl');
     foreach my $attributeName (undef, @data::attributeNames) {
       my $attributeFieldName = $attributeName ? $data::attributeFieldNames{$attributeName} : undef;
       my $attributeOffset = $attributeFieldName ? $::pc{"paletteTakenDamageOffset${attributeFieldName}"} : 0;
