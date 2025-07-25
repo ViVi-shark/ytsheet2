@@ -905,7 +905,7 @@ sub resolveAdditionalSkills {
       my $lastPartName;
       my $lastSkillIndex;
 
-      for my $line (split(/&lt;br&gt;/i, $pc{$key})) {
+      for my $line (split(/&lt;br&gt;|<br>/i, $pc{$key})) {
         next if $line =~ /^\s*$/;
 
         if ($line =~ /^●\s*(.+?)\s*$/) {
