@@ -375,6 +375,13 @@ sub palettePreset {
 
         push(@drugsLines, $line);
 
+        {
+          my $shortName = $drugName;
+          $shortName =~ s/ポーション(\+1)?$/$1/;
+
+          push(@drugsLines, "\@${shortName}-1");
+        }
+
         if ($headline !~ /\Q${drugCategory}\E/) {
           $headline .= '・' if $headline ne '';
           $headline .= $drugCategory;
