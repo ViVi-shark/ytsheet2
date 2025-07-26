@@ -192,6 +192,15 @@ sub palettePreset {
   ## ＰＣ
   if(!$type){
     $text .= appendPaletteInsert('');
+
+    # 自然回復
+    $text .= "### ■自然回復系\n";
+    $text .= "//自然回復HP単位=@{[ ceil($::pc{hpTotal} * 0.1) ]}\n";
+    $text .= "//自然回復MP単位=@{[ ceil($::pc{mpTotal} * 0.5) ]}\n" if $::pc{mpTotal};
+    $text .= "\@HP+{自然回復HP単位} @{[$::pc{mpTotal} ? 'MP+{自然回復MP単位}' : '']} ３時間ぶんの睡眠による回復\n";
+    $text .= "\@HP+{自然回復HP単位}*2 @{[$::pc{mpTotal} ? 'MP+{自然回復MP単位}*2' : '']} ６時間相当の睡眠による回復\n";
+    $text .= "###\n\n";
+
     $text .= "//行為判定修正=0\n";
     $text .= "//行動判定修正=0\n";
     $text .= "//生死判定修正=0\n";
