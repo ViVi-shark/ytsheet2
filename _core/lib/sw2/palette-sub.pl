@@ -199,6 +199,7 @@ sub palettePreset {
     $text .= "//自然回復MP単位=@{[ ceil($::pc{mpTotal} * 0.5) ]}\n" if $::pc{mpTotal};
     $text .= "\@HP+{自然回復HP単位} @{[$::pc{mpTotal} ? 'MP+{自然回復MP単位}' : '']} ３時間ぶんの睡眠による回復\n";
     $text .= "\@HP+{自然回復HP単位}*2 @{[$::pc{mpTotal} ? 'MP+{自然回復MP単位}*2' : '']} ６時間相当の睡眠による回復\n";
+    $text .= appendPaletteInsert('regeneration-tail');
     $text .= "###\n\n";
 
     $text .= "//行為判定修正=0\n";
