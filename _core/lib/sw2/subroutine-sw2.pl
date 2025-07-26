@@ -171,6 +171,65 @@ sub createUnitStatus {
       { '防護' => $pc{defenseTotal1Def} },
     );
 
+    if ($pc{race} =~ s/^(.+?)(?:（(.+?)）)?$//) {
+      my $majorRaceName = $1;
+      my $minorRaceName = $2;
+
+      require($::core_dir . '/lib/sw2/data-races.pl');
+      if ($data::races{$majorRaceName}) {
+        my %majorRace = %{$data::races{$majorRaceName}};
+        my %raceVariants = %{$majorRace{variant} // {}};
+        my %minorRace = $minorRaceName ? %{$raceVariants{$minorRaceName} // {}} : ();
+        my @raceAbilities = @{$minorRace{ability} // $majorRace{ability} // []};
+        my %raceAbilityUsageLimits = %{$minorRace{abilityUsageLimit} // $majorRace{abilityUsageLimit} // {}};
+
+        {
+          my $selectionIndex = 1;
+          foreach (0 .. $#raceAbilities) {
+            if (ref($raceAbilities[$_]) eq 'ARRAY') {
+              $raceAbilities[$_] = $pc{"raceAbilitySelect${selectionIndex}"};
+              $selectionIndex++;
+            }
+          }
+        }
+
+        foreach my $abilityName (@raceAbilities) {
+          next unless defined($raceAbilityUsageLimits{$abilityName});
+
+          my $statusName = $abilityName;
+          my $count;
+
+          if (ref($raceAbilityUsageLimits{$abilityName}) =~ /^(?:HASH|ARRAY)$/) {
+            my $hashReference;
+            $hashReference = $raceAbilityUsageLimits{$abilityName} if ref($raceAbilityUsageLimits{$abilityName}) eq 'HASH';
+            $hashReference = { limit => $raceAbilityUsageLimits{$abilityName} } if ref($raceAbilityUsageLimits{$abilityName}) eq 'ARRAY';
+
+            my %hash = %{$hashReference};
+            $hash{limit} = [{ lv => 1, limit => $hash{limit} }] unless ref $hash{limit};
+            $hash{limit} = [$hash{limit}] if ref($hash{limit}) eq 'HASH';
+
+            foreach (@{$hash{limit}}) {
+              my %limit = %{$_};
+              last if $pc{level} < $limit{lv};
+
+              $count = $limit{limit};
+            }
+
+            $statusName = $hash{label} if defined($hash{label});
+          }
+          else {
+            $count = $raceAbilityUsageLimits{$abilityName};
+          }
+
+          next if !defined($count) || $count eq '∞';
+
+          $count = $pc{bonusMnd} if $count eq '精神力ボーナス'; # アルヴの［吸精］用
+
+          push(@unitStatus, { $statusName => "$count/$count" });
+        }
+      }
+    }
+
     if (!$::SW2_0) {
       if ($pc{lvBar}) {
         push(@unitStatus, { '⤴' => '0' });

@@ -62,6 +62,9 @@ our %races = (
   '人間' => {
     type => '人族',
     ability => ['剣の加護／運命変転'],
+    abilityUsageLimit => {
+      '剣の加護／運命変転' => { limit => 1, label => '運命変転', },
+    },
     language => [
       ['交易共通語', 1, 1 ],
     ],
@@ -86,6 +89,15 @@ our %races = (
       },
       'ミストエルフ' => {
         ability => ['暗視','剣の加護／惑いの霧'],
+        abilityUsageLimit => {
+          '剣の加護／惑いの霧' => {
+            label => '惑いの霧',
+            limit => [
+              { lv => 0, limit => 6 },
+              { lv => 11, limit => '∞' },
+            ],
+          },
+        },
       },
     },
   },
@@ -133,6 +145,12 @@ our %races = (
   'ルーンフォーク' => {
     type => '人族',
     ability => ['暗視','HP変換'],
+    abilityUsageLimit => {
+      'HP変換' => [
+        { lv => 0, limit => 1 },
+        { lv => 11, limit => 2 },
+      ],
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['魔動機文明語', 1, 1 ],
@@ -145,9 +163,18 @@ our %races = (
     variant => {
       '護衛型ルーンフォーク' => {
         ability => ['暗視','仲間との絆'],
+        abilityUsageLimit => {
+          '仲間との絆' => [
+            { lv => 0, limit => 1 },
+            { lv => 11, limit => 2 },
+          ],
+        },
       },
       '戦闘型ルーンフォーク' => {
         ability => ['暗視','任務遂行の意志'],
+        abilityUsageLimit => {
+          '任務遂行の意志' => 1,
+        },
       },
     },
   },
@@ -205,6 +232,12 @@ our %races = (
   'リカント' => {
     type => '人族',
     ability => ['暗視(獣変貌)','獣変貌'],
+    abilityUsageLimit => {
+      '獣変貌' => {
+        label => '補助動作獣変貌',
+        limit => { lv => 6, limit => 1 },
+      },
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['リカント語', 1, 1 ],
@@ -217,15 +250,36 @@ our %races = (
     variant => {
       '大型草食獣リカント' => {
         ability => ['暗視(獣変貌)','獣変貌(大型草食獣)'],
+        abilityUsageLimit => {
+          '獣変貌(大型草食獣)' => {
+            label => '補助動作獣変貌',
+            limit => { lv => 6, limit => 1 },
+          },
+        },
       },
       '小型草食獣リカント' => {
         ability => ['暗視(獣変貌)','獣変貌(小型草食獣)'],
+        abilityUsageLimit => {
+          '獣変貌(小型草食獣)' => {
+            label => '補助動作獣変貌',
+            limit => { lv => 6, limit => 1 },
+          },
+        },
       },
     },
   },
   'リルドラケン' => {
     type => '人族',
     ability => ['鱗の皮膚','尻尾が武器','剣の加護／風の翼'],
+    abilityUsageLimit => {
+      '剣の加護／風の翼' => {
+        label => '風の翼',
+        limit => [
+          { lv => 0, limit => 6 },
+          { lv => 11, limit => 12 },
+        ],
+      },
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['ドラゴン語', 1, 0 ],
@@ -238,15 +292,33 @@ our %races = (
     variant => {
       '小翼種リルドラケン' => {
         ability => ['鱗の皮膚','尻尾が武器','剣の加護／竜の咆哮'],
+        abilityUsageLimit => {
+          '剣の加護／竜の咆哮' => {
+            label => '竜の咆哮',
+            limit => [
+              { lv => 0, limit => 1 },
+              { lv => 6, limit => 2 },
+            ],
+          },
+        },
       },
       '有毛種リルドラケン' => {
         ability => ['暖かき風','剣の加護／風の翼'],
+        abilityUsageLimit => {
+          '剣の加護／風の翼' => 6,
+        },
       },
     },
   },
   'グラスランナー' => {
     type => '人族',
     ability => ['マナ不干渉','虫や植物との意思疎通'],
+    abilityUsageLimit => {
+      'マナ不干渉' => {
+        label => '魔法破り',
+        limit => { lv => 6, limit => 1 },
+      }
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['グラスランナー語', 1, 1 ],
@@ -260,6 +332,7 @@ our %races = (
       'アリーシャ' => {
       },
       'クリメノス' => {
+        abilityUsageLimit => {}, # クリメノスには“魔法破り”がない
       },
     },
   },
@@ -278,15 +351,30 @@ our %races = (
     variant => {
       'カーニバラスメリア' => {
         ability => ['捕食する生命'],
+        abilityUsageLimit => {
+          '捕食する生命' => {
+            label => '捕食',
+            limit => [
+              { lv => 0, limit => 1 },
+              { lv => 11, limit => 2 },
+            ],
+          },
+        },
       },
       'ファンギーメリア' => {
         ability => ['胞子散布'],
+        abilityUsageLimit => {
+          '胞子散布' => 1,
+        },
       },
     },
   },
   'ティエンス' => {
     type => '人族',
     ability => ['通じ合う意識'],
+    abilityUsageLimit => {
+      '通じ合う意識' => 1,
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['魔神語', 1, 0 ],
@@ -299,9 +387,24 @@ our %races = (
     variant => {
       'ティエンス機解種' => {
         ability => ['無生物と通じ合う意識'],
+        abilityUsageLimit => {
+          '無生物と通じ合う意識' => {
+            label => '通じ合う意識',
+            limit => 1,
+          },
+        },
       },
       'ティエンス魔解種' => {
         ability => ['魔神と通じ合う意識'],
+        abilityUsageLimit => {
+          '魔神と通じ合う意識' => {
+            label => '通じ合う意識',
+            limit => [
+              { lv => 0, limit => 1 },
+              { lv => 6, limit => 2 },
+            ],
+          },
+        },
       },
     },
   },
@@ -319,6 +422,9 @@ our %races = (
     variant => {
       '放浪種レプラカーン' => {
         ability => ['暗視','見えざる手','姿消す職人'],
+        abilityUsageLimit => {
+          '姿消す職人' => 1,
+        },
       },
       '探索種レプラカーン' => {
         ability => ['暗視','見えざる手','群れなす職人'],
@@ -328,6 +434,9 @@ our %races = (
   'アルヴ' => {
     type => '人族',
     ability => ['暗視','吸精'],
+    abilityUsageLimit => {
+      '吸精' => '精神力ボーナス',
+    },
     language => [
       ['交易共通語', 1, 1 ],
     ],
@@ -351,6 +460,13 @@ our %races = (
   'ソレイユ' => {
     type => '人族',
     ability => ['輝く肉体','太陽の再生','太陽の子'],
+    abilityUsageLimit => {
+      '輝く肉体'   => [
+        { lv => 0, limit => 1 },
+        { lv => 11, limit => 2 },
+      ],
+      '太陽の再生' => 6,
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['ソレイユ語', 1, 0 ],
@@ -414,6 +530,14 @@ our %races = (
   'スプリガン' => {
     type => '人族',
     ability => ['暗視','巨人化'],
+    abilityUsageLimit => {
+      '巨人化' => {
+        limit => [
+          { lv => 0, limit => 2 },
+          { lv => 6, limit => 3 },
+        ],
+      },
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['魔法文明語', 1, 1 ],
@@ -429,6 +553,15 @@ our %races = (
       '奈落の落とし子',
       ['奈落の身体／アビストランク','奈落の身体／アビスアーム','奈落の身体／アビスアイ',]
     ],
+    abilityUsageLimit => {
+      '奈落の身体／アビスアイ' => {
+        label => 'アビスアイ',
+        limit => [
+          { lv => 0, limit => 6 },
+          { lv => 11, limit => '∞' },
+        ],
+      },
+    },
     language => [
       ['交易共通語', 1, 1 ],
     ],
@@ -465,6 +598,9 @@ our %races = (
   'ハイマン' => {
     type => '人族',
     ability => ['魔法の申し子','デジャヴ'],
+    abilityUsageLimit => {
+      'デジャヴ' => 1,
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['魔法文明語', 1, 1 ],
@@ -570,6 +706,9 @@ our %races = (
   'ダークドワーフ' => {
     type => '人族',
     ability => ['暗視','黒炎の遣い手'],
+    abilityUsageLimit => {
+      '黒炎' => 6,
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['ドワーフ語', 1, 1 ],
@@ -703,6 +842,9 @@ our %races = (
   'コボルド' => {
     type => '蛮族',
     ability => ['種の限界','軽視','小さな匠'],
+    abilityUsageLimit => {
+      '軽視' => 1,
+    },
     language => [
       ['交易共通語', 1, 1 ],
       ['汎用蛮族語', 1, 1 ],
@@ -745,6 +887,9 @@ our %races = (
     ability => ['暗視','飛行（飛翔）','魔神の皮膚','魔人化'],
     abilityReplace => {
       '飛行（飛翔）' => { lv => 11, before => '飛行Ⅱ（飛翔Ⅱ）'},
+    },
+    abilityUsageLimit => {
+      '魔人化' => 1,
     },
     language => [
       ['汎用蛮族語', 1, 1 ],
