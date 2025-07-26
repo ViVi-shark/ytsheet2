@@ -1659,6 +1659,29 @@ sub palettePreset {
       (?<head>
         (?<mark>(?:$skillMarkRE)+)
         (?<name>.+?)
+        (?:【(?:前提|拡張)[:：].+?】)*
+        (?:
+          [\/／]
+          (?:ライダー(?:技能|レベル)+[+＋](?<statusName>器用度|敏捷度|筋力|生命力|知力|精神力)(?:ボーナス|[BＢ]))
+          (?<other>.+?)
+        )
+      )
+      (?:
+        \s
+        (?<note>[\s\S]*?)
+      )?
+      (?=^$skillMarkRE|^●|\z)
+      /
+      $text .= convertMark($+{mark}) . $+{name} . $+{other} . "\n";
+      $text .= "2d+{ライダー技能レベル}+{騎手_@{[ substr($+{statusName}, 0, 2) ]}B}+{行為判定修正}+{行動判定修正} " . convertMark($+{mark}) . $+{name} . "\n";
+      $text .= mountSkillNote($+{head}, $+{note});
+      $text .= "\n";
+    /megix;
+    
+    $skills =~ s/^
+      (?<head>
+        (?<mark>(?:$skillMarkRE)+)
+        (?<name>.+?)
         (
         [\/／]
         (
@@ -1711,6 +1734,49 @@ sub palettePreset {
     $note =~ s/「\s*?(?<dice>[0-9]+[DＤ][0-9]*[+\-*\/()0-9]*)\s*」?点の(?<elm>.+属性)?の?(?<dmg>物理|魔法|落下|確定)?ダメージ/$out .= "{${name}ダメージ} $+{elm}$+{dmg}ダメージ\n".($half?"{${name}ダメージ}\/\/2 $+{elm}$+{dmg}ダメージ（半減）\n":'');/smegi if $bot{YTC};
     $note =~ s/「\s*?(?<dice>[0-9]+[DＤ][0-9]*[+\-*\/()0-9]*)\s*」?点の(?<elm>.+属性)?の?(?<dmg>物理|魔法|落下|確定)?ダメージ/$out .= "{${name}ダメージ} $+{elm}$+{dmg}ダメージ／${name}\n".($half?"({${name}ダメージ})\/2U $+{elm}$+{dmg}ダメージ（半減）／${name}\n":'');/smegi if $bot{BCD};
     return $out;
+  }
+  sub mountSkillNote {
+    my $head = shift;
+    my $note = shift;
+    my $half = ($head =~ /半減/ ? 1 : 0);
+    $note =~ tr#＋－×÷（）#+\-*/()#;
+    my $out;
+    $note =~ s/
+    「\s*
+      威力(?<rate>\d+)
+      (?:[\/／][CＣ]値?(?<critical>\d+|[⑦⑧⑨⑩⑪⑫]|なし))?
+      (?<additional_damage>[-+](?:\d+|\(?ライダー(?:技能|レベル)*\+(?:器用度?|敏捷度?|筋力|生命力?|知力|精神力?)(?:[BＢ]|ボーナス)?\)?))
+    \s*」点の
+    (?<elm>.+属性)?の?
+    (?<dmg>物理|魔法|落下|確定)?ダメージ
+    /
+      $out .= "k$+{rate}@{[ convertCritical($+{critical}) ]}@{[ convertAdditionalDamage($+{additional_damage}) ]} $+{elm}$+{dmg}ダメージ\n";
+      $out .= "k$+{rate}@{[ convertAdditionalDamage($+{additional_damage}) ]}\/\/ $+{elm}$+{dmg}ダメージ\n" if $half;
+    /smegix if $bot{YTC};
+    return $out;
+
+    sub convertCritical {
+      my $source = shift;
+      return "[$source]" if $source =~ /^\d+$/;
+      return '[12]' if $source eq '⑫';
+      return '[11]' if $source eq '⑪';
+      return '[10]' if $source eq '⑩';
+      return '[9]' if $source eq '⑨';
+      return '[8]' if $source eq '⑧';
+      return '[7]' if $source eq '⑦';
+      return '';
+    }
+
+    sub convertAdditionalDamage {
+      my $source = shift;
+      return '' if $source eq '';
+
+      my $text = $source;
+      $text =~ s/ライダー(?:技能)?(?:レベル)?/{ライダー技能レベル}/g;
+      $text =~ s/(器用度?|敏捷度?|筋力|生命力?|知力|精神力?)(?:[BＢ]|ボーナス)/{騎手_$1B}/g;
+      $text =~ s/(\{..)[度力](B})/$1$2/g;
+      return $text =~ /^[-+]/ ? $text : "+${text}";
+    }
   }
   sub convertMark {
     my $text = shift;
