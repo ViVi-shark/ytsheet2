@@ -232,6 +232,17 @@ sub createUnitStatus {
       }
     }
 
+    foreach (['Red', '赤'], ['Gre', '緑'], ['Bla', '黒'], ['Whi', '白'], ['Gol', '金']) {
+      (my $cardColorEn, my $cardColorJa) = @{$_};
+      foreach my $cardRank ('B', 'A', 'S', 'SS') {
+        my $fieldName = "card${cardColorEn}${cardRank}";
+        my $quantity = $pc{$fieldName} // 0;
+        next if $quantity <= 0;
+
+        push(@unitStatus, { "${cardColorJa}${cardRank}" => $quantity });
+      }
+    }
+
     # 薬草・ポーション
     {
       my $items = $pc{items};
