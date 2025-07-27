@@ -1461,6 +1461,7 @@ sub palettePreset {
           $::pc{'status' . $num . 'Accuracy'} += $::pc{'partEquipment' . $_ . '-weapon-accuracy'} if $::pc{'status' . $num . 'Accuracy'} ne '';
           $::pc{'status' . $num . 'Damage'} = addOffsetToDamage($::pc{'status' . $num . 'Damage'}, $::pc{'partEquipment' . $_ . '-weapon-damage'}) if $::pc{'status' . $num . 'Damage'} ne '';
           $::pc{'status' . $num . 'Evasion'} += $::pc{'partEquipment' . $_ . '-armor-evasion'} if $::pc{'status' . $num . 'Evasion'} ne '';
+          $::pc{'status' . $num . 'Defense'} += $::pc{'partEquipment' . $_ . '-armor-defense'} if $::pc{'status' . $num . 'Defense'} ne '';
 
           my $partName = $::pc{'status' . $_ . 'Style'};
           if ($partName) {
