@@ -804,8 +804,12 @@ sub data_calc {
   $pc{cashbook}      =~ s/\r\n?|\n/<br>/g;
   $pc{fellowProfile} =~ s/\r\n?|\n/<br>/g;
   $pc{fellowNote}    =~ s/\r\n?|\n/<br>/g;
+  $pc{chatPalette}   = encodePalette $pc{chatPalette};
   $pc{chatPalette}   =~ s/\r\n?|\n/<br>/g;
-  $pc{'chatPaletteInsert'.$_} =~ s/\r\n?|\n/<br>/g foreach(1..$pc{chatPaletteInsertNum});
+  foreach(1..$pc{chatPaletteInsertNum}) {
+    $pc{'chatPaletteInsert'.$_} = encodePalette $pc{'chatPaletteInsert'.$_};
+    $pc{'chatPaletteInsert'.$_} =~ s/\r\n?|\n/<br>/g;
+  }
   $pc{additionalExpenses} =~ s/\r\n?|\n/<br>/g;
   $pc{$_} =~ s/\r\n?|\n/<br>/g foreach (grep {/^fellow[-0-9]+(?:Action|Note)$/} keys %pc);
   

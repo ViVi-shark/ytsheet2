@@ -173,8 +173,12 @@ sub appendPaletteInsert {
   my $text;
   foreach (1 .. $::pc{chatPaletteInsertNum}) {
     if($::pc{"chatPaletteInsert${_}Position"} eq $position){
-      $text .= $::pc{"chatPaletteInsert$_"} =~ s/<br>/\n/gr;;
-      $text .= "\n" if $::pc{"chatPaletteInsert$_"};
+      my $additive = $::pc{"chatPaletteInsert$_"};
+      $additive =~ s/<br>/\n/g;
+      $additive = decodePalette $additive;
+
+      $text .= $additive;
+      $text .= "\n" if $additive;
     }
   }
   return $text;

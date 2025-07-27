@@ -53,10 +53,11 @@ HTML
 HTML
     foreach ('TMPL',1 .. $pc{chatPaletteInsertNum}){
         $html .= '<template id="palette-insert-template">' if $_ eq 'TMPL';
+        my $value = ::decodePalette($pc{'chatPaletteInsert'.$_});
         $html .= "<li>"
             . ::selectBox("chatPaletteInsert${_}Position", 'setChatPalette', 'def=|<先頭>','regeneration-tail|<自然回復の末尾>','general|<非戦闘系の直後>','common|<一般技能の直後>','feats|<宣言特技の直後>','magic|<魔法系の直後>','attack_head|<武器攻撃系の先頭>','attack|<武器攻撃系の直後>','defense|<抵抗回避の直後>')
             . "に挿入"
-            . "<textarea name=\"chatPaletteInsert${_}\" onchange=\"setChatPalette()\">$pc{'chatPaletteInsert'.$_}</textarea>";
+            . "<textarea name=\"chatPaletteInsert${_}\" onchange=\"setChatPalette()\">${value}</textarea>";
         $html .= '</template>' if $_ eq 'TMPL';
     }
     $html .= <<"HTML";
