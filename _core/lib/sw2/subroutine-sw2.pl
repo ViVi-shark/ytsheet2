@@ -1239,8 +1239,7 @@ sub resolveAdditionalSkills {
         my @allSkills = @{$skillsByParts{$partName}};
         my @availableSkills = ();
         my %skillIndexesTable = %{$skillIndexes{$partName}};
-        foreach my $keyOfIndex (sort keys %skillIndexesTable) {
-          my $index = $skillIndexesTable{$keyOfIndex};
+        foreach my $index (sort values %skillIndexesTable) {
           next unless defined($index);
           push(@availableSkills, $allSkills[$index]);
         }
