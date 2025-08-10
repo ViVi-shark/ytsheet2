@@ -262,7 +262,7 @@ $SHEET->param(Tags => \@tags);
     magicItemViewOn('Cost','Target','Range','Duration','Resist',($pc{magicElement}?'Element':undef));
   }
 
-  $SHEET->param(magicEffect => splitParagraph $pc{magicEffect});
+  $SHEET->param($_ => splitParagraph $pc{$_}) foreach ('magicEffect', 'magicDescription');
 }
 sub textMagic {
   $_[0] =~ s#／#／<wbr>#;
