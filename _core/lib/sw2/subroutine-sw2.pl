@@ -952,13 +952,14 @@ sub resolveAdditionalSkills {
     }
 
     my %skillsByParts = ();
+    my %skillIndexes = ();
 
     if ($pc{swordFragmentNum} > 0) {
-      my $text = "○剣のかけら＝$pc{swordFragmentNum}個<br>ＨＰ・ＭＰ・生命抵抗力・精神抵抗力が上昇しています。（いずれも反映済みです）";
+      my $headline = "○剣のかけら＝$pc{swordFragmentNum}個";
+      my $text = "${headline}<br>ＨＰ・ＭＰ・生命抵抗力・精神抵抗力が上昇しています。（いずれも反映済みです）";
       $skillsByParts{$partNames[0]} = [$text];
+      $skillIndexes{$partNames[0]} = {$headline => 0};
     }
-
-    my %skillIndexes = ();
 
     for my $key ('skills', 'additionalSkills') {
       my $lastPartName;
