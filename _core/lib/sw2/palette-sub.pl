@@ -1452,8 +1452,22 @@ sub palettePreset {
     $text .= "//行動判定修正=0\n";
     $text .= "//${flyingName}=${flyingBonus}\n" if $flyingBonus > 0;
     $text .- "\n";
-    $text .= "生死判定 2d+{生命抵抗}+{行為判定修正}\n" if $achievementDiceEnabled;
-    $text .= "生死判定 {生命抵抗}（<f>$::pc{vitResistFix}+{行為判定修正}</f>）\n" if $achievementFixedEnabled;
+    if ($::pc{parts} eq '') {
+      $text .= "生死判定 2d+{生命抵抗}+{行為判定修正}+{HP}>=0\n" if $achievementDiceEnabled;
+      $text .= "生死判定 {生命抵抗}（<f>$::pc{vitResistFix}+{行為判定修正}+{HP}</f>）\n" if $achievementFixedEnabled;
+    }
+    else {
+      my @n2a = ('', 'A' .. 'Z');
+      foreach my $partName (split('／', $::pc{parts})) {
+        my $partCount = ($partName =~ s/×(\d+)$// ? $1 : 1);
+        foreach (1 .. $partCount) {
+          my $partNameSuffix = $partCount > 1 ? $n2a[$_] : '';
+
+          $text .= "生死判定 2d+{生命抵抗}+{行為判定修正}+{${partName}${partNameSuffix}:HP}>=0\n" if $achievementDiceEnabled;
+          $text .= "生死判定 {生命抵抗}（<f>$::pc{vitResistFix}+{行為判定修正}+{${partName}${partNameSuffix}:HP}</f>）\n" if $achievementFixedEnabled;
+        }
+      }
+    }
 
     if ($::pc{individualization}) {
       if ($::pc{mount}) {
