@@ -1140,44 +1140,53 @@ sub resolveAdditionalSkills {
 
     if ($pc{treasurePointTotal} > 0) {
       my @commonPartSkills = @{$skillsByParts{$partNames[0]};};
+      my %commonSkillIndexes = %{$skillIndexes{$partNames[0]};};
 
       if ($pc{treasureEnhancement_increaseWeaknessGuard} > 0) {
         my $value = data::getTreasureEnhancementValue('弱点値上昇', $pc{treasureEnhancement_increaseWeaknessGuard});
+        my $headline = "◯弱点値上昇＝${value}";
 
         push(
             @commonPartSkills,
             join(
                 "\n",
                 (
-                    "◯弱点値上昇＝${value}",
+                    $headline,
                     "弱点値が ${value} されています。記載されている弱点値には反映済みです。",
                     "これはトレジャー強化能力です。",
                 )
             )
         );
+
+        $commonSkillIndexes{$headline} = $#commonPartSkills;
       }
 
       if ($pc{treasureEnhancement_increaseInitiative} > 0) {
         my $value = data::getTreasureEnhancementValue('先制値上昇', $pc{treasureEnhancement_increaseInitiative});
+        my $headline = "◯先制値上昇＝${value}";
 
         push(
             @commonPartSkills,
             join(
                 "\n",
                 (
-                    "◯先制値上昇＝${value}",
+                    $headline,
                     "先制値が ${value} されています。記載されている先制値には反映済みです。",
                     "これはトレジャー強化能力です。",
                 )
             )
         );
+
+        $commonSkillIndexes{$headline} = $#commonPartSkills;
       }
 
       $skillsByParts{$partNames[0]} = \@commonPartSkills;
+      $skillIndexes{$partNames[0]} = \%commonSkillIndexes;
 
       foreach my $partSerial (1 .. ($#partNames > 0 ? $#partNames : 1)) {
         my $partName = $partNames[$#partNames > 0 ? $partSerial : 0];
         my @skillsOfPart = ref $skillsByParts{$partName} ? @{$skillsByParts{$partName}} : ();
+        my %skillIndexesOfPart = ref $skillIndexes{$partName} ? %{$skillIndexes{$partName}} : ();
 
         foreach (@data::treasureEnhancements) {
           my %enhancement = %{$_};
@@ -1212,10 +1221,13 @@ sub resolveAdditionalSkills {
                     )
                 )
             );
+
+            $skillIndexesOfPart{$headline} = $#skillsOfPart;
           }
         }
 
         $skillsByParts{$partName} = \@skillsOfPart;
+        $skillIndexes{$partName} = \%skillIndexesOfPart;
       }
     }
 
