@@ -1188,6 +1188,8 @@ sub resolveAdditionalSkills {
         my @skillsOfPart = ref $skillsByParts{$partName} ? @{$skillsByParts{$partName}} : ();
         my %skillIndexesOfPart = ref $skillIndexes{$partName} ? %{$skillIndexes{$partName}} : ();
 
+        my $enhancementFound = 0;
+
         foreach (@data::treasureEnhancements) {
           my %enhancement = %{$_};
           my $point = $pc{"treasureEnhancement_part${partSerial}_$enhancement{fieldName}"};
@@ -1223,8 +1225,12 @@ sub resolveAdditionalSkills {
             );
 
             $skillIndexesOfPart{$headline} = $#skillsOfPart;
+
+            $enhancementFound = 1;
           }
         }
+
+        next unless $enhancementFound;
 
         $skillsByParts{$partName} = \@skillsOfPart;
         $skillIndexes{$partName} = \%skillIndexesOfPart;
