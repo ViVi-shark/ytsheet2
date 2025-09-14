@@ -755,7 +755,7 @@ else {
   $herculean += 2 if $herculean > 0 && $pc{level} >= 11;
   foreach (1 .. $pc{weaponNum}){
     next if !existsRow "weapon$_",'Name','Part','Usage','Reqd','Acc','Rate','Crit','Dmg','Own','Note';
-    if ($pc{'weapon'.$_.'Usage'} =~ /^2H投?$/ && $pc{'weapon'.$_.'Category'} =~ /^(?:ソード|アックス|スピア|メイス|スタッフ|フレイル|ウォーハンマー|絡み|格闘|ガン（物理）)$/) {
+    if ($pc{'weapon'.$_.'Usage'} =~ /^2H投?$/ && $pc{'weapon'.$_.'Category'} =~ /^(?:ソード|アックス|スピア|メイス|スタッフ|フレイル|ウォーハンマー|絡み|格闘|ガン（物理）|ガン（近接）)$/) {
       # ［剛力］の反映
       $pc{'weapon'.$_.'Dmg'} += $herculean;
       $pc{'weapon'.$_.'DmgTotal'} += $herculean;
