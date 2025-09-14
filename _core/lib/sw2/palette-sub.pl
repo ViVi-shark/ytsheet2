@@ -433,6 +433,21 @@ sub palettePreset {
       my %costCountOf30secs = ();
       my %costCountOf10secs = ();
 
+      sub get_mana_gem_quantity {
+        my %pc = %{shift;};
+        my $point = shift;
+
+        return ($pc{'manaGem' . sprintf('%02d', $point) . 'Quantity'} // 0) . ($pc{'manaGem' . sprintf('%02d', $point) . 'Offset'} // 0);
+      }
+
+      sub add_circle {
+        my $num = shift;
+        return '②' if $num == 2;
+        return '③' if $num == 3;
+        return '⑨' if $num == 9;
+        return '⑩' if $num == 10;
+      }
+
       foreach (1 .. $::pc{lvEnh}) {
         my $craftName = $::pc{"craftEnhance${_}"};
         next unless $craftName;
@@ -472,25 +487,52 @@ sub palettePreset {
           $otherStatusManipulation .= '+{生命B}' if grep { /スマルティエの武道帯/ } getAvailableAccessoryNames(\%::pc);
         }
 
-        $text .= "\@MP-${cost}";
-        $text .= " ${otherStatusManipulation}" if $otherStatusManipulation ne '';
-        $text .= " ${craftName}\n";
+        my $line = "\@MP-${cost}";
+        $line .= " ${otherStatusManipulation}" if $otherStatusManipulation ne '';
+        $line .= " ${craftName}";
+
+        $text .= "${line}\n";
+
+        if (get_mana_gem_quantity(\%::pc, $cost) > 0) {
+          $line =~ s/^\@MP-\d+/\@魔晶石@{[ add_circle($cost) ]}-1/;
+          $text .= "${line}\n";
+        }
       }
 
       if ($#namesOf30secs > 0) {
         $text .= '@MP';
+        my $gem_line = '@';
         foreach my $cost (2, 3, 9, 10) {
-          $text .= "-${cost}*$costCountOf30secs{$cost}" if $costCountOf30secs{$cost};
+          next unless $costCountOf30secs{$cost};
+          $text .= "-${cost}*$costCountOf30secs{$cost}";
+
+          if (get_mana_gem_quantity(\%::pc, $cost) > 0 && defined($gem_line)) {
+            $gem_line .= "魔晶石@{[ add_circle($cost) ]}-$costCountOf30secs{$cost} ";
+          }
+          else {
+            $gem_line = undef;
+          }
         }
         $text .= ' ' . join('', @namesOf30secs) . "\n";
+        $text .= "${gem_line} " . join('', @namesOf30secs) . "\n" if defined($gem_line) && $gem_line ne '@';
       }
 
       if ($#namesOf10secs > 0) {
         $text .= '@MP';
+        my $gem_line = '@';
         foreach my $cost (2, 3, 9, 10) {
-          $text .= "-${cost}*$costCountOf10secs{$cost}" if $costCountOf10secs{$cost};
+          next unless $costCountOf10secs{$cost};
+          $text .= "-${cost}*$costCountOf10secs{$cost}";
+
+          if (get_mana_gem_quantity(\%::pc, $cost) > 0 && defined($gem_line)) {
+            $gem_line .= "魔晶石@{[ add_circle($cost) ]}-$costCountOf10secs{$cost} ";
+          }
+          else {
+            $gem_line = undef;
+          }
         }
         $text .= ' ' . join('', @namesOf10secs) . "\n";
+        $text .= "${gem_line} " . join('', @namesOf10secs) . "\n" if defined($gem_line) && $gem_line ne '@';
       }
 
       $text .= "###\n";
