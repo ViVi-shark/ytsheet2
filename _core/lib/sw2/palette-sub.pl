@@ -606,6 +606,7 @@ sub palettePreset {
           $text .= "[主]【${craftName}】\n";
         }
         elsif ($action =~ s/\[常]//g) {
+          $text .= "\@HP-1d " if $craftName =~ /^(?:魔生法|魔遊法)$/;
           $text .= "[常]【${craftName}】\n";
         }
       }
