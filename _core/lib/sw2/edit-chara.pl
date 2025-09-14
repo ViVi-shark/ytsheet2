@@ -1484,7 +1484,7 @@ HTML
 HTML
     }
     print <<"HTML";
-                  <td class="quantity">@{[ input "${keyPrefix}Quantity",'number',"calcCharm(${charmRowIndex})",'min="0"' ]}
+                  <td class="quantity">@{[ input "${keyPrefix}Quantity",'number',"calcCharm(${charmRowIndex}),calcCash",'min="0"' ]}
                   <td class="offset">@{[ input "${keyPrefix}Offset",'number',"calcCharm(${charmRowIndex})" ]}
                   <td class="total">=<span class="value"></span><i class="unit">枚</i>
 HTML
@@ -1496,6 +1496,7 @@ HTML
 print <<"HTML";
               </tbody>
             </table>
+            @{[ checkbox 'charmQuantityExpensesAutomatically', '所持数を支出に加味する（新規作成向け）', 'calcCash' ]}
             <button type="button" class="clearing-off" id="clearing-off-charms-offset" onclick="clearOffCharmsOffset();" disabled>一時的増減を清算する</button>
           </details>
           <div class="box" id="battle-items"@{[ display $set::battleitem ]}>

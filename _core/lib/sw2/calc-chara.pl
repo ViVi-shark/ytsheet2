@@ -962,6 +962,42 @@ sub findExpensesFromItems {
     return @rows;
   }
 
+  sub findExpensesFromCharms {
+    return () unless $pc{charmQuantityExpensesAutomatically};
+
+    sub getPrice {
+      my $kind = shift;
+      my $rank = shift;
+
+      if ($kind eq '陽光' || $kind eq '月光') {
+        return 500 if $rank eq '1';
+        return 1500 if $rank eq '2';
+        return 5000 if $rank eq '3';
+      }
+      elsif ($kind eq 'イグニス') {
+        return 1000;
+      }
+    }
+
+    my @rows = ();
+
+    foreach ([ Sunlight => '陽光' ], [ Moonlight => '月光' ], [ Ignis => 'イグニス' ]) {
+      (my $kindEn, my $kindJa) = @{$_};
+
+      foreach my $rank ('', '1', '2', '3') {
+        my $quantity = $pc{"charm${kindEn}${rank}_Quantity"} // 0;
+        next if $quantity == 0;
+
+        my $price = getPrice($kindJa, $rank);
+        next unless $price;
+        my $itemName = $rank ne '' ? "${kindJa}の魔符（+${rank}）" : "${kindJa}の魔符";
+        push(@rows, "〈${itemName}〉×${quantity}::-@{[ commify($price) ]}*${quantity}");
+      }
+    }
+
+    return @rows;
+  }
+
   sub findExpensesFromBaggage {
     my $text = $pc{items} // '';
     my @rows = ();
@@ -979,6 +1015,7 @@ sub findExpensesFromItems {
   push(@all, findExpensesFromAccessories());
   push(@all, findExpensesFromManaGems());
   push(@all, findExpensesFromCards());
+  push(@all, findExpensesFromCharms());
   push(@all, findExpensesFromBaggage());
 
   return join("\n", @all);

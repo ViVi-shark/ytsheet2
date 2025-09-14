@@ -2140,6 +2140,60 @@ function findExpensesFromItems() {
   /**
    * @return {string[]}
    */
+  function findExpensesFromCharms() {
+    const supportsQuantity = document.querySelector('[name="charmQuantityExpensesAutomatically"]').checked;
+
+    if (!supportsQuantity) {
+      return [];
+    }
+
+    /**
+     * @param {'Sunlight'|'Moonlight'|'Ignis'} kind
+     * @param {''|'1'|'2'|'3'} rank
+     * @return {int}
+     */
+    function getPrice(kind, rank) {
+      switch (kind) {
+        case 'Sunlight':
+        case 'Moonlight':
+          switch (rank) {
+            case '1':
+              return 500;
+            case '2':
+              return 1500;
+            case '3':
+              return 5000;
+          }
+        case 'Ignis':
+          return 1000;
+      }
+    }
+
+    const rows = [];
+
+    for (const kind of ['Sunlight', 'Moonlight', 'Ignis']) {
+      for (const rank of ['', '1', '2', '3']) {
+        const input = document.querySelector(`#charms input[name="charm${kind}${rank}_Quantity"]`);
+        if (input == null) {
+          continue;
+        }
+
+        const quantity = input.value ?? NaN;
+
+        if (isNaN(quantity) || quantity === 0 || quantity === '') {
+          continue;
+        }
+
+        rows.push(`::-${getPrice(kind, rank)}*${quantity}`);
+      }
+    }
+
+    return rows;
+  }
+
+  /**
+   * @return {string[]}
+   */
   function findExpensesFromBaggage() {
     const text = document.querySelector('[name="items"]').value ?? '';
 
@@ -2159,6 +2213,7 @@ function findExpensesFromItems() {
       .concat(findExpensesFromAccessories())
       .concat(findExpensesFromManaGems())
       .concat(findExpensesFromCards())
+      .concat(findExpensesFromCharms())
       .concat(findExpensesFromBaggage())
       .join('\n');
 }
