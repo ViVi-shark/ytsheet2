@@ -861,7 +861,7 @@ sub palettePreset {
     }
     
     foreach (1 .. $::pc{weaponNum}){
-      if($::pc{'weapon'.$_.'Category'} eq 'ガン'){
+      if($::pc{'weapon'.$_.'Category'} eq 'ガン' || $::pc{'weapon'.$_.'Category'} eq 'ガン（近接）'){
         $text .= "//ガン追加D修正=0\n";
         last;
       }
@@ -954,7 +954,7 @@ sub palettePreset {
         my $activeCrit = $::pc{'paletteAttack'.$paNum.'Crit'} ? optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Crit'}" : '';
         my $activeDmg  = $::pc{'paletteAttack'.$paNum.'Dmg' } ? optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Dmg' }" : '';
 
-        if($::pc{'weapon'.$_.'Category'} eq 'ガン'){
+        if($::pc{'weapon'.$_.'Category'} eq 'ガン' || $::pc{'weapon'.$_.'Category'} eq 'ガン（近接）'){
           foreach my $bullet (sort {$a->{p} <=> $b->{p}} @gunPowers){
             next if $::pc{lvMag} < $bullet->{lv};
             next if $bullet->{h} && $::pc{'weapon'.$_.'Usage'} !~ /$bullet->{h}/;
@@ -2056,6 +2056,7 @@ sub paletteProperties {
         if(!$partNum || $partNum eq $::pc{partCore}) {
           $dmgMod += $::pc{'mastery' . ucfirst($data::weapon_id{ $category }) };
           if($category eq 'ガン（物理）'){ $dmgMod += $::pc{masteryGun}; }
+          if($category eq 'ガン（近接）'){ $dmgMod += $::pc{masteryGun}; }
           if($::pc{"weapon${_}Note"} =~ /〈魔器〉/){ $dmgMod += $::pc{masteryArtisan}; }
         }
         else {
@@ -2066,7 +2067,7 @@ sub paletteProperties {
         }
         my $basetext;
         if   ($category eq 'クロスボウ'){ $basetext = $::SW2_0 ? '' : "{$::pc{'weapon'.$_.'Class'}}"; }
-        elsif($category eq 'ガン'      ){ $basetext = "{魔動機術}"; }
+        elsif($category eq 'ガン' || $category eq 'ガン（近接）'){ $basetext = "{魔動機術}"; }
         elsif($data::class{$class}{accUnlock}{dmg} eq 'power'){ $basetext = '{'.($data::class{$class}{magic}{jName} || $data::class{$class}{craft}{power} || $data::class{$class}{craft}{jName}).'}' }
         else { $basetext = "{$::pc{'weapon'.$_.'Class'}}+({筋力}+{筋力増強})/6"; }
         $basetext .= addNum($dmgMod);

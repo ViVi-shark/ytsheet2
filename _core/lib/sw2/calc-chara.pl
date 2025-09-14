@@ -606,7 +606,7 @@ sub data_calc {
     if   ($category eq 'クロスボウ'){
       $dmg += $::SW2_0 ? 0 : $pc{lvSho};
     }
-    elsif($category eq 'ガン'){
+    elsif($category eq 'ガン' || $category eq 'ガン（近接）'){
       $dmg += $pc{magicPowerMag};
     }
     elsif($data::class{$class}{accUnlock}{dmg} eq 'power'){
@@ -619,6 +619,7 @@ sub data_calc {
     if(!$partNum || $partNum eq $pc{partCore}) {
       $dmg += $pc{'mastery' . ucfirst($data::weapon_id{ $category }) };
       if($category eq 'ガン（物理）'){ $dmg += $pc{masteryGun}; }
+      if($category eq 'ガン（近接）'){ $dmg += $pc{masteryGun}; }
       if($pc{"weapon${_}Note"} =~ /〈魔器〉/){ $dmg += $pc{masteryArtisan}; }
     }
     else {

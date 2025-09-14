@@ -1544,7 +1544,7 @@ function calcWeapon() {
     }
     // 基礎ダメージ
     if     (category === 'クロスボウ'){ dmgBase = modeZero ? 0 : classLv; }
-    else if(category === 'ガン')      { dmgBase = magicPowers['Mag']; }
+    else if(category === 'ガン' || category === 'ガン（近接）'){ dmgBase = magicPowers['Mag']; }
     else if(SET.class[className]?.accUnlock?.dmg === 'power')
                                       { dmgBase = magicPowers[SET.class[className].id] }
     else if(classLv)                  { dmgBase = classLv + parseInt(str / 6); }
@@ -1555,6 +1555,7 @@ function calcWeapon() {
       if(category === '投擲') { accBase += feats['スローイング'] ? 1 : 0; }
 
       if(category === 'ガン（物理）') { dmgBase += feats['武器習熟／ガン'] || 0; }
+      else if(category === 'ガン（近接）') { dmgBase += feats['武器習熟／ガン'] || 0; }
       else if(category) { dmgBase += feats['武器習熟／'+category] || 0; }
       if(note.match(/〈魔器〉/)){ dmgBase += feats['魔器習熟'] || 0; }
     }
