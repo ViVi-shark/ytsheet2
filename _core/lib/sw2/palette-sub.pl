@@ -267,7 +267,7 @@ sub palettePreset {
         $text .= "2d+{$name}${packageModifiers}+{行為判定修正}+{行動判定修正} $name\n";
         my $monsterLoreModifiers = makeStatesExpression(\%::pc, ['魔物知識判定', '知力ボーナス']);
         if($data{$p_id}{monsterLore} && $::pc{monsterLoreAddTotal}){ $text .= "2d+{$name}+$::pc{monsterLoreAddTotal}${monsterLoreModifiers}+{行為判定修正}+{行動判定修正} 魔物知識\n"; }
-        my $initiativeModifiers = makeStatesExpression(\%::pc, '先制判定');
+        my $initiativeModifiers = makeStatesExpression(\%::pc, ['先制判定', '敏捷度ボーナス']);
         if($data{$p_id}{initiative } && ($::pc{initiativeAddTotal} || $initiativeModifiers)){ $text .= "2d+{$name}+$::pc{initiativeAddTotal}${initiativeModifiers}+{行為判定修正}+{行動判定修正} 先制\n"; }
       }
       foreach my $status ('器用度', '敏捷度', '筋力', '生命力', '知力', '精神力') {
