@@ -565,6 +565,8 @@ sub palettePreset {
     if ($::pc{lvAlc} > 0) {
       $text .= "### ■賦術\n";
 
+      $text .= appendPaletteInsert('alchemy_head');
+
       my %colorMap = (赤 => 'Red', 緑 => 'Gre', 黒 => 'Bla', 白 => 'Whi', 金 => 'Gol');
 
       foreach (1 .. $::pc{lvAlc}) {
