@@ -185,8 +185,20 @@ our @stateTargets = (
         fieldName => 'checking_release',
     },
     {
+        name      => '足跡追跡判定',
+        fieldName => 'checking_tracking',
+    },
+    {
         name      => '探索判定',
         fieldName => 'checking_search',
+    },
+    {
+        name      => '危険感知判定',
+        fieldName => 'checking_dangerSensing',
+    },
+    {
+        name      => '罠回避判定',
+        fieldName => 'checking_trapEvasion',
     },
 );
 
