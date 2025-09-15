@@ -916,7 +916,7 @@ sub palettePreset {
 
     # オプションの組み合わせの解決
     {
-      my @fieldNames = ('Acc', 'Crit', 'Dmg', 'Roll');
+      my @fieldNames = ('Acc', 'Rate', 'Crit', 'Dmg', 'Roll');
       my %options = ();
 
       foreach my $paNum (1 .. $::pc{paletteAttackNum}) {
@@ -998,6 +998,7 @@ sub palettePreset {
         next if $::pc{"weapon${weaponId}DisableRateInPalette"};
 
         my $text;
+        my $activeRate = $::pc{'paletteAttack'.$paNum.'Rate'} ? optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Rate'}" : '';
         my $activeCrit = $::pc{'paletteAttack'.$paNum.'Crit'} ? optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Crit'}" : '';
         my $activeDmg  = $::pc{'paletteAttack'.$paNum.'Dmg' } ? optimizeOperatorFirst "+$::pc{'paletteAttack'.$paNum.'Dmg' }" : '';
 
@@ -1005,7 +1006,12 @@ sub palettePreset {
           foreach my $bullet (sort {$a->{p} <=> $b->{p}} @gunPowers){
             next if $::pc{lvMag} < $bullet->{lv};
             next if $bullet->{h} && $::pc{'weapon'.$_.'Usage'} !~ /$bullet->{h}/;
-            $text .= "k$bullet->{p}\[";
+            if ($activeRate ne '') {
+              $text .= "k$bullet->{p}\[";
+            }
+            else {
+              $text .= "k($bullet->{p}${activeRate})\[";
+            }
             $text .= "(" if $bot{BCD};
             $text .= "$::pc{'weapon'.$_.'Crit'}$bullet->{c}";
             $text .= "$::pc{'paletteAttack'.$paNum.'Crit'}";
@@ -1021,7 +1027,12 @@ sub palettePreset {
           foreach my $bullet (sort {$a->{p} <=> $b->{p}} @gunHeals){
             next if $::pc{lvMag} < $bullet->{lv};
             next if $bullet->{h} && $::pc{'weapon'.$_.'Usage'} !~ /$bullet->{h}/;
-            $text .= "k$bullet->{p}\[";
+            if ($activeRate ne '') {
+              $text .= "k$bullet->{p}\[";
+            }
+            else {
+              $text .= "k($bullet->{p}${activeRate})\[";
+            }
             $text .= "13";
             $text .= "\]+";
             $text .= $::pc{paletteUseVar} ? "{追加D$_}" : $::pc{"weapon${_}DmgTotal"};
@@ -1032,7 +1043,12 @@ sub palettePreset {
         }
         else {
           my $line = '';
-          $line .= "k$::pc{'weapon'.$_.'Rate'}\[";
+          if ($activeRate eq '') {
+            $line .= "k$::pc{'weapon' . $_ . 'Rate'}\[";
+          }
+          else {
+            $line .= "k($::pc{'weapon' . $_ . 'Rate'}${activeRate})\[";
+          }
           $line .= "(" if $bot{BCD};
           $line .= "$::pc{'weapon'.$_.'Crit'}@{[makeStatesExpression(\%::pc, ['武器攻撃クリティカル値'])]}+{C修正}$activeCrit";
           $line .= ")" if $bot{BCD};
@@ -1091,7 +1107,7 @@ sub palettePreset {
         if($dmgTexts{$paNum + 1} && $dmgTexts{$paNum} eq $dmgTexts{$paNum + 1}){
           next;
         }
-        elsif ($paNum == 0 || $::pc{'paletteAttack'.$paNum.'Crit'} || $::pc{'paletteAttack'.$paNum.'Dmg'} || $::pc{'paletteAttack'.$paNum.'Roll'}) {
+        elsif ($paNum == 0 || $::pc{'paletteAttack'.$paNum.'Rate'} || $::pc{'paletteAttack'.$paNum.'Crit'} || $::pc{'paletteAttack'.$paNum.'Dmg'} || $::pc{'paletteAttack'.$paNum.'Roll'}) {
           if($dmgTexts{$paNum} eq $dmgTexts{$paNum - 1}){
             $activeName = $::pc{'paletteAttack'.($paNum - 1).'Name'} ? "＋$::pc{'paletteAttack'.($paNum - 1).'Name'}" : '';
           }

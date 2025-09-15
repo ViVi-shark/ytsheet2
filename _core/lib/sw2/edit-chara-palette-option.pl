@@ -116,6 +116,7 @@ HTML
                 <th>
                 <th class="name  ">名称（宣言特技名など）
                 <th class="acc   ">命中修正
+                <th class="rate  ">威力修正
                 <th class="crit  ">C値修正
                 <th class="dmg   "><span class="small">ダメージ<br>修正</span>
                 <th class="roll  ">出目修正
@@ -128,6 +129,7 @@ HTML
         $html .= '<td class="handle">';
         $html .= '<td>'.::input("paletteAttack${_}Name",'','','onchange="setChatPalette()"');
         $html .= '<td>'.::input("paletteAttack${_}Acc" ,'','','onchange="setChatPalette()"');
+        $html .= '<td>'.::input("paletteAttack${_}Rate",'','','onchange="setChatPalette()"');
         $html .= '<td>'.::input("paletteAttack${_}Crit",'','','onchange="setChatPalette()"');
         $html .= '<td>'.::input("paletteAttack${_}Dmg" ,'','','onchange="setChatPalette()"');
         $html .= '<td>'.::input("paletteAttack${_}Roll",'','','onchange="setChatPalette()"');
