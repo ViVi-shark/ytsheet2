@@ -164,6 +164,18 @@ our @stateTargets = (
         name      => '呪い属性軽減',
         fieldName => 'curseDamageReduction',
     },
+    {
+        name      => '毒属性抵抗',
+        fieldName => 'poisonResistance',
+    },
+    {
+        name      => '病気属性抵抗',
+        fieldName => 'diseaseResistance',
+    },
+    {
+        name      => '精神効果属性抵抗',
+        fieldName => 'mentalResistance',
+    },
 );
 
 sub getPaletteStateFieldNames {

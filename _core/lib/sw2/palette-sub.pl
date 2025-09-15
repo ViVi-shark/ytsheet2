@@ -1186,6 +1186,9 @@ sub palettePreset {
             push(@labelItems, $attributeName);
           }
 
+          my $stateMod = makeStatesExpression(\%::pc, "${attributeName}属性抵抗");
+          push(@offsets, $stateMod) if $stateMod ne '';
+
           if (grep { $_ eq $attributeName } @reservedResistanceAttributeVars) {
             push(@offsets, "+{@{[ makeAttributeResistanceVarName($attributeName) ]}}");
             push(@offsets, "+{@{[ makeAttributeResistanceVarName($attributeName, $modeNameJa) ]}}");
