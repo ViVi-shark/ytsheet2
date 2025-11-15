@@ -1253,9 +1253,6 @@ sub resolveAdditionalSkills {
       }
 
       if ($skillsByParts{$partName}) {
-        $skills .= '<br>' if $skills ne '';
-        $skills .= "●$partName<br>" if $partName ne '';
-
         my @allSkills = @{$skillsByParts{$partName}};
         my @availableSkills = ();
         my %skillIndexesTable = %{$skillIndexes{$partName} // {}};
@@ -1264,7 +1261,11 @@ sub resolveAdditionalSkills {
           push(@availableSkills, $allSkills[$index]);
         }
 
-        $skills .= join('<br>', @availableSkills);
+        if (@availableSkills) {
+          $skills .= '<br>' if $skills ne '';
+          $skills .= "●$partName<br>" if $partName ne '';
+          $skills .= join('<br>', @availableSkills);
+        }
       }
     }
 
