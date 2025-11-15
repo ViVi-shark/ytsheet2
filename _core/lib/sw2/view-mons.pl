@@ -574,7 +574,7 @@ if ($pc{golem} && $pc{individualization}) {
       }
 
       push(@partItems, \%item);
-      push(@lootsByGolemReinforcement, \%item);
+      push(@lootsByGolemReinforcement, \%item) foreach (1..($partSuffix ne 'All' ? 1 : $#partNames + 1));
     }
 
     # ○移動力強化
