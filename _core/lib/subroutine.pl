@@ -517,8 +517,8 @@ sub unescapeTags {
 
     $text =~ s|\[([特流アテ])\]|<i class="i-icon" data-kind="$1"><span class="raw">[$1]</span></i>|g;
 
-    $text =~ s|\[⤴\]|<i class="s-icon uplift">⤴</i>|g;
-    $text =~ s|\[⤵\]|<i class="s-icon calm">⤵</i>|g;
+    $text =~ s|\[[⤴↑]\]|<i class="s-icon uplift">⤴</i>|g;
+    $text =~ s|\[[⤵↓]\]|<i class="s-icon calm">⤵</i>|g;
     $text =~ s|\[♡\]|<i class="s-icon heart">♡</i>|g;
   }
   
