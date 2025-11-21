@@ -395,6 +395,7 @@ sub palettePreset {
         {
           my $shortName = $drugName;
           $shortName =~ s/ポーション(\+1)?$/$1/;
+          $shortName =~ s/\+/﹢/g if $bot{YTC}; # 〈ヒーリングポーション+1〉をステータス項目としてあつかいやすい形に変換
 
           push(@drugsLines, "\@${shortName}-1");
         }

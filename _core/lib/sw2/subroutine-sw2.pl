@@ -318,6 +318,7 @@ sub createUnitStatus {
 
         my $shortName = $drugName;
         $shortName =~ s/ポーション(\+1)?$/$1/;
+        $shortName =~ s/\+/﹢/g; # 〈ヒーリングポーション+1〉をステータス項目としてあつかいやすい形に変換
 
         push(@unitStatus, { $shortName => $quantity });
       }
