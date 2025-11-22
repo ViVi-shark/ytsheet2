@@ -493,7 +493,7 @@ sub palettePreset {
         $line .= " ${otherStatusManipulation}" if $otherStatusManipulation ne '';
         $line .= " ${craftName}";
 
-        $text .= "${line}\n";
+        $text .= "${line}\n" if $::pc{mpTotal};
 
         if (get_mana_gem_quantity(\%::pc, $cost) > 0) {
           $line =~ s/^\@MP-\d+/\@魔晶石@{[ add_circle($cost) ]}-1/;
@@ -502,11 +502,11 @@ sub palettePreset {
       }
 
       if ($#namesOf30secs > 0) {
-        $text .= '@MP';
+        my $mp_line = '@MP';
         my $gem_line = '@';
         foreach my $cost (2, 3, 9, 10) {
           next unless $costCountOf30secs{$cost};
-          $text .= "-${cost}*$costCountOf30secs{$cost}";
+          $mp_line .= "-${cost}*$costCountOf30secs{$cost}";
 
           if (get_mana_gem_quantity(\%::pc, $cost) > 0 && defined($gem_line)) {
             $gem_line .= "魔晶石@{[ add_circle($cost) ]}-$costCountOf30secs{$cost} ";
@@ -515,16 +515,19 @@ sub palettePreset {
             $gem_line = undef;
           }
         }
-        $text .= ' ' . join('', @namesOf30secs) . "\n";
-        $text .= "${gem_line} " . join('', @namesOf30secs) . "\n" if defined($gem_line) && $gem_line ne '@';
+        $mp_line .= ' ' . join('', @namesOf30secs);
+        $gem_line .= ' ' . join('', @namesOf30secs) if defined($gem_line) && $gem_line ne '@';
+
+        $text .= "${mp_line}\n" if $::pc{mpTotal};
+        $text .= "${gem_line}\n" if defined($gem_line) && $gem_line ne '@';
       }
 
       if ($#namesOf10secs > 0) {
-        $text .= '@MP';
+        my $mp_line = '@MP';
         my $gem_line = '@';
         foreach my $cost (2, 3, 9, 10) {
           next unless $costCountOf10secs{$cost};
-          $text .= "-${cost}*$costCountOf10secs{$cost}";
+          $mp_line .= "-${cost}*$costCountOf10secs{$cost}";
 
           if (get_mana_gem_quantity(\%::pc, $cost) > 0 && defined($gem_line)) {
             $gem_line .= "魔晶石@{[ add_circle($cost) ]}-$costCountOf10secs{$cost} ";
@@ -533,8 +536,11 @@ sub palettePreset {
             $gem_line = undef;
           }
         }
-        $text .= ' ' . join('', @namesOf10secs) . "\n";
-        $text .= "${gem_line} " . join('', @namesOf10secs) . "\n" if defined($gem_line) && $gem_line ne '@';
+        $mp_line .= ' ' . join('', @namesOf10secs);
+        $gem_line .= ' ' . join('', @namesOf10secs) if defined($gem_line) && $gem_line ne '@';
+
+        $text .= "${mp_line}\n" if $::pc{mpTotal};
+        $text .= "${gem_line}\n" if defined($gem_line) && $gem_line ne '@';
       }
 
       $text .= "###\n";
