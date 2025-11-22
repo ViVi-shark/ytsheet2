@@ -176,6 +176,10 @@ our @stateTargets = (
         name      => '精神効果属性抵抗',
         fieldName => 'mentalResistance',
     },
+    {
+        name      => '呪い属性抵抗',
+        fieldName => 'curseResistance',
+    },
 );
 
 sub getPaletteStateFieldNames {
