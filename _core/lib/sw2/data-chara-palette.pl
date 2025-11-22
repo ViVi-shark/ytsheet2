@@ -180,6 +180,14 @@ our @stateTargets = (
         name      => '呪い属性抵抗',
         fieldName => 'curseResistance',
     },
+    {
+        name      => '解除判定',
+        fieldName => 'checking_release',
+    },
+    {
+        name      => '探索判定',
+        fieldName => 'checking_search',
+    },
 );
 
 sub getPaletteStateFieldNames {

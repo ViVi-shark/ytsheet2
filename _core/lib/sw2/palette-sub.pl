@@ -276,8 +276,9 @@ sub palettePreset {
           my %checking = %{$_};
           my $checkingName = $checking{name};
           my $fieldName = "checking_$checking{fieldName}_mod";
-          next unless $::pc{$fieldName};
-          my $mod = addNum($::pc{$fieldName}) . makeStatesExpression(\%::pc, $status . 'ボーナス');
+          my $stateMod = makeStatesExpression(\%::pc, $checkingName);
+          next unless $::pc{$fieldName} || $stateMod;
+          my $mod = addNum($::pc{$fieldName}) . $stateMod . makeStatesExpression(\%::pc, $status . 'ボーナス');
           $text .= "2d+{${class}}+{${statusVarName}}${mod} ${checkingName}（${class}）\n";
         }
       }
