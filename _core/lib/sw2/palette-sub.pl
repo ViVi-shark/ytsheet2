@@ -966,6 +966,8 @@ sub palettePreset {
           next unless @list;
           $::pc{"paletteAttack${paNum}${fieldName}"} = join('+', @list);
         }
+
+        $::pc{"paletteAttack${paNum}Name"} =~ s/[|｜]/¦/g; # 戦闘特技の名称と組み合わせてルビ記法が成立してしまわないように置換しておく
       }
     }
     
