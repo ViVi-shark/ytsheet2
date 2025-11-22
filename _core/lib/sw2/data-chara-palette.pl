@@ -117,6 +117,10 @@ our @stateTargets = (
         fieldName => 'magicDamageReduction',
     },
     {
+        name      => 'プロテクション効果',
+        fieldName => 'damageReductionByProtection',
+    },
+    {
         name      => '土属性軽減',
         fieldName => 'earthDamageReduction',
     },

@@ -1233,11 +1233,12 @@ sub palettePreset {
     $text .= "//魔法ダメージ軽減=0\n";
     my $physicalDamageText = '';
     my $magicalDamageText = '';
+    my $protectionEffectMod = makeStatesExpression(\%::pc, 'プロテクション効果');
     foreach my $attributeName (undef, @data::attributeNames) {
       my $attributeFieldName = $attributeName ? $data::attributeFieldNames{$attributeName} : undef;
       my $attributeOffset = $attributeFieldName ? $::pc{"paletteTakenDamageOffset${attributeFieldName}"} : 0;
       $text .= "//${attributeName}属性ダメージ増減=0\n" if $::pc{"paletteTakenDamageVarReservation${attributeFieldName}"};
-      next if $attributeName && $attributeOffset == 0 && !$::pc{"paletteTakenDamageVarReservation${attributeFieldName}"};
+      next if $attributeName && $attributeOffset == 0 && !$::pc{"paletteTakenDamageVarReservation${attributeFieldName}"} && ($protectionEffectMod eq '' || ($attributeName ne '毒' && $attributeName ne '病気' && $attributeName ne '呪い'));
 
       foreach my $taxa (undef, @data::taxa) {
         my @taxa = ref $taxa ? @{$taxa} : ();
@@ -1264,6 +1265,11 @@ sub palettePreset {
         if ($taxaOffset < 0) {
           $physicalDefense .= addNum(abs($taxaOffset));
           $magicalDefense .= addNum(abs($taxaOffset));
+        }
+
+        if ($protectionEffectMod ne '' && $attributeName ne '毒' && $attributeName ne '病気' && $attributeName ne '呪い') {
+          $physicalDefense .= $protectionEffectMod;
+          $magicalDefense .= $protectionEffectMod;
         }
 
         $physicalDamageText .= "\@HP-";
