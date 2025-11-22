@@ -1179,7 +1179,7 @@ sub palettePreset {
         my $offset = $::pc{"paletteResistanceOffset${attributeNameEn}${modeNameEn}"} // 0;
 
         $attributeOffsets{$attributeNameJa} = $offset if $offset != 0;
-        push(@individualizedAttributeNames, $attributeNameJa) if $offset != 0 || grep { $_ eq $attributeNameJa } @reservedResistanceAttributeVars;
+        push(@individualizedAttributeNames, $attributeNameJa) if $offset != 0 || (grep { $_ eq $attributeNameJa } @reservedResistanceAttributeVars) || makeStatesExpression(\%::pc, "${attributeNameJa}属性抵抗") ne '';
       }
 
       my @taxaOffsets = ();
@@ -1213,7 +1213,10 @@ sub palettePreset {
           }
 
           my $stateMod = makeStatesExpression(\%::pc, "${attributeName}属性抵抗");
-          push(@offsets, $stateMod) if $stateMod ne '';
+          if ($stateMod ne '') {
+            push(@offsets, $stateMod);
+            push(@labelItems, $attributeName) unless grep { $_ eq $attributeName } @labelItems;
+          }
 
           if (grep { $_ eq $attributeName } @reservedResistanceAttributeVars) {
             push(@offsets, "+{@{[ makeAttributeResistanceVarName($attributeName) ]}}");
