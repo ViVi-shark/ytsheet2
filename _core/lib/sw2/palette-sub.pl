@@ -394,6 +394,8 @@ sub palettePreset {
           }
         }
 
+        $statusModificationCommand .= " 〈${drugName}〉" if $statusModificationCommand ne '';
+
         if ($line ne '') {
           $line .= " 〈${drugName}〉";
           push(@drugsLines, $line);
