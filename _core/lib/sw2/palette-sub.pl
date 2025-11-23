@@ -379,8 +379,11 @@ sub palettePreset {
           }
         }
 
+        my $statusModificationCommand;
+
         if ($line ne '' && $line !~ /^k/) { # 威力がなければ計算コマンドにする（〈魔香水〉）
           if ($bot{YTC}) {
+            $statusModificationCommand = "\@$drug{status}+${line}" if $drug{status};
             $line .= '=';
           }
           elsif ($bot{BCD}) {
@@ -395,6 +398,8 @@ sub palettePreset {
           $line .= " 〈${drugName}〉";
           push(@drugsLines, $line);
         }
+
+        push(@drugsLines, $statusModificationCommand) if $statusModificationCommand ne '';
 
         {
           my $shortName = $drugName;

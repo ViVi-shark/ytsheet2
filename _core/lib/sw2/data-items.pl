@@ -74,6 +74,7 @@ our @drugs = (
     {
         name     => '魔香水',
         category => 'ポーション',
+        status   => 'MP',
     },
     {
         name     => 'アウェイクポーション',
