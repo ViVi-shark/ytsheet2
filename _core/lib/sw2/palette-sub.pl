@@ -635,9 +635,15 @@ sub palettePreset {
         next unless ref $craft;
 
         my %craft = %{$craft};
+        my @options = ref $craft{options} ? @{$craft{options}} : (undef);
 
-        $text .= "\@陣気@{[ addNum $craft{陣気} ]} " if $craft{陣気};
-        $text .= "$craft{action}【${craftName}】\n";
+        foreach (@options) {
+          my $option = $_;
+          $text .= "\@陣気@{[ addNum $craft{陣気} ]} " if $craft{陣気};
+          $text .= "$craft{action}【${craftName}】";
+          $text .= "／${option}" if $option ne '';
+          $text .= "\n";
+        }
       }
 
       $text .= "###\n";
