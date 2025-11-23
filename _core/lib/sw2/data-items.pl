@@ -82,9 +82,11 @@ our @drugs = (
         command  => '@HP=1',
     },
     {
-        name     => 'スカーレットポーション',
-        category => 'ポーション',
-        heal     => 0,
+        name          => 'スカーレットポーション',
+        category      => 'ポーション',
+        status        => 'HP',
+        add           => 10,
+        commandSuffix => '/+10',
     },
     {
         name     => 'デクスタリティポーション',

@@ -394,6 +394,7 @@ sub palettePreset {
           }
         }
 
+        $statusModificationCommand .= $drug{commandSuffix};
         $statusModificationCommand .= " 〈${drugName}〉" if $statusModificationCommand ne '';
 
         if ($line ne '') {
