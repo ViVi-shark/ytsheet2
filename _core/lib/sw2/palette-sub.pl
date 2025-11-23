@@ -346,18 +346,20 @@ sub palettePreset {
 
         my $fixedValue = '';
 
-        if ($::pc{lvRan} > 0) {
-          $fixedValue .= '{レンジャー}';
-          $fixedValue .= '+{器用B}' . makeStatesExpression(\%::pc, '器用度ボーナス') if $drugCategory eq '薬草';
-          $fixedValue .= '+{知力B}' . makeStatesExpression(\%::pc, '知力ボーナス') if $drugCategory eq 'ポーション';
-        }
-
-        if ($drug{add} ne '') {
-          if ($drug{add} =~ /^\d/) { # 追加値が単純な数値（〈ヒーリングポーション+1〉）
-            $fixedValue .= $fixedValue ne '' ? addNum($drug{add}) : $drug{add};
+        if ($drug{heal} // 1) {
+          if ($::pc{lvRan} > 0) {
+            $fixedValue .= '{レンジャー}';
+            $fixedValue .= '+{器用B}' . makeStatesExpression(\%::pc, '器用度ボーナス') if $drugCategory eq '薬草';
+            $fixedValue .= '+{知力B}' . makeStatesExpression(\%::pc, '知力ボーナス') if $drugCategory eq 'ポーション';
           }
-          else { # 追加値が単純な数値でないケース（〈テインテッドポーション〉）
-            $fixedValue .= ($fixedValue ne '' ? '+' : '') . $drug{add};
+
+          if ($drug{add} ne '') {
+            if ($drug{add} =~ /^\d/) { # 追加値が単純な数値（〈ヒーリングポーション+1〉）
+              $fixedValue .= $fixedValue ne '' ? addNum($drug{add}) : $drug{add};
+            }
+            else { # 追加値が単純な数値でないケース（〈テインテッドポーション〉）
+              $fixedValue .= ($fixedValue ne '' ? '+' : '') . $drug{add};
+            }
           }
         }
 
@@ -377,7 +379,7 @@ sub palettePreset {
           }
         }
 
-        unless ($line =~ /^k/) { # 威力がなければ計算コマンドにする（〈魔香水〉）
+        if ($line ne '' && $line !~ /^k/) { # 威力がなければ計算コマンドにする（〈魔香水〉）
           if ($bot{YTC}) {
             $line .= '=';
           }
@@ -389,9 +391,10 @@ sub palettePreset {
           }
         }
 
-        $line .= " 〈${drugName}〉";
-
-        push(@drugsLines, $line);
+        if ($line ne '') {
+          $line .= " 〈${drugName}〉";
+          push(@drugsLines, $line);
+        }
 
         {
           my $shortName = $drugName;

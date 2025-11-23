@@ -75,6 +75,36 @@ our @drugs = (
         name     => '魔香水',
         category => 'ポーション',
     },
+    {
+        name     => 'アウェイクポーション',
+        category => 'ポーション',
+        heal     => 0,
+    },
+    {
+        name     => 'スカーレットポーション',
+        category => 'ポーション',
+        heal     => 0,
+    },
+    {
+        name     => 'デクスタリティポーション',
+        category => 'ポーション',
+        heal     => 0,
+    },
+    {
+        name     => 'スピードポーション',
+        category => 'ポーション',
+        heal     => 0,
+    },
+    {
+        name     => 'アンチマジックポーション',
+        category => 'ポーション',
+        heal     => 0,
+    },
+    {
+        name     => '熱狂の酒',
+        category => 'ポーション',
+        heal     => 0,
+    },
 );
 
 our @charms = (
