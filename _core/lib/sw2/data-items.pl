@@ -79,7 +79,7 @@ our @drugs = (
     {
         name     => 'アウェイクポーション',
         category => 'ポーション',
-        heal     => 0,
+        command  => '@HP=1',
     },
     {
         name     => 'スカーレットポーション',

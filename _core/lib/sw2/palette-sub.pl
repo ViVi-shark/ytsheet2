@@ -346,7 +346,7 @@ sub palettePreset {
 
         my $fixedValue = '';
 
-        if ($drug{heal} // 1) {
+        if ($drug{command} eq '' && ($drug{heal} // 1)) {
           if ($::pc{lvRan} > 0) {
             $fixedValue .= '{レンジャー}';
             $fixedValue .= '+{器用B}' . makeStatesExpression(\%::pc, '器用度ボーナス') if $drugCategory eq '薬草';
@@ -401,6 +401,7 @@ sub palettePreset {
           push(@drugsLines, $line);
         }
 
+        push(@drugsLines, $drug{command}) if $drug{command} ne '';
         push(@drugsLines, $statusModificationCommand) if $statusModificationCommand ne '';
 
         {
