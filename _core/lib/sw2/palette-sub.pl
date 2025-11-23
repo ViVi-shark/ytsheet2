@@ -977,7 +977,22 @@ sub palettePreset {
         foreach my $fieldName (@fieldNames) {
           my @list = @{$option{$fieldName}};
           next unless @list;
-          $::pc{"paletteAttack${paNum}${fieldName}"} = join('+', @list);
+
+          if ($fieldName ne 'Roll') {
+            $::pc{"paletteAttack${paNum}${fieldName}"} = join('+', @list);
+          }
+          else {
+            # 「出目修正」は単純な '+' での結合では済まないケースがある.
+
+            my $composed = $list[0];
+            if ($#list > 0) {
+              foreach (1..$#list) {
+                $composed .= '+' if $list[$_] =~ /^\d/;
+                $composed .= $list[$_];
+              }
+            }
+            $::pc{"paletteAttack${paNum}${fieldName}"} = $composed;
+          }
         }
 
         $::pc{"paletteAttack${paNum}Name"} =~ s/[|｜]/¦/g; # 戦闘特技の名称と組み合わせてルビ記法が成立してしまわないように置換しておく
