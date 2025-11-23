@@ -421,8 +421,11 @@ sub palettePreset {
       }
 
       if (@drugsLines) {
+        $text .= "### ■${headline}\n";
+        $text .= "[準]《ポーションマスター》\n" if $::pc{lvRan} >= 9;
+
         my $drugTexts = join("\n", reverse @drugsLines); # 手前のループを逆順で回した分を相殺するために reverse
-        $text .= "### ■${headline}\n${drugTexts}\n###\n";
+        $text .= "${drugTexts}\n###\n";
       }
     }
 
