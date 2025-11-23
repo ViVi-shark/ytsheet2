@@ -87,6 +87,7 @@ our @drugs = (
         status        => 'HP',
         add           => 10,
         commandSuffix => '/+10',
+        formula       => 0,
     },
     {
         name     => 'デクスタリティポーション',
