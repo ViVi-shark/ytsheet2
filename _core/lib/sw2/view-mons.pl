@@ -337,6 +337,7 @@ foreach (1 .. $pc{statusNum}){
 }
 push(@status_tbody, { "ROW" => \@status_row }) if !$pc{mount} || $pc{lv} eq '' || $pc{lvMin} == $pc{lv};
 foreach my $lv (2 .. ($pc{lvMax}-$pc{lvMin}+1)){
+  next unless $pc{mount};
   my @status_row;
   foreach (1 .. $pc{statusNum}){
     my $num = "$_-$lv";
