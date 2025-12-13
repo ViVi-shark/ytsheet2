@@ -703,6 +703,8 @@ sub replaceModificationNotation {
   $sourceText =~ s#
       [\@＠]
       (
+        HP |
+        MP |
         器(?:用度?)?(?:増強)?  |
         敏(?:捷度?)?(?:増強)?  |
         筋(?:力)?(?:増強)?     |

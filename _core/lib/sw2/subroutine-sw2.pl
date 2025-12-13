@@ -528,6 +528,8 @@ sub extractModifications {
     my $note = shift;
 
     my %sttRegEx = (
+      'hp' => 'HP',
+      'mp' => 'MP',
       'A:increment' => '器(?:用度?)?増強',
       'B:increment' => '敏(?:捷度?)?増強',
       'C:increment' => '筋(?:力)?増強',

@@ -304,7 +304,7 @@ sub data_calc {
       $equipModStatusIncrement{$_} //= 0;
       $equipModStatusIncrement{$_} = max($equipModStatusIncrement{$_}, $mod{"${_}:increment"} // 0);
     }
-    foreach ('vResist','mResist','eva','def','mobility', 'monsterLore', 'initiative'){
+    foreach ('hp', 'mp', 'vResist','mResist','eva','def','mobility', 'monsterLore', 'initiative'){
       $equipModTotal{$_} += $mod{$_} // 0;
     }
     foreach ('magicPower','magicCast','magicDamage'){
@@ -471,12 +471,14 @@ sub data_calc {
   ## ＨＰ
   $pc{hpBase} = $pc{level}*3 + $pc{sttVit} + $pc{sttAddD} + $pc{sttEquipD};
   $pc{hpAddTotal} = s_eval($pc{hpAdd}) + $pc{tenacity} + $pc{hpAccessory} + $pc{seekerAbilityHpMp};
+  $pc{hpAddTotal} += $equipModTotal{hp} // 0;
   $pc{hpAddTotal} += 15 if $pc{lvFig} >= 7; #タフネス
   $pc{hpTotal}  = $pc{hpBase} + $pc{hpAddTotal};
   ## ＭＰ
   $pc{mpBase} = $lv_caster_total*3 + $pc{sttMnd} + $pc{sttAddF} + $pc{sttEquipF};
   $pc{mpBase} = $pc{level}*3 + $pc{sttMnd} + $pc{sttAddF} + $pc{sttEquipF} if ($pc{raceAbility} =~ /［溢れるマナ］/);
   $pc{mpAddTotal} = s_eval($pc{mpAdd}) + $pc{capacity} + $pc{raceAbilityMp} + $pc{mpAccessory} + $pc{seekerAbilityHpMp};
+  $pc{mpAddTotal} += $equipModTotal{mp} // 0;
   $pc{mpTotal} = $pc{mpBase} + $pc{mpAddTotal};
   $pc{mpTotal} = 0  if ($pc{raceAbility} =~ /［マナ不干渉］/);
 

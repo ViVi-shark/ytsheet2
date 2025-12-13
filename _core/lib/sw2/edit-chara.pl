@@ -436,11 +436,11 @@ print <<"HTML";
           </dl>
           <dl class="box">
             <dt id="hp">ＨＰ
-            <dd><span id="hp-base">$pc{hpBase}</span>+<span id="hp-auto-add">$pc{hpAutoAdd}</span>+@{[input('hpAdd','number','calcSubStt')]}=<b id="hp-total">$pc{hpTotal}</b>
+            <dd><span id="hp-base">$pc{hpBase}</span>+<span id="hp-auto-add">$pc{hpAutoAdd}</span>+<span id="hp-mod">$pc{hpMod}</span>+@{[input('hpAdd','number','calcSubStt')]}=<b id="hp-total">$pc{hpTotal}</b>
           </dl>
           <dl class="box">
             <dt id="mp">ＭＰ
-            <dd><span id="mp-base">$pc{mpBase}</span>+<span id="mp-auto-add">$pc{mpAutoAdd}</span>+@{[input('mpAdd','number','calcSubStt')]}=<b id="mp-total">$pc{mpTotal}</b>
+            <dd><span id="mp-base">$pc{mpBase}</span>+<span id="mp-auto-add">$pc{mpAutoAdd}</span>+<span id="mp-mod">$pc{mpMod}</span>+@{[input('mpAdd','number','calcSubStt')]}=<b id="mp-total">$pc{mpTotal}</b>
           </dl>
         </div>
         
@@ -1378,7 +1378,7 @@ print <<"HTML";
             <li>左のボックスにチェックを入れると欄が一つ追加されます
             <li>
               <code>\@器用度+1</code>や<code>\@防護点+1</code>のように記述すると、<span class="text-em">常時</span>有効な上昇効果が自動計算されます。<br>
-              有効な項目は、<code>器用度</code>～<code>精神力</code> <code>生命抵抗力</code> <code>精神抵抗力</code> <code>回避力</code> <code>防護点</code> <code>移動力</code> <code>魔力</code> <code>行使判定</code> <code>魔物知識判定</code> <code>先制判定</code> <code>武器必筋上限</code>です。<br>
+              有効な項目は、<code>HP</code> <code>MP</code> <code>器用度</code>～<code>精神力</code> <code>生命抵抗力</code> <code>精神抵抗力</code> <code>回避力</code> <code>防護点</code> <code>移動力</code> <code>魔力</code> <code>行使判定</code> <code>魔物知識判定</code> <code>先制判定</code> <code>武器必筋上限</code>です。<br>
               同じ項目へは累積するため、同名や効果排他のアイテムには注意してください。<br>
               能力値の増強にかぎり、<code>\@筋力増強+2</code>のように<code>増強</code>の文言を記述することで、能力値ごとに最大の値のみを採用できます。
             <li><code>::-57,000</code>のように記述すると、支出として所持金の自動計算に加味されます。<br>末尾に単位<code>G</code>をつけて、<code>-57,000G</code>のようにも記述できます。
