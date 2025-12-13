@@ -112,7 +112,7 @@ if($pc{forbidden} && !$pc{yourAuthor}){
   $pc{forbiddenMode} = 1;
 }
 else {
-  $pc{cashbook} = "[↓]自動転記\n$pc{additionalExpenses}\n[---]\n" . $pc{cashbook} if $pc{additionalExpenses} ne '';
+  $pc{cashbook} = "[v]自動転記\n$pc{additionalExpenses}\n[---]\n" . $pc{cashbook} if $pc{additionalExpenses} ne '';
 }
 
 ### その他 --------------------------------------------------
