@@ -436,11 +436,11 @@ print <<"HTML";
           </dl>
           <dl class="box">
             <dt id="hp">ＨＰ
-            <dd><span id="hp-base">$pc{hpBase}</span>+<span id="hp-auto-add">$pc{hpAutoAdd}</span>+<span id="hp-mod">$pc{hpMod}</span>+@{[input('hpAdd','number','calcSubStt')]}=<b id="hp-total">$pc{hpTotal}</b>
+            <dd><span id="hp-base">$pc{hpBase}</span>+<span id="hp-auto-add">$pc{hpAutoAdd}</span>+@{[input('hpAdd','number','calcSubStt')]}=<b id="hp-total">$pc{hpTotal}</b>
           </dl>
           <dl class="box">
             <dt id="mp">ＭＰ
-            <dd><span id="mp-base">$pc{mpBase}</span>+<span id="mp-auto-add">$pc{mpAutoAdd}</span>+<span id="mp-mod">$pc{mpMod}</span>+@{[input('mpAdd','number','calcSubStt')]}=<b id="mp-total">$pc{mpTotal}</b>
+            <dd><span id="mp-base">$pc{mpBase}</span>+<span id="mp-auto-add">$pc{mpAutoAdd}</span>+@{[input('mpAdd','number','calcSubStt')]}=<b id="mp-total">$pc{mpTotal}</b>
           </dl>
         </div>
         

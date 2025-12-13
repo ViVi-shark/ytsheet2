@@ -1144,10 +1144,8 @@ function calcSubStt() {
   subStt.mpTotal = subStt.mpBase + Number(form.mpAdd.value) + subStt.mpAutoAdd + subStt.mpAccessory + subStt.mpMod;
   document.getElementById("hp-base").textContent = subStt.hpBase;
   document.getElementById("mp-base").textContent = raceAbilities.includes('マナ不干渉') ? '0' : subStt.mpBase;
-  document.getElementById("hp-auto-add").textContent = subStt.hpAutoAdd;
-  document.getElementById("mp-auto-add").textContent = subStt.mpAutoAdd;
-  document.getElementById("hp-mod").textContent = subStt.hpMod;
-  document.getElementById("mp-mod").textContent = subStt.mpMod;
+  document.getElementById("hp-auto-add").textContent = (subStt.hpTotal - subStt.hpBase).toString();
+  document.getElementById("mp-auto-add").textContent = (subStt.mpTotal - subStt.mpBase).toString();
   document.getElementById("hp-total").textContent = subStt.hpTotal
   document.getElementById("mp-total").textContent = raceAbilities.includes('マナ不干渉') ? 'なし' : subStt.mpTotal;
 }
